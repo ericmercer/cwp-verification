@@ -1,0 +1,606 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContactEntityModel/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     ontologyIRI="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContactEntityModel/">
+    <Prefix name="" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="sm" IRI="http://www.omg.org/techprocess/ab/SpecificationMetadata/"/>
+    <Prefix name="dct" IRI="http://purl.org/dc/terms/"/>
+    <Prefix name="mpc" IRI="http://www.hcde.washington.edu/ontologies/math/PriorityContact/"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="skos" IRI="http://www.w3.org/2004/02/skos/core#"/>
+    <Prefix name="fibo-fnd-utl-av" IRI="http://www.omg.org/spec/EDMC-FIBO/FND/Utilities/AnnotationVocabulary/"/>
+    <Prefix name="fibo-fnd-aap-ppl" IRI="http://www.omg.org/spec/EDMC-FIBO/FND/AgentsAndPeople/People/"/>
+    <Prefix name="fibo-fnd-rel-rel" IRI="http://www.omg.org/spec/EDMC-FIBO/FND/Relations/Relations/"/>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Priority Contact Entity Model</Literal>
+    </Annotation>
+    <Declaration>
+        <Class IRI="ContactPlan"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Conversation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Disease"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Doctor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Instruction"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Order"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Patient"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Person"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Priority"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Symptom"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="Test"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="TestResult"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="TreatmentPlan"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="VAIdentificationNumber"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="consistsOf"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="has"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="isAssociatedWith"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="isOrderedBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="isOrderedFor"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="mandates"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="produces"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="requires"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="conversEndTime"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="conversStartTime"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="conversTime"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="coversDate"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="emergencyContactPhone"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="has_date"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="has_time"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="homePhone"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="launchTime"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="mobolePhone"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="officePhone"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="resolveTime"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="Priority_1"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="Priority_2"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="Priority_3"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="Priority_4"/>
+    </Declaration>
+    <Declaration>
+        <Datatype IRI="PriorityLevel"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="ContactPlan"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="has"/>
+            <Class IRI="Doctor"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ContactPlan"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="has"/>
+            <Class IRI="Patient"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ContactPlan"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="has"/>
+            <Class IRI="Priority"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ContactPlan"/>
+        <DataMaxCardinality cardinality="1">
+            <DataProperty IRI="launchTime"/>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+        </DataMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="ContactPlan"/>
+        <DataMaxCardinality cardinality="1">
+            <DataProperty IRI="resolveTime"/>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+        </DataMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Conversation"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="conversTime"/>
+            <Datatype abbreviatedIRI="xsd:dateTime"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Disease"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="has"/>
+            <Class IRI="Symptom"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Disease"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="has"/>
+            <Class IRI="TreatmentPlan"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Doctor"/>
+        <Class IRI="Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Doctor"/>
+        <ObjectMinCardinality cardinality="0">
+            <ObjectProperty abbreviatedIRI="fibo-fnd-rel-rel:has"/>
+            <Class IRI="TreatmentPlan"/>
+        </ObjectMinCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Doctor"/>
+        <DataSomeValuesFrom>
+            <DataProperty abbreviatedIRI="fibo-fnd-rel-rel:hasName"/>
+            <Datatype abbreviatedIRI="xsd:Name"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Doctor"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="mobolePhone"/>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Doctor"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="officePhone"/>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Patient"/>
+        <Class IRI="Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Patient"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty abbreviatedIRI="fibo-fnd-rel-rel:isIdentifiedBy"/>
+            <Class IRI="VAIdentificationNumber"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Patient"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="homePhone"/>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Patient"/>
+        <DataSomeValuesFrom>
+            <DataProperty IRI="mobolePhone"/>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Patient"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty abbreviatedIRI="fibo-fnd-rel-rel:hasName"/>
+            <Datatype abbreviatedIRI="xsd:Name"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Patient"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="emergencyContactPhone"/>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Patient"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="homePhone"/>
+            <Datatype abbreviatedIRI="xsd:string"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="Test"/>
+        <Class IRI="Instruction"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="TreatmentPlan"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="has"/>
+            <Class IRI="Conversation"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="TreatmentPlan"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="has"/>
+            <Class IRI="Doctor"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="TreatmentPlan"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="has"/>
+            <Class IRI="ContactPlan"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="VAIdentificationNumber"/>
+        <Class abbreviatedIRI="fibo-fnd-aap-ppl:NationalIdentificationNumber"/>
+    </SubClassOf>
+    <ClassAssertion>
+        <Class IRI="Priority"/>
+        <NamedIndividual IRI="Priority_1"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="Priority"/>
+        <NamedIndividual IRI="Priority_2"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="Priority"/>
+        <NamedIndividual IRI="Priority_3"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="Priority"/>
+        <NamedIndividual IRI="Priority_4"/>
+    </ClassAssertion>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="consistsOf"/>
+        <Class IRI="TreatmentPlan"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="isAssociatedWith"/>
+        <Class IRI="ContactPlan"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="isOrderedBy"/>
+        <Class IRI="Order"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="isOrderedFor"/>
+        <Class IRI="Order"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="mandates"/>
+        <Class IRI="Order"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="produces"/>
+        <Class IRI="Test"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="requires"/>
+        <Class IRI="TestResult"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="consistsOf"/>
+        <Class IRI="Order"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="isAssociatedWith"/>
+        <Class IRI="Person"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="isOrderedBy"/>
+        <Class IRI="Doctor"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="isOrderedFor"/>
+        <Class IRI="Patient"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="mandates"/>
+        <Class IRI="Instruction"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="produces"/>
+        <Class IRI="TestResult"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="requires"/>
+        <Class IRI="ContactPlan"/>
+    </ObjectPropertyRange>
+    <SubDataPropertyOf>
+        <DataProperty IRI="conversEndTime"/>
+        <DataProperty IRI="has_time"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="conversStartTime"/>
+        <DataProperty IRI="has_time"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="conversTime"/>
+        <DataProperty IRI="has_time"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="coversDate"/>
+        <DataProperty IRI="has_date"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="launchTime"/>
+        <DataProperty IRI="has_time"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="resolveTime"/>
+        <DataProperty IRI="has_time"/>
+    </SubDataPropertyOf>
+    <DataPropertyDomain>
+        <DataProperty IRI="emergencyContactPhone"/>
+        <Class IRI="Patient"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="homePhone"/>
+        <Class IRI="Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="mobolePhone"/>
+        <Class IRI="Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="officePhone"/>
+        <Class IRI="Person"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="conversTime"/>
+        <Datatype abbreviatedIRI="xsd:dateTime"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="emergencyContactPhone"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="homePhone"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="mobolePhone"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="officePhone"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>ContactPlan</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">contact plan</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Conversation</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">conversation</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Disease</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">disease</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Doctor</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">doctor</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Instruction</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">instruction</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Order</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">order</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Patient</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">patient</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Person</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">person</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>Priority</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral"></Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>PriorityLevel</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">priority level</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>Priority_1</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">A life-threatening diagnosis is an emergency to get the patient to an ED with a little delay as possible (Minutes count. This is rare but critical to include)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>Priority_2</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral"> life-changing diagnosis and treatment plan should be discussed with patient within 48 hours. (fairly common for the patients in this clinic)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>Priority_3</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral"> A routine diagnosis that requires a routine treatment change that should be communicated within two weeks. The provider can choose to do that with a phone call that can be scheduled to take place within two weeks, or send written message within two weeks. (A routine change is most common)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>Priority_4</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">The diagnosis indicates no treatment change is appropriate. The provider can choose to do that with a phone call that can be scheduled to take place within two weeks, or send written message within two weeks. (No change is fairly common)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>Test</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">test</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>TestResult</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">test result</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>TreatmentPlan</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">treatment plan</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>VAIdentificationNumber</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">VA identification number</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>consistsOf</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">consists of</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>emergencyContactPhone</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">emergency contact telephone number</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>homePhone</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">home telephone number</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>isAssociatedWith</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">is associated with</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>isOrderedBy</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">is ordered by</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>isOrderedFor</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">is ordered for</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>mandates</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">mandates</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>mobolePhone</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">mobile telephone number</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>officePhone</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">office telephone number</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>produces</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">produces</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>requires</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">requires</Literal>
+    </AnnotationAssertion>
+    <DatatypeDefinition>
+        <Datatype IRI="PriorityLevel"/>
+        <DataOneOf>
+            <Literal datatypeIRI="&xsd;string">life changing</Literal>
+            <Literal datatypeIRI="&xsd;string">life threatening</Literal>
+            <Literal datatypeIRI="&xsd;string">no change</Literal>
+            <Literal datatypeIRI="&xsd;string">routine change</Literal>
+        </DataOneOf>
+    </DatatypeDefinition>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

@@ -1,0 +1,641 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY swrl "http://www.w3.org/2003/11/swrl#" >
+    <!ENTITY swrlb "http://www.w3.org/2003/11/swrlb#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY PriorityContact "http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact#" >
+    <!ENTITY PriorityContact2 "http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact#"
+     xml:base="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+     xmlns:PriorityContact="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact#"
+     xmlns:PriorityContact2="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/">
+        <owl:imports rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContactEntityModel/"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#hasContactPlan -->
+
+    <owl:ObjectProperty rdf:about="&PriorityContact2;hasContactPlan"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#hasMessage -->
+
+    <owl:ObjectProperty rdf:about="&PriorityContact2;hasMessage"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#hasState -->
+
+    <owl:ObjectProperty rdf:about="&PriorityContact2;hasState"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#hasStatus -->
+
+    <owl:ObjectProperty rdf:about="&PriorityContact2;hasStatus">
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#nextStep -->
+
+    <owl:ObjectProperty rdf:about="&PriorityContact2;nextStep"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#object -->
+
+    <owl:ObjectProperty rdf:about="&PriorityContact2;object"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#patientObject -->
+
+    <owl:ObjectProperty rdf:about="&PriorityContact2;patientObject">
+        <rdfs:subPropertyOf rdf:resource="&PriorityContact2;object"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Conversation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Conversation"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Patient -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Patient"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/ResolvedConversation -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/ResolvedConversation">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContactEntityModel/resolveTime"/>
+                <owl:someValuesFrom rdf:resource="&xsd;dateTime"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Conversation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#Appointment_scheduled -->
+
+    <owl:Class rdf:about="&PriorityContact2;Appointment_scheduled">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&PriorityContact2;nextStep"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="&PriorityContact2;Resolved"/>
+                            <rdf:Description rdf:about="&PriorityContact2;no_longer_needed"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#Conversation_in_progress -->
+
+    <owl:Class rdf:about="&PriorityContact2;Conversation_in_progress">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&PriorityContact2;nextStep"/>
+                <owl:allValuesFrom rdf:resource="&PriorityContact2;Resolved"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#End -->
+
+    <owl:Class rdf:about="&PriorityContact2;End">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L1Patient -->
+
+    <owl:Class rdf:about="&PriorityContact2;L1Patient">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Patient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L2Patient -->
+
+    <owl:Class rdf:about="&PriorityContact2;L2Patient">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Patient"/>
+        <rdfs:comment>Life Changing</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L3Patient -->
+
+    <owl:Class rdf:about="&PriorityContact2;L3Patient">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Patient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L4Patient -->
+
+    <owl:Class rdf:about="&PriorityContact2;L4Patient">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Patient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#Launched -->
+
+    <owl:Class rdf:about="&PriorityContact2;Launched">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&PriorityContact2;nextStep"/>
+                <owl:someValuesFrom rdf:resource="&PriorityContact2;Appointment_scheduled"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&PriorityContact2;nextStep"/>
+                <owl:someValuesFrom rdf:resource="&PriorityContact2;no_longer_needed"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&PriorityContact2;nextStep"/>
+                <owl:someValuesFrom rdf:resource="&PriorityContact2;Conversation_in_progress"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#MessageLeft -->
+
+    <owl:Class rdf:about="&PriorityContact2;MessageLeft">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&PriorityContact2;State"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&PriorityContact2;hasStatus"/>
+                        <owl:hasValue rdf:resource="&PriorityContact2;messageLeft"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;Launched"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#Needed -->
+
+    <owl:Class rdf:about="&PriorityContact2;Needed">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&PriorityContact2;nextStep"/>
+                <owl:someValuesFrom rdf:resource="&PriorityContact2;Launched"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#Resolved -->
+
+    <owl:Class rdf:about="&PriorityContact2;Resolved">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&PriorityContact2;nextStep"/>
+                <owl:someValuesFrom rdf:resource="&PriorityContact2;no_longer_needed"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#StageL2MessageLeft -->
+
+    <owl:Class rdf:about="&PriorityContact2;StageL2MessageLeft">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&PriorityContact2;State"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&PriorityContact2;patientObject"/>
+                        <owl:someValuesFrom rdf:resource="&PriorityContact2;L2Patient"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&PriorityContact2;hasStatus"/>
+                        <owl:hasValue rdf:resource="&PriorityContact2;messageLeft"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;MessageLeft"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#Start -->
+
+    <owl:Class rdf:about="&PriorityContact2;Start">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#State -->
+
+    <owl:Class rdf:about="&PriorityContact2;State"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#Status -->
+
+    <owl:Class rdf:about="&PriorityContact2;Status"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#no_longer_needed -->
+
+    <owl:Class rdf:about="&PriorityContact2;no_longer_needed">
+        <rdfs:subClassOf rdf:resource="&PriorityContact2;State"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L1 -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;L1"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L2 -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;L2"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L3 -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;L3"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#L4 -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;L4"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#ResultInformed -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;ResultInformed">
+        <rdf:type rdf:resource="&PriorityContact2;Status"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#called -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;called">
+        <rdf:type rdf:resource="&PriorityContact2;Status"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#f1 -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;f1"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#messageLeft -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;messageLeft">
+        <rdf:type rdf:resource="&PriorityContact2;Status"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#nevercalled -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;nevercalled">
+        <rdf:type rdf:resource="&PriorityContact2;Status"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#patientAnswered -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;patientAnswered">
+        <rdf:type rdf:resource="&PriorityContact2;Status"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#test1 -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;test1">
+        <rdf:type rdf:resource="&PriorityContact2;State"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#tom -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;tom"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#tomContactPlan -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;tomContactPlan">
+        <PriorityContact2:patientObject rdf:resource="&PriorityContact2;tom"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/#tomContactStage -->
+
+    <owl:NamedIndividual rdf:about="&PriorityContact2;tomContactStage">
+        <rdf:type rdf:resource="&PriorityContact2;State"/>
+        <PriorityContact2:hasStatus rdf:resource="&PriorityContact2;messageLeft"/>
+        <PriorityContact2:patientObject rdf:resource="&PriorityContact2;tom"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Rules
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="urn:swrl#c">
+        <rdf:type rdf:resource="&swrl;Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="urn:swrl#s">
+        <rdf:type rdf:resource="&swrl;Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="urn:swrl#te">
+        <rdf:type rdf:resource="&swrl;Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="urn:swrl#ts">
+        <rdf:type rdf:resource="&swrl;Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="urn:swrl#current">
+        <rdf:type rdf:resource="&swrl;Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="urn:swrl#st">
+        <rdf:type rdf:resource="&swrl;Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="urn:swrl#t">
+        <rdf:type rdf:resource="&swrl;Variable"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                <swrl:builtin rdf:resource="&swrlb;greaterThan"/>
+                                                <swrl:arguments rdf:parseType="Collection">
+                                                    <rdf:Description rdf:about="urn:swrl#t"/>
+                                                    <rdf:Description rdf:about="urn:swrl#current"/>
+                                                </swrl:arguments>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                    </rdf:Description>
+                                </rdf:rest>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContactEntityModel/conversStartTime"/>
+                                        <swrl:argument1 rdf:resource="urn:swrl#c"/>
+                                        <swrl:argument2 rdf:resource="urn:swrl#t"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                            </rdf:Description>
+                        </rdf:rest>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="&PriorityContact2;hasState"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#c"/>
+                                <swrl:argument2 rdf:resource="urn:swrl#s"/>
+                            </rdf:Description>
+                        </rdf:first>
+                    </rdf:Description>
+                </rdf:rest>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Conversation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#c"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="&PriorityContact2;Appointment_scheduled"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#s"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContact/Conversation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#c"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContactEntityModel/conversEndTime"/>
+                                        <swrl:argument1 rdf:resource="urn:swrl#c"/>
+                                        <swrl:argument2 rdf:resource="urn:swrl#te"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="http://www.semanticweb.org/ctao/ontologies/2014/2/PriorityContactEntityModel/conversStartTime"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#c"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#ts"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                <rdf:rest>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                <swrl:builtin rdf:resource="&swrlb;lessThan"/>
+                                                                <swrl:arguments rdf:parseType="Collection">
+                                                                    <rdf:Description rdf:about="urn:swrl#st"/>
+                                                                    <rdf:Description rdf:about="urn:swrl#current"/>
+                                                                </swrl:arguments>
+                                                            </rdf:Description>
+                                                        </rdf:first>
+                                                    </rdf:Description>
+                                                </rdf:rest>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                        <swrl:builtin rdf:resource="&swrlb;greaterThan"/>
+                                                        <swrl:arguments rdf:parseType="Collection">
+                                                            <rdf:Description rdf:about="urn:swrl#te"/>
+                                                            <rdf:Description rdf:about="urn:swrl#current"/>
+                                                        </swrl:arguments>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="&PriorityContact2;hasState"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#c"/>
+                                <swrl:argument2 rdf:resource="urn:swrl#s"/>
+                            </rdf:Description>
+                        </rdf:first>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="&PriorityContact2;Conversation_in_progress"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#s"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+
