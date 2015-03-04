@@ -9,43 +9,34 @@ mtype = {
   VOICE
 }
 
-typedef TreatmentPlan{
-  bool diseaseDiagnosis = 0;
-  bool Severity = 0;
-  bool treatmentOptions = 0;
-  bool nextAppointment = 0;
-}
-
-typedef Phone{
-  bool sms = 0;
-  bool call = 0;
-  bool voiceMail = 0;
-};
 
 typedef Conversation {
   bool date = 0;
   bool time = 0;
 };
 
-typedef Disease {
-  bit symptoms;
-}
-
 typedef Patient {
-  byte name[20];
+  /*byte name[20];*/
+  bool name;
   bool inMyCare = 0;
   short VANumber = 0;
-  chan mobile = [1] of {mtype};
-  Phone home;
-  Phone business;
-  Phone emergencyContact;
-  Disease disease;
+  chan mobile = [0] of {mtype};
+  chan home = [0] of {mtype};
+  chan business = [0] of {mtype};
+  chan emergencyContact = [0] of {mtype}
 }
 
 typedef Doctor {
-  byte name[20];
-  Phone mobile;
-  Phone office;
+  /*byte name[20];*/
+  chan mobile = [0] of {mtype};
+  chan office = [0] of {mtype};
+}
+
+typedef TreatmentPlan{
+  bool diseaseDiagnosis = 0;
+  bool Severity = 0;
+  bool treatmentOptions = 0;
+  bool nextAppointment = 0;
 }
 
 typedef ContactPlan{
@@ -56,160 +47,93 @@ typedef ContactPlan{
   bool resolveTime = 0;
   Doctor doctor;
   Patient patient;
-  Disease disease;
   TreatmentPlan treatmentPlan;
   Conversation conversation;
 }
 
-
-typedef PhoneType {
-  bit sms = 0;
-  bit phone = 0;
-  bit voiceMail = 0;
-}
-
 ContactPlan cpe;
-PhoneType phone;
 
-active proctype patientProc() {
-  if
-	:: phone.sms -> printf("Patient checks sms\n");
-					printf("Patient calls PC P1t\n");
-					goto PCAnswersAndGivesInstructions;
-	:: phone.sms -> skip;
-	:: phone.phone -> goto PCAnswersAndGivesInstructions;
-	:: phone.phone -> phone.voiceMail = 1; phone.phone = 0;
-	:: phone.voiceMail -> printf("Patient checks voice mail\n");
-						  printf("Patient calls PC P1v\n");
-						  goto PCAnswersAndGivesInstructions;
-	:: phone.voiceMail == 1-> skip;
-  fi;
-  
-  if
-	:: skip -> printf("PC send text and update log\n"); phone.sms = 1;
-	:: skip -> printf("PC autocall all tels and update log\n"); phone.phone = 1;
-	:: skip;
-  fi;
-  
-PCAnswersAndGivesInstructions:
-{
-  printf("PC answers and gives instructions\n");
-
-  printf("Patient enters ID\n");
-
-  printf("PC updates log\n");
+proctype patientProc() {
+  printf ("Patient stuff...");
 }
 
+proctype doctorProc() {
+  printf ("Patient stuff...");
 }
 
-active proctype PriorityContact() {
-  printf("Confirm diagnosis and severity\n");
-  if
-	:: cpe.cpPriority = P1LifeThreatening
-	   /*:: cpe.cpPriority = P2LifeChanging*/
-	   /*:: cpe.cpPriority = P3RoutineChange*/
-	   /*:: cpe.cpPriority = P4NoChange*/
-  fi;
+proctype p1LifeThreateningProc(chan p) {
+  p!1;
+}
+
+proctype p2LifeChangingProc(chan p) {
+  p!1;
+}
+
+proctype p3RoutineChangeProc(chan p) {
+  p!1;
+}
+
+proctype p4NoChangeProc(chan p) {
+  p!1;
+}
+
+proctype carryOutContactPlanProc() {
+  chan child = [0] of {bool};
+  bool result = 0;
   
-  printf("Query: life threatening?\n");
-  if
-	:: cpe.cpPriority == P1LifeThreatening -> goto InitiatePriorityContact
-  fi;
-  
-  printf("Determine appropriate intervention\n");
-  
-InitiatePriorityContact:
-{
-  printf("Initiate priority contact\n");
   printf("Carry out contact plan\n");
   printf("Query: priority?\n");
   if
-	:: cpe.cpPriority == P1LifeThreatening -> goto qCallNowAndPatientAnswersP1;
-	:: cpe.cpPriority == P2LifeChanging -> goto qCallNowAndPatientAnswersP2;
-	:: cpe.cpPriority == P3RoutineChange -> goto qPreferredCommunicationModeP3;
-	:: cpe.cpPriority == P4NoChange -> goto qPreferredCommunicationModeP4;
+	:: cpe.cpPriority == P1LifeThreatening -> run p1LifeThreateningProc(child);
+	:: cpe.cpPriority == P2LifeChanging -> run p2LifeChangingProc(child);
+	:: cpe.cpPriority == P3RoutineChange -> run p3RoutineChangeProc(child);
+	:: cpe.cpPriority == P4NoChange -> run p4NoChangeProc(child);
   fi;
+  child?result;
 }
 
-qCallNowAndPatientAnswersP1:
-{
-  printf("Query: call now and patient answers P1?\n");
+proctype cpeMonitor() {
+  printf ("Monitor the cpe");
+end:
+  assert(cpe.resolveDate && cpe.resolveTime);
+}
+
+init {
+  
+  /* Complete care and asessement plan: initializes the contact plan entity */
+ConfirmDiagnosisAndSeverity:
+  printf("Confirm diagnosis and severity:");
   if
-	:: skip -> goto DoctorSendsPatientToER;
-	:: skip -> goto PCCarryOutContactPlanP1;
+	:: skip -> cpe.cpPriority = P1LifeThreatening; printf("P1 life threatening\n");
+	:: skip -> cpe.cpPriority = P2LifeChanging; printf("P2 life changing\n");
+	:: skip -> cpe.cpPriority = P3RoutineChange; printf("P3 routine change\n");
+	:: skip -> cpe.cpPriority = P4NoChange; printf("P4 no change\n");
   fi;
-}
-
-DoctorSendsPatientToER:
-{
-  printf("Doctor sends patient to ER\n");
-  printf("Discuss why patient must immediately get life-saving care\n");
+  goto QueryLifeThreatening;
   
-  
-  printf("Query: include in call P1?\n");
-  
+QueryLifeThreatening:
+  printf("Query: life threatening?\n");
   if
-	:: printf("Doctor adds emergency contact\n");
-	:: skip;
+	:: cpe.cpPriority == P1LifeThreatening -> goto LaunchPriorityContact;
+	:: cpe.cpPriority != P2LifeChanging -> goto DetermineAppropriateIntervention;
   fi;
-  
-  if
-	:: printf("Doctor adds 911\n");
-	:: skip;
-  fi;
-  
-  printf("Doctor send patient to ER gateway 21\n");
-  
-  printf("Doctor resolves contact P1\n");
-  
-  goto CarryOutContactPlanEnd;
-}
 
-PCCarryOutContactPlanP1:
-{
-  printf("PC send text and update log\n"); phone.sms = 1;
-  printf("PC autocall all tels and update log\n"); phone.phone = 1;
-}
+DetermineAppropriateIntervention:
+  /* ??: Is there any interaction with the CWP in this step? */
+  printf("Determine appropriate intervention\n");
+  goto LaunchPriorityContact;
 
-PatientCheck:
-{
-  if
-	:: phone.sms -> printf("Patient checks sms\n");
-					printf("Patient calls PC P1t\n");
-					goto PCAnswersAndGivesInstructions;
-	:: phone.sms -> skip;
-	:: phone.phone -> goto PCAnswersAndGivesInstructions;
-	:: phone.phone -> phone.voiceMail = 1; phone.phone = 0;
-	:: phone.voiceMail -> printf("Patient checks voice mail\n");
-						  printf("Patient calls PC P1v\n");
-						  goto PCAnswersAndGivesInstructions;
-	:: phone.voiceMail == 1-> skip;
-  fi;
-  
-  if
-	:: skip -> printf("PC send text and update log\n"); phone.sms = 1;
-	:: skip -> printf("PC autocall all tels and update log\n"); phone.phone = 1;
-	:: skip;
-  fi;
-  
-  goto PatientCheck;
-}
+LaunchPriorityContact:
+  printf("Initiate priority contact\n");
+  cpe.patient.name = 1;
+  cpe.patient.VANumber = 1;
+  cpe.launchDate = 1;
+  cpe.launchTime = 1;
+  goto CarryOutContactPlan;
 
-PCAnswersAndGivesInstructions:
-{
-  printf("PC answers and gives instructions\n");
-
-  printf("Patient enters ID\n");
-
-  printf("PC updates log\n");
-}
-goto CarryOutContactPlanEnd;
-
-qCallNowAndPatientAnswersP2:
-qPreferredCommunicationModeP3:
-qPreferredCommunicationModeP4:
-
-
-CarryOutContactPlanEnd:
-printf("Carry out contact plan end\n");
+CarryOutContactPlan:
+  run cpeMonitor();
+  run patientProc();
+  run doctorProc();
+  run carryOutContactPlanProc();
 }
