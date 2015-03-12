@@ -1,0 +1,35 @@
+Change:
+
+The priority contact model is trivial for the SPIN model checker (less than a second to verify), and the model checker itself has proven able to manage millions of different states in the verification process. It is yet to be determined if SPIN is sufficient for an interesting class of CWP and MATHflow models to be of value. (put in Future Work?)
+
+TO:
+
+The priority contact model is trivial for the SPIN model checker and verifies in a few milliseconds because the model has little concurrency between the actors and there is very little non-determinism in the input. The meaning of the model checking result is that the MATHflow model of the priority contact system implements the CWP under all possible inputs and under all possible ways for the actors to communicate. As such, a faithful implementation of the MATHflow model in an HIT system would be known to be correct relative to the intended work.
+
+Conclusion:
+
+Model checking is a powerful tool to relate a specification to a model
+of the implementation. In this context, the specification is the CWP,
+and the model of the implementation is the MATHflow description. The
+model checking step establishes a formal relationship between the
+MATHflow description of how the work is accomplished and the CWP
+declaration of what needs to accomplished. This formal relationship
+can be a cornerstone for other model driven analyses such as
+usability, workload, latency, etc. If an organization is trying to
+decide which system to deploy, systems accomplishing the intended work
+can then be compared on other metrics. Perhaps more critically, from a
+usability perspective, The small case study on the priority contact
+system suggests that once the CWP and MATHflow models are known, much
+of the model checking step can be automated to hide unnecessary
+details from the user.
+
+Future Work:
+
+There are three critical pieces of future work related to the model checking step: automation, scaling to large systems, results presentation, and workload analysis. The first step automates the process of extracting an Promela model from the MATHflow and CWP. It is critical for case studies on complex HIT systems. The second step characterizes the model checking on larger systems to understand its limits, and explores various techiques to mitigate state explosions including abstraction. The SPIN model checker typically scales to systems with millions of states, and it is hoped, but not yet known, that it is sufficient to verify interesting HIT processes. The third step relates directly to the usability of the model checking results. Any verification counter-example (i.e., a path that does not accomplish the work), must be mapped back into the MATHflow model and illustrated in MATHsim for the user to diagnose. The framework for such an interface is non-trivial as it is required to track the source of each model transition. Finally, recent work [1,2,3] has used cognitive science to define a notion of human workload in discrete event models of human-computer interaction. Future work intends to apply these workload measures to MATHflow and the CWP.
+
+
+R. Stocker, N. Rungta, E. G. Mercer, F. Raimondi, J. Holbrook, C. Cardoza, and M. A. Goodrich, An Approach to Quantify Workload in a System of Agents, in Proceedings of the 14th International Conference on Autonomous Agents and Multiagent Systems, Istanbul, Turkey, May 2015.
+
+J. Moore, R. Ivie, T.J. Gledhill, E. Mercer, and M. Goodrich. Modeling Human Workload in Unmanned Aerial Systems, in AAAI 2014 Spring Symposia, Formal Verification and Modeling in Human-Machine Systems, CA, March, 2014.
+
+T. J. Gledhill, E. Mercer, and M. A. Goodrich, Modeling UASs for Role Fusion and Human Machine Interface Optimization, Proceedings of the IEEE International Conference on Systems, Man, and Cybernetics, 2013.
