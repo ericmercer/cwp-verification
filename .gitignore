@@ -2,3 +2,6 @@
 pan.*
 *.xml
 *~
+*.trail
+*.laccdb
+~$*
