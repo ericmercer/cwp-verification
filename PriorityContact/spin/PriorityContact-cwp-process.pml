@@ -187,6 +187,7 @@ proctype SchedulerCallsPatient(chan rvChan) {
 
 proctype SelectCallClinicTimeDate(chan rvChan) {
   printf("Task: select call clinic timeDate\n");
+  pc.confirmedAppointmentDateTime = nonNull;
   rvChan!1;
 }
 
