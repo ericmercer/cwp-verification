@@ -11,7 +11,14 @@ mtype = {
 /* Input */
 
 /* Severity ranges over P1-P4 defined above in mtype */
-mtype severity = null;
+mtype gSeverity = null;
+
+/* P4 globals */
+bool gCallNowAndPatientAnswersP4 = 0;
+bool gPatientAnswersP4 = 0;
+bool gScheduleAnswersPhoneP4 = 0;
+bool gSelectDateTime1P4 = 0;
+bool gSelectDateTime2P4 = 0;
 
 /* End-of-Input */
 
@@ -66,7 +73,7 @@ proctype InitiatePriorityContact(chan rvChan) {
 	/* This task also initializes patient information, but that is
 	ommitted from the model since it is not used in any control
 	flow. */
-	pc.contactPriority = severity;
+	pc.contactPriority = gSeverity;
 	pc.launchDate = nonNull;
 	pc.launchTime = nonNull;
   };
@@ -82,15 +89,23 @@ proctype CompleteCareAndAssessmentPlan(chan rvChan) {
 
   printf("Gateway (XOR->2): life threatening? ");
   if
-	:: severity == P1LifeThreatening -> printf(" Yes.\n");
+	:: gSeverity == P1LifeThreatening -> printf(" Yes.\n");
+										 goto locInitiatePriorityContact;
 	:: else -> printf(" No.\n");
-			   run DetermineAppropriateIntervention(rv);
-			   rv?_;
+			   goto locDetermineAppropriateIntervention;
   fi;
 
+locDetermineAppropriateIntervention:
+  run DetermineAppropriateIntervention(rv);
+  rv?_;
+  goto locInitiatePriorityContact;
+  
+locInitiatePriorityContact:
   run InitiatePriorityContact(rv);
   rv?_;
+  goto locCarryOutContactPlan;
 
+locCarryOutContactPlan:
   /* CarryOutContactPlan() does not start anything, so there is no
   need for CompleteCareAndAssessmentPlan to wait. */
   run CarryOutContactPlan(rv);
@@ -98,28 +113,39 @@ proctype CompleteCareAndAssessmentPlan(chan rvChan) {
   rvChan!1;
 }  
 
-proctype P1() {
+proctype P1(chan rvChan) {
   printf("P1\n");
 end_CarryOutContactPlanEnd33:
   CarryOutContactPlanEnd33 = 1;
+  goto exit;
+exit:
+  rvChan!1;
 }
 
-proctype P2() {
+proctype P2(chan rvChan) {
   printf("P2\n");
 end_CarryOutContactPlanEnd56:
   CarryOutContactPlanEnd56 = 1;
+  goto exit;
+exit:
+  rvChan!1;
 }
 
-proctype P3() {
+proctype P3(chan rvChan) {
   printf("P3\n");
 end_CarryOutContactPlanEnd146:
   CarryOutContactPlanEnd146 = 1;
+  goto exit;
+exit:
+  rvChan!1;
+
 }
 
 proctype discussNoChangeTask8(chan rvChan) {
   printf("Task: Discuss no changeTask8 (Physician MD-1)\n");
   rvChan!1;
 }
+
 proctype discussNoChange(chan rvChan) {
   chan rv = [1] of {bool};
   printf("Process: Discuss no change\n");
@@ -150,23 +176,13 @@ proctype PCOffersTimeDate2P4(chan rvChan) {
 }
 
 proctype PatientMakesSelectionP4_1(chan rvChan) {
-  printf("Task: Patient makes selection P4-1");
-  if
-	:: skip --> printf("no\n");
-				rvChan!0;
-	:: skip --> printf("yes\n");
-				rvChan!1;
-  fi;
+  printf("Task: Patient makes selection P4-1\n");
+  rvChan!gSelectDateTime1P4;
 }
 
 proctype PatientMakesSelectionP4_2(chan rvChan) {
-  printf("Task: Patient makes selection P4-2");
-  if
-	:: skip --> printf("no\n");
-				rvChan!0;
-	:: skip --> printf("yes\n");
-				rvChan!1;
-  fi;
+  printf("Task: Patient makes selection P4-2\n");
+  rvChan!gSelectDateTime2P4;
 }
 
 proctype PCWriteAppointmentTimeDateToDoctorSchedule(chan rvChan) {
@@ -197,9 +213,9 @@ proctype PCCallClinicSchedulerP4(chan rvChan) {
 
   printf("Gateway (XOR->2): scheduler answers phone P4?");
   if
-	:: skip --> printf("yes\n");
+	:: gScheduleAnswersPhoneP4 -> printf("yes\n");
 				goto locPatientLeavesVMRequest;
-	:: skip --> printf("no\n");
+	:: !gScheduleAnswersPhoneP4 -> printf("no\n");
 				goto locSelectCallClinicTimeDate;
   fi;
 
@@ -219,10 +235,6 @@ locSelectCallClinicTimeDate:
   rvChan!1;
 }
 
-proctype delayToAppP4(chan rvChan) {
-  
-loop:
-}
 proctype MakePhoneClinicAppointmentP4(chan rvChan) {
   chan rv = [1] of {bool};
   bool yes;
@@ -277,10 +289,12 @@ locPCCallClinicSchedulerP4:
 locDelayToApp:
   printf("Event: delay to app P4\n");
   if
-	:: skip --> goto locDelayToApp;
-	:: skip --> rvChan!1;
+	:: skip -> goto locDelayToApp;
+	:: skip -> goto progress_exit;
   fi;
   
+progress_exit:
+  rvChan!1;
 }
 
 proctype PCAutoCallP4(chan rvChan) {
@@ -288,15 +302,55 @@ proctype PCAutoCallP4(chan rvChan) {
   rvChan!1;
 }
 
+proctype PCLeaveVoicemailAndUpdateLogP4(chan rvChan) {
+  printf("Task: PC leave voicmail and update log P4\n");
+  rvChan!1;
+}
+
+proctype PatientChecksVoicemailP4(chan rvChan){
+  printf("Task: Patient checks voicemail P4\n");
+  rvChan!1;
+}
+
+proctype PatientCallsPCP4(chan rvChan) {
+  printf("Task: Patient calls PC P4\n");
+  rvChan!1;
+}
+
+proctype PatientVoicemailActionsP4(chan rvChan){
+  chan rv = [1] of {bool};
+
+  printf("Process: Patient voicmail actions P4\n");
+
+locDelayCheckVMP4:
+  printf("Event: delay check VM P4\n");
+  if
+	:: skip -> goto locDelayCheckVMP4;
+	:: skip -> goto progress_locPatientChecksVoicemailP4;
+  fi;
+
+progress_locPatientChecksVoicemailP4:
+  run PatientChecksVoicemailP4(rv);
+  rv?_;
+
+  run PatientCallsPCP4(rv);
+  rv?_;
+
+  rvChan!1;
+}
+
 proctype P4(chan rvChan) {
   chan rv = [1] of {bool};
-  
+
+  printf("Process: P4\n");
   printf("Gateway (XOR->2): call now and patient answers P4?");
   if
-	:: skip -> printf("Yes\n");
-			   goto locDiscussNoChange;
-	:: skip -> printf("No\n");
-			   goto locPCAutoCallP4;
+	:: gCallNowAndPatientAnswersP4 ->
+	   printf("Yes\n");
+	   goto locDiscussNoChange;
+	:: !gCallNowAndPatientAnswersP4 ->
+	   printf("No\n");
+	   goto locPCAutoCallP4;
   fi;
 
 locPCAutoCallP4:
@@ -307,9 +361,23 @@ locPCAutoCallP4:
 PatientAnswersP4:
   printf("Gateway: Patient answers P4?");
   if
-	:: skip -> printf("Yes\n");
-			   goto locMakePhoneClinicAppointment;
+	:: gPatientAnswersP4 -> printf("Yes\n");
+							goto locMakePhoneClinicAppointment;
+	:: !gPatientAnswersP4 -> printf("No\n");
+							 goto locPCLeaveVoicemailAndUpdateLogP4;
+							
+
   fi;
+
+locPCLeaveVoicemailAndUpdateLogP4:
+  run PCLeaveVoicemailAndUpdateLogP4(rv);
+  rv?_;
+  goto locPatientVoicemailActionsP4;
+
+locPatientVoicemailActionsP4:
+  run PatientVoicemailActionsP4(rv);
+  rv?_;
+  goto locMakePhoneClinicAppointment;
 
 locMakePhoneClinicAppointment:
   run MakePhoneClinicAppointmentP4(rv);
@@ -325,6 +393,8 @@ end_locCarryOutContactPlanEnd146:
   /* The event "throws" */
   printf("Event: CarryOutContactPlanEnd175\n");
   CarryOutContactPlanEnd175 = 1;
+  goto exit;
+  
 exit:
   rvChan!1;
 }
@@ -335,16 +405,40 @@ proctype CarryOutContactPlan(chan rvChan) {
   printf("Gateway (XOR->4)): priority?");
   if
 	:: (pc.contactPriority == P1LifeThreatening) ->
-	   printf("P1LifeThreatening\n"); run P1();
+	   printf("P1LifeThreatening\n");
+	   goto locP1;
 	:: (pc.contactPriority == P2LifeChanging) ->
-	   printf("P2LifeChanging\n"); run P2();
+	   printf("P2LifeChanging\n");
+	   goto locP2;
 	:: (pc.contactPriority == P3RoutineChange) ->
-	   printf("P3RoutineChange\n"); run P3();
+	   printf("P3RoutineChange\n");
+	   goto locP3;
 	:: (pc.contactPriority == P4NoChange) ->
 	   printf("P4NoChange\n");
-	   run P4(rv);
-	   rv?_;
+	   goto locP4;
   fi;
+
+locP1:
+  run P1(rv);
+  rv?_;
+  goto exit;
+
+locP2:
+  run P2(rv);
+  rv?_;
+  goto exit;
+
+locP3:
+  run P3(rv);
+  rv?_;
+  goto exit;
+
+locP4:
+  run P4(rv);
+  rv?_;
+  goto exit;
+
+exit:
   (CarryOutContactPlanEnd33==1 || CarryOutContactPlanEnd56 || CarryOutContactPlanEnd146 || CarryOutContactPlanEnd175);
   rvChan!1;
 }
@@ -354,12 +448,51 @@ init {
   
   /* Initialize the input to the model (things that do not change over
   the life of the model) */
+
+  /* Priority Setting */
   if
-/*	:: skip -> severity = P1LifeThreatening; printf("severity: P1 life threatening\n");
-	:: skip -> severity = P2LifeChanging; printf("severity: P2 life changing\n");
-	:: skip -> severity = P3RoutineChange; printf("severity: P3 routine change\n");
+/*	:: skip -> gSeverity = P1LifeThreatening; printf("severity: P1 life threatening\n");
+	:: skip -> gSeverity = P2LifeChanging; printf("severity: P2 life changing\n");
+	:: skip -> gSeverity = P3RoutineChange; printf("severity: P3 routine change\n");
  */
-	:: skip -> severity = P4NoChange; printf("severity: P4 no change\n");
+	:: skip -> gSeverity = P4NoChange; printf("severity: P4 no change\n");
+  fi;
+
+  /* P4 Input */
+  if
+	:: skip -> gCallNowAndPatientAnswersP4 = 0;
+			   printf("gCallNowAndPatientAnswersP4: No\n");
+	:: skip -> gCallNowAndPatientAnswersP4 = 1;
+			   printf("gCallNowAndPatientAnswersP4: Yes\n");
+  fi;
+
+  
+  if
+	:: skip -> gPatientAnswersP4 = 0;
+			   printf("gPatientAnswersP4: No\n");
+	:: skip -> gPatientAnswersP4 = 1;
+			   printf("gPatientAnswersP4: Yes\n");
+  fi;
+
+  if
+	:: skip -> gScheduleAnswersPhoneP4 = 0;
+			   printf("gScheduleAnswersPhoneP4: No\n");
+	:: skip -> gScheduleAnswersPhoneP4 = 1;
+			   printf("gScheduleAnswersPhoneP4: Yes\n");
+  fi;
+
+  if
+	:: skip -> gSelectDateTime1P4 = 0;
+			   printf("gSelectDateTime1P4: No\n");
+	:: skip -> gSelectDateTime1P4 = 1;
+			   printf("gSelectDateTime1P4: Yes\n");
+  fi;
+
+  if
+	:: skip -> gSelectDateTime2P4 = 0;
+			   printf("gSelectDateTime2P4: No\n");			   
+	:: skip -> gSelectDateTime2P4 = 1;
+			   printf("gSelectDateTime2P4: Yes\n");
   fi;
 
   printf("Event: Start1\n");
@@ -369,4 +502,3 @@ end_End25:
   (End25 == 1);
   printf("End25\n");
 }
-
