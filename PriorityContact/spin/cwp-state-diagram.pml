@@ -17,7 +17,6 @@ accept_start:
 		pc.confirmedAppointmentDateTime == null &&
 		pc.conversDate == null && pc.conversTime == null &&
 		pc.inMyCare == 1) -> goto accept_start;
-	:: (np_) -> goto accept_np;
 	:: else -> goto accept;
   fi;
 
@@ -33,7 +32,6 @@ accept_conversationInProgress:
   if 
 	:: (pc.resolveDate != null && pc.resolveTime != null) -> goto resolved;
 	:: (pc.inMyCare == 0) -> goto noLongerNeeded;
-	:: (np_) -> goto accept_np;
 	:: else -> goto accept_conversationInProgress;
   fi;
 
@@ -41,7 +39,6 @@ accept_appointmentScheduled:
   if
 	:: (pc.resolveDate != null && pc.resolveTime != null) -> goto resolved;
 	:: (pc.inMyCare == 0) -> goto noLongerNeeded;
-	:: (np_) -> goto accept_np;
 	:: else -> goto accept_appointmentScheduled;
   fi;
 
@@ -56,10 +53,8 @@ accept:
   fi;
 
 noLongerNeeded:
-  (0);
-
-accept_np:
+  (0); /* Comment to get full coverage in model */
   if
-	:: (np_) -> goto accept_np;
+	:: (1) -> goto noLongerNeeded;
   fi;
 }

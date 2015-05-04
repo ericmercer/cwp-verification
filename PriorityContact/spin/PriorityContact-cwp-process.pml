@@ -143,6 +143,16 @@ exit:
 
 proctype discussNoChangeTask8(chan rvChan) {
   printf("Task: Discuss no changeTask8 (Physician MD-1)\n");
+
+  /* -- ADDED ---
+   * Not part of model. Comment out to match model
+   */
+  pc.conversDate = nonNull;
+  pc.conversTime = nonNull;
+  pc.resolveDate = nonNull;
+  pc.resolveTime = nonNull;
+  /*-------------*/
+  
   rvChan!1;
 }
 
@@ -289,7 +299,7 @@ locPCCallClinicSchedulerP4:
 locDelayToApp:
   printf("Event: delay to app P4\n");
   if
-	:: skip -> goto locDelayToApp;
+/*	:: skip -> goto locDelayToApp;*/
 	:: skip -> goto progress_exit;
   fi;
   
@@ -325,7 +335,7 @@ proctype PatientVoicemailActionsP4(chan rvChan){
 locDelayCheckVMP4:
   printf("Event: delay check VM P4\n");
   if
-	:: skip -> goto locDelayCheckVMP4;
+/*	:: skip -> goto locDelayCheckVMP4;*/
 	:: skip -> goto progress_locPatientChecksVoicemailP4;
   fi;
 
@@ -365,8 +375,6 @@ PatientAnswersP4:
 							goto locMakePhoneClinicAppointment;
 	:: !gPatientAnswersP4 -> printf("No\n");
 							 goto locPCLeaveVoicemailAndUpdateLogP4;
-							
-
   fi;
 
 locPCLeaveVoicemailAndUpdateLogP4:
