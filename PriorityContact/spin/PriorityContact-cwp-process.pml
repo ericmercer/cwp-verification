@@ -147,10 +147,12 @@ proctype discussNoChangeTask8(chan rvChan) {
   /* -- ADDED ---
    * Not part of model. Comment out to match model
    */
+   /*
   pc.conversDate = nonNull;
   pc.conversTime = nonNull;
   pc.resolveDate = nonNull;
   pc.resolveTime = nonNull;
+  */
   /*-------------*/
   
   rvChan!1;
@@ -299,7 +301,7 @@ locPCCallClinicSchedulerP4:
 locDelayToApp:
   printf("Event: delay to app P4\n");
   if
-/*	:: skip -> goto locDelayToApp;*/
+	:: skip -> goto locDelayToApp; 
 	:: skip -> goto progress_exit;
   fi;
   
@@ -336,7 +338,8 @@ locDelayCheckVMP4:
   printf("Event: delay check VM P4\n");
   if
 /*	:: skip -> goto locDelayCheckVMP4;*/
-	:: skip -> goto progress_locPatientChecksVoicemailP4;
+	:: skip ->
+progress_0: goto progress_locPatientChecksVoicemailP4;
   fi;
 
 progress_locPatientChecksVoicemailP4:
@@ -395,9 +398,9 @@ locMakePhoneClinicAppointment:
 locDiscussNoChange:
   run discussNoChange(rv);
   rv?_;
-  goto end_locCarryOutContactPlanEnd146;
+  goto end_locCarryOutContactPlanEnd175;
   
-end_locCarryOutContactPlanEnd146:
+end_locCarryOutContactPlanEnd175:
   /* The event "throws" */
   printf("Event: CarryOutContactPlanEnd175\n");
   CarryOutContactPlanEnd175 = 1;

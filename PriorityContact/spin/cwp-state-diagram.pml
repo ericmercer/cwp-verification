@@ -53,7 +53,7 @@ accept:
   fi;
 
 noLongerNeeded:
-  (0); /* Comment to get full coverage in model */
+/*  (0); */ /* Comment to get full coverage in model */
   if
 	:: (1) -> goto noLongerNeeded;
   fi;

@@ -5,3 +5,6 @@ pan.*
 *.trail
 *.laccdb
 ~$*
+/nbproject/private/
+/build/
+/dist/
