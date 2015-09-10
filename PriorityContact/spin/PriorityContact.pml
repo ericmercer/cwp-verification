@@ -29,6 +29,7 @@ typedef Phone {
 ContactPlanEntity cpe;
 Phone phone;
 
+/* Commented out the non-determinism in when the patient answers (avoiding fairness) */
 ltl alwaysResolve {<> (cpe.state == Resolved)}
 
 /* Properties should generate error because failing means the
@@ -166,19 +167,19 @@ PatientCheck:
 	:: phone.sms -> printf("Patient checks sms\n");
 					printf("Patient calls PC P1t\n");
 					goto PCAnswersAndGivesInstructions;
-	:: phone.sms -> skip;
+	/* :: phone.sms -> skip; */
 	:: phone.phone -> goto PCAnswersAndGivesInstructions;
-	:: phone.phone -> phone.voiceMail = 1; phone.phone = 0;
+	:: phone.phone && phone.voiceMail == 0 -> phone.voiceMail = 1; phone.phone = 0;
 	:: phone.voiceMail -> printf("Patient checks voice mail\n");
 						  printf("Patient calls PC P1v\n");
 						  goto PCAnswersAndGivesInstructions;
-	:: phone.voiceMail == 1-> skip;
+	/* :: phone.voiceMail == 1-> skip;*/ 
   fi;
   
   if
 	:: skip -> printf("PC send text and update log\n"); phone.sms = 1;
 	:: skip -> printf("PC autocall all tels and update log\n"); phone.phone = 1;
-	:: skip;
+	/*:: skip;*/
   fi;
   
   goto PatientCheck;

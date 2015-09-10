@@ -1,0 +1,59 @@
+Command:
+   spin -search -ltl alwaysResolve  PriorityContact.pml >& PriorityContact-spin-alwaysResolve-out.text
+
+For error traces:
+   spin -replay PriorityContact.pml
+
+
+
+pan: ltl formula alwaysResolve
+
+(Spin Version 6.4.3 -- 16 December 2014)
+	+ Partial Order Reduction
+
+Full statespace search for:
+	never claim         	+ (alwaysResolve)
+	assertion violations	+ (if within scope of claim)
+	acceptance   cycles 	+ (fairness disabled)
+	invalid end states	- (disabled by never claim)
+
+State-vector 44 byte, depth reached 50, errors: 0
+       49 states, stored (98 visited)
+       56 states, matched
+      154 transitions (= visited+matched)
+        0 atomic steps
+hash conflicts:         0 (resolved)
+
+Stats on memory usage (in Megabytes):
+    0.003	equivalent memory usage for states (stored*(State-vector + overhead))
+    0.257	actual memory usage for states
+  128.000	memory used for hash table (-w24)
+    0.534	memory used for DFS stack (-m10000)
+  128.730	total actual memory usage
+
+
+unreached in proctype PriorityContact
+	PriorityContact.pml:206, state 89, "-end-"
+	(1 of 89 states)
+unreached in claim alwaysResolve
+	_spin_nvr.tmp:6, state 6, "-end-"
+	(1 of 6 states)
+
+pan: elapsed time 0 seconds
+ltl alwaysResolve: <> ((cpe.state==Resolved))
+ltl pNeeded: [] (! ((cpe.state==Needed)))
+ltl pLaunched: [] (! ((cpe.state==Launched)))
+ltl pConversationInProgress: [] (! ((cpe.state==ConversationInProgress)))
+ltl pAppointmentScheduled: [] (! ((cpe.state==AppointmentScheduled)))
+ltl pResolved: [] (! ((cpe.state==Resolved)))
+ltl pNoLongerNeeded: [] (! ((cpe.state==NoLongerNeeded)))
+ltl pNeededSucc: [] ((! ((cpe.state==Needed))) || (((cpe.state==Needed)) U ((cpe.state==Launched))))
+ltl pLaunchedSucc: [] ((! ((cpe.state==Launched))) || (((cpe.state==Launched)) U ((((cpe.state==ConversationInProgress)) || ((cpe.state==AppointmentScheduled))) || ((cpe.state==NoLongerNeeded)))))
+ltl pConversationInProgressSucc: [] ((! ((cpe.state==ConversationInProgress))) || (((cpe.state==ConversationInProgress)) U ((cpe.state==Resolved))))
+ltl pAppointmentScheduledSucc: [] ((! ((cpe.state==AppointmentScheduled))) || (((cpe.state==AppointmentScheduled)) U (((cpe.state==Resolved)) || ((cpe.state==NoLongerNeeded)))))
+ltl pResolvedSucc: [] ((! ((cpe.state==Resolved))) || (((cpe.state==Resolved)) U ((cpe.state==NoLongerNeeded))))
+ltl pNoLongerNeededSucc: [] ((! ((cpe.state==NoLongerNeeded))) || ([] ((cpe.state==NoLongerNeeded))))
+  the model contains 13 never claims: pNoLongerNeededSucc, pResolvedSucc, pAppointmentScheduledSucc, pConversationInProgressSucc, pLaunchedSucc, pNeededSucc, pNoLongerNeeded, pResolved, pAppointmentScheduled, pConversationInProgress, pLaunched, pNeeded, alwaysResolve
+  only one claim is used in a verification run
+  choose which one with ./pan -a -N name (defaults to -N alwaysResolve)
+  or use e.g.: spin -search -ltl alwaysResolve PriorityContact.pml
