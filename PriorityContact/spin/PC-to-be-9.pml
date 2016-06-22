@@ -12,8 +12,9 @@ typedef ContactPlan{
   mtype launchDateTime = null;
   mtype resolveDateTime = null;
   mtype cancelDateTime = null;
-  mtype conversationStartDateTime = null;
-  mtype conversationScheduledDateTime = null;
+  mtype convStartDateTime = null;
+  mtype convSchedDateTime = null;
+  mtype appAccptDateTime = null
   bool activeStatus = true;
 }
 
@@ -23,32 +24,28 @@ ContactPlan cp;
  * ContactPlanCWP-9
  *********************************************************************/
 
-// Fix all state witnesses to be: [] !(state)
-// Account for Exists eventually -- properties should fail 
-
-// Fix all edges to be [](s0 -> (s0 U (s1 || s2 || ...)))
-// Accounts for different paths -- properties should pass
-
-#define iotaS                                   \
-    (   cp.priorityCP == null	                \
-	 && cp.launchDateTime == null               \
- 	 && cp.resolveDateTime == null              \
- 	 && cp.cancelDateTime == null               \
- 	 && cp.conversationStartDateTime == null    \
-	 && cp.conversationScheduledDateTime == null\
+#define iotaS                        \
+    (   cp.priorityCP == null	     \
+	 && cp.launchDateTime == null    \
+ 	 && cp.resolveDateTime == null   \
+ 	 && cp.cancelDateTime == null    \
+ 	 && cp.convStartDateTime == null \
+	 && cp.convSchedDateTime == null \
+	 && cp.appAccptDateTime == null  \
 	 && cp.activeStatus == true) 
 		 
 ltl iota {
 	[](! iotaS)
 }
 
-#define planLaunchedS                           \
-    (   cp.priorityCP == null	                \
-	 && cp.launchDateTime == nonNull            \
- 	 && cp.resolveDateTime == null              \
- 	 && cp.cancelDateTime == null               \
- 	 && cp.conversationStartDateTime == null    \
- 	 && cp.conversationScheduledDateTime == null\
+#define planLaunchedS                \
+    (   cp.priorityCP == null	     \
+	 && cp.launchDateTime == nonNull \
+ 	 && cp.resolveDateTime == null   \
+ 	 && cp.cancelDateTime == null    \
+ 	 && cp.convStartDateTime == null \
+ 	 && cp.convSchedDateTime == null \
+	 && cp.appAccptDateTime == null  \
 	 && cp.activeStatus == true) 
 
 ltl planLaunched {
@@ -57,7 +54,7 @@ ltl planLaunched {
 	
 #define conversationInProgressS                      \
     (   (cp.priorityCP == p1 || cp.priorityCP == p2) \
-	 && cp.conversationStartDateTime == nonNull      \
+	 && cp.convStartDateTime == nonNull              \
 	 && cp.activeStatus == true)
 	 
 ltl conversationInProgress {
@@ -66,7 +63,7 @@ ltl conversationInProgress {
 
 #define conversationAppointmentScheduledS            \
     (   (cp.priorityCP == p3 || cp.priorityCP == p4) \
-	 && cp.conversationScheduledDateTime == nonNull  \
+	 && cp.convSchedDateTime == nonNull              \
 	 && cp.activeStatus == true)
 
 ltl conversationAppointmentScheduled {
@@ -80,8 +77,9 @@ ltl planCanceled {
 	[](! planCanceledS)
 }
 
-#define resolvedS \
-	(cp.resolveDateTime == nonNull)
+#define resolvedS                                    \
+	(   (cp.resolveDateTime == cp.convStartDateTime) \
+	 || (cp.resolveDateTime == cp.appAccptDateTime))
 
 ltl resolved {
 	[](! resolvedS)
@@ -105,16 +103,16 @@ ltl planLaunched_transitions {
 }
 
 ltl conversationInProgress_transitions {
-	<>(conversationInProgressS -> (conversationInProgressS U resolvedS))
+	[](conversationInProgressS -> (conversationInProgressS U resolvedS))
 }
 
 ltl conversationAppointmentScheduled_transitions {
-	<>(conversationAppointmentScheduledS ->
+	[](conversationAppointmentScheduledS ->
 	  (conversationAppointmentScheduledS U resolvedS))
 }
 
 ltl planCanceled_transitions {
-	<>(planCanceledS -> (planCanceledS U canceledS))
+	[](planCanceledS -> (planCanceledS U canceledS))
 }
 
 /*********************************************************************
