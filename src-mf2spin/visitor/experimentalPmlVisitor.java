@@ -174,6 +174,8 @@ public class experimentalPmlVisitor implements BpmnVisitor {
 
 	@Override
 	public boolean visit(MFManualTask node) {
+		System.out.println("ManualTask");
+		System.out.println(node.toString());
 		//System.out.println(":MANUAL_TASK "+"\""+node.name+"\" node");
 		if (node.parentProcess.id.equals(curProcessID) == false) {
 			changeToNewCodeSegment(node.parentProcess.id);
@@ -184,6 +186,8 @@ public class experimentalPmlVisitor implements BpmnVisitor {
 
 	@Override
 	public boolean visit(MFServiceTask node) {
+		System.out.println("ServiceTask");
+		System.out.println(node.toString());
 		//System.out.println(":SERVICE_TASK "+"\""+node.name+"\" node");
 		if (node.parentProcess.id.equals(curProcessID) == false) {
 			changeToNewCodeSegment(node.parentProcess.id);
@@ -194,6 +198,8 @@ public class experimentalPmlVisitor implements BpmnVisitor {
 
 	@Override
 	public boolean visit(MFUserTask node) {
+		System.out.println("UserTask");
+		System.out.println(node.toString());
 		//System.out.println(":USER_TASK "+"\""+node.name+"\" node");
 		if (node.parentProcess.id.equals(curProcessID) == false) {
 			changeToNewCodeSegment(node.parentProcess.id);

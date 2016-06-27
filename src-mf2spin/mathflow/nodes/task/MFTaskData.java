@@ -48,7 +48,11 @@ public class MFTaskData {
 				"value= "+value+"\n\t\t"+
 				"priority= "+priority+"\n\t\t"+
 				"inputs= "+arrayToString(inputNames)+"\n\t\t"+
+				"inputsAttrs= "+arrayToString(inputAttrs)+"\n\t\t"+
+				"inputsValues= "+arrayToString(inputValues)+"\n\t\t"+
 				"outputs= "+arrayToString(outputNames)+"\n\t\t"+
+				"outputsAttrs= "+arrayToString(outputAttrs)+"\n\t\t"+
+				"outputsValues= "+arrayToString(outputValues)+"\n\t\t"+ 
 				"earliestStartTime= "+earliestStartTime+"\n\t\t"+
 				"latestStartTimes= "+latestStartTime+"\n\t\t"+
 				"useDistributionFormula= "+useDistributionFormula+"\n\t\t"+
