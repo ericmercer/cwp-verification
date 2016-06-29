@@ -5,6 +5,8 @@ mtype = {
   p2,
   p3,
   p4,
+  patientLeaving,
+  doctor
 }
 
 typedef ContactPlan{
@@ -127,21 +129,20 @@ ltl planCanceled_transitions {
  *********************************************************************/
 proctype doctor_launch_PC(chan parent) {
    if
-/*   :: skip -> printf("Doctor launch PC::arriving priority (XOR)::danger to self or others\n")
+   /*
+   :: skip -> printf("Doctor launch PC::arriving priority (XOR)::danger to self or others\n")
               printf("Doctor launch PC::Doctor call police\n");
 			  printf("Doctor launch PC::Doctor launch PCEnd21\n");
 			  goto end_Doctor_launch_PC;
-*/
    :: skip -> printf("Doctor launch PC::arriving priority (XOR)::Doctor launch P1\n");
 			  cp.priorityCP = p1;
-/*			  
    :: skip -> printf("Doctor launch PC::arriving priority (XOR)::Doctor launch P2\n");
 			  cp.priorityCP = p2;
-:: skip -> printf("Doctor launch PC::arriving priority (XOR)::Doctor launch P3\n");
+   :: skip -> printf("Doctor launch PC::arriving priority (XOR)::Doctor launch P3\n");
 			  cp.priorityCP = p3;
+			  */
    :: skip -> printf("Doctor launch PC::arriving priority (XOR)::Doctor launch P4\n");
 			  cp.priorityCP = p4;
-*/
    fi;
    cp.launchDateTime = nonNull;
    parent!true;
@@ -153,7 +154,8 @@ end_Doctor_launch_PC:
 /*********************************************************************
  * Compelte care and assessement: Doctor monitor contact
  *********************************************************************/
-proctype doctor_monitor_contact(chan resolvedByDoctor, resolvedByPC) {
+proctype doctor_monitor_contact(chan parent, resolvedByDoctor, resolvedByPC) {
+   mtype by = null;
    {
       printf("Doctor monitor contact::delay to check PC\n");
 	  printf("Doctor monitor contact::PC filter plans for overdue dates\n");
@@ -163,19 +165,19 @@ proctype doctor_monitor_contact(chan resolvedByDoctor, resolvedByPC) {
 	  :: skip -> printf("Doctor monitor contact::decide action (XOR)::social worker\n");
 	             printf("Doctor request social worker contact patient and mark plan resolved\n");
 	  	 	  	 cp.resolveDateTime = nonNull;
-				 resolvedByDoctor!true;
+				 resolvedByDoctor!doctor;
 	  :: skip -> printf("Doctor monitor contact::decide action (XOR)::cancel\n");
 	             printf("Doctor cancel contact plan and remove patient from roster\n");
  	  	 	  	 cp.resolveDateTime = nonNull;
-				 resolvedByDoctor!true;
+				 resolvedByDoctor!patientLeaving;
 	  fi;
 
    } unless {
-   	  nempty(resolvedByPC);
-	  printf("Doctor monitor contact::INTERRUPTED: resolved by PC\n");
+   	  resolvedByPC?by;
+	  printf("Doctor monitor contact::INTERRUPTED %e\n", by);
    }
    printf("Doctor monitor contact::close-or (XOR)\n");
-   resolvedByDoctor!true;
+   parent!true;
 }
 
 /*********************************************************************
@@ -193,9 +195,73 @@ proctype pc_carry_out_contact_plan_p1(chan parent) {
 }
 
 /*********************************************************************
+ * Carry out contact plan: PC carry out contact plan P2
+ *********************************************************************/
+proctype pc_carry_out_contact_plan_p2(chan parent) {
+  parent!true;
+}
+
+/*********************************************************************
+ * Carry out contact plan: Doctor inform patient of results
+ *********************************************************************/
+proctype doctor_inform_patient_of_results(chan parent) {
+  parent!true;
+}
+
+/*********************************************************************
+ * Carry out contact plan: Notify POC P2
+ *********************************************************************/
+proctype notify_poc_p2(chan parent) {
+  parent!true;
+}
+
+/*********************************************************************
+ * Carry out contact plan: Make phone clinic appointment
+ *********************************************************************/
+proctype make_phone_clinic_appointment(chan parent) {
+  parent!true;
+}
+
+/*********************************************************************
+ * Carry out contact plan: Patient voicemail actions
+ *********************************************************************/
+proctype patient_voicemail_actions(chan parent) {
+   printf("Patient voicemail actions::delay check VM\n");
+   printf("Patient voicemail actions::Patient checks voicemail\n");
+   printf("Patient voicemail actions::Patient calls PC\n");
+   parent!true;
+}
+
+proctype p3_routine_change(chan parent) {
+   chan rv = [1] of {bool};
+   printf("Carry out contact plan::PC autocall P3\n");
+loop:
+   if
+   :: skip -> printf("Carry out contact plan::patient answers P3 (XOR)::yes\n");
+      printf("Carry out contact plan::Make phone clinic appointment\n");
+	  run make_phone_clinic_appointment(rv);
+	  rv?_
+   :: skip -> printf("Carry out contact plan::patient answers P3 (XOR)::no\n");
+      printf("Carry out contact plan::PC leave voicemail and update log\n");
+	  if
+	  :: skip -> printf("Carry out contact plan::Patient voicemail actions P3\n");
+	     run patient_voicemail_actions(rv);
+	     rv?_
+		 printf("Carry out contact plan::Make phone clinic apointment\n");
+	     run make_phone_clinic_appointment(rv);
+	     rv?_
+	  :: skip -> goto loop;
+	  fi;
+   fi;
+progress_p3:   
+   parent!true;
+}
+
+/*********************************************************************
  * Compelte care and assessement: Carry out contact plan
  *********************************************************************/
-proctype carry_out_contact_plan(chan resolvedByDoctor, resolvedByPC) {
+proctype carry_out_contact_plan(chan parent, resolvedByDoctor, resolvedByPC) {
+   mtype by = null;
    {
 	  chan rv = [1] of {bool};
 	  if
@@ -219,12 +285,64 @@ proctype carry_out_contact_plan(chan resolvedByDoctor, resolvedByPC) {
   			   printf("Carry out contact plan::ED notify doctor who stops PC\n");
             fi;
          fi;
+  		 resolvedByPC!p1;
+	  :: (cp.priorityCP == p2) -> printf("Carry out contact plan::priority (complex)::P2 life-changing\n");
+	  	 if
+		 :: skip -> printf("Carry out contact plan::call now (XOR)::yes\n");
+		    printf("Carry out contact plan::Doctor call P P2\n");
+			if
+			:: skip -> printf("Carry out contact plan::patient answers (XOR)::yes\n");
+			   printf("Carry out contact plan::Doctor inform patient of results\n");
+			   run doctor_inform_patient_of_results(rv);
+   			   rv?_;
+			:: skip -> printf("Carry out contact plan::patient answers (XOR)::no\n");
+			   printf("Carry out contact plan::PC carry out contact plan P2\n");
+			   run pc_carry_out_contact_plan_p2(rv);
+   			   rv?_;
+         fi;
+		 :: skip -> printf("Carry out contact plan::call now (XOR)::no\n");
+		    printf("Carry out contact plan::PC carry out contact plan P2\n");
+			run pc_carry_out_contact_plan_p2(rv);
+ 		    rv?_;
+            printf("Carry out contact plan::Notify POC P2\n");
+			run notify_poc_p2(rv);
+			rv?_;
+			resolvedByPC!p2;
+			printf("Carry out contact plan::Doctor inform patient of results\n");
+			run doctor_inform_patient_of_results(rv);
+			rv?_;
+		 fi;
+	  :: (cp.priorityCP == p3) -> printf("Carry out contact plan::priority (complex)::P3 routine change\n");
+	     run p3_routine_change(rv);
+		 rv?_;
+		 resolvedByPC!p3;
+  	  :: (cp.priorityCP == p4) -> printf("Carry out contact plan::priority (complex)::P4 no change\n");
+         printf("Carry out contact plan::PC autocall P4\n");
+         if
+         :: skip -> printf("Carry out contact plan::patient answers P4 (XOR)::yes\n");
+            printf("Carry out contact plan::Make phone clinic appointment P4\n");
+	        run make_phone_clinic_appointment(rv);
+	        rv?_
+         :: skip -> printf("Carry out contact plan::patient answers P3 (XOR)::no\n");
+            printf("Carry out contact plan::PC leave voicemail and update log P4\n");
+	        printf("Carry out contact plan::Patient voicemail actions\n");
+	        run patient_voicemail_actions(rv);
+	        rv?_
+		    printf("Carry out contact plan::Make phone clinic apointment\n");			
+	        run make_phone_clinic_appointment(rv);
+	        rv?_
+		 fi;
+ 		 resolvedByPC!p4;
+	  fi;
+   fi;
+progress_p3:   
+	  
       fi;
    } unless {
-	  nempty(resolvedByDoctor);
- 	  printf("Carry out contact plan::INTERRUPTED: resolved by Doctor\n");
+	  resolvedByDoctor?by;
+ 	  printf("Carry out contact plan::INTERRUPTED %e\n", by);
    }
-   resolvedByPC!true;
+   parent!true;
 }
 
 /*********************************************************************
@@ -232,9 +350,10 @@ proctype carry_out_contact_plan(chan resolvedByDoctor, resolvedByPC) {
  *********************************************************************/
 proctype complete_care_and_assessement_plan(chan parent) {
    chan rv = [1] of {bool};
-   chan resolvedByDoctor = [1] of {bool};
-   chan resolvedByPC = [1] of {bool};
-
+   chan resolvedByDoctor = [1] of {mtype};
+   chan resolvedByPC = [1] of {mtype};
+   mtype resolvedBy = null;
+   
    printf("Complete care and asessement plan::Confirm diagnosis and severity\n");
 
    if
@@ -249,13 +368,13 @@ end_doctor_launch_PC:
 	rv?_;
 
    printf("Complete care and asessement plan::and monitor (AND)::Doctor monitor contact\n");
-   run doctor_monitor_contact(resolvedByDoctor, resolvedByPC);
+   run doctor_monitor_contact(rv, resolvedByDoctor, resolvedByPC);
    printf("Complete care and asessement plan::and monitor (AND)::Carry out contact plan\n");
-   run carry_out_contact_plan(resolvedByDoctor, resolvedByPC);
-   resolvedByDoctor?_;
-   resolvedByPC?_;
-   printf("Complete care and asessement plan::and m close (AND)\n");
+   run carry_out_contact_plan(rv, resolvedByDoctor, resolvedByPC);
+   rv?_;
+   rv?_;
    
+   printf("Complete care and asessement plan::and m close (AND)\n");
    parent!true;
 }
 
