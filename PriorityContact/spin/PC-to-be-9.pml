@@ -163,12 +163,12 @@ proctype doctor_monitor_contact(chan parent, resolvedByDoctor, resolvedByPC) {
 	  if
 	  :: skip -> printf("Doctor monitor contact::decide action (XOR)::no action\n");
 	  :: skip -> printf("Doctor monitor contact::decide action (XOR)::social worker\n");
-	             printf("Doctor request social worker contact patient and mark plan resolved\n");
-	  	 	  	 cp.resolveDateTime = nonNull;
+	             d_step{printf("Doctor request social worker contact patient and mark plan resolved\n");
+	  	 	  	 cp.resolveDateTime = nonNull;}
 				 resolvedByDoctor!doctor;
 	  :: skip -> printf("Doctor monitor contact::decide action (XOR)::cancel\n");
-	             printf("Doctor cancel contact plan and remove patient from roster\n");
- 	  	 	  	 cp.resolveDateTime = nonNull;
+	             d_step{printf("Doctor cancel contact plan and remove patient from roster\n");
+ 	  	 	  	 cp.resolveDateTime = nonNull;}
 				 resolvedByDoctor!patientLeaving;
 	  fi;
 
@@ -219,7 +219,34 @@ proctype notify_poc_p2(chan parent) {
  * Carry out contact plan: Make phone clinic appointment
  *********************************************************************/
 proctype make_phone_clinic_appointment(chan parent) {
-  parent!true;
+   chan rv = [1] of {bool};
+   printf("Make phone clinic appointment::Patient listens to instructions\n");
+   printf("Make phone clinic appointment::Patient enters ID\n");
+   printf("Make phone clinic appointment::PC offers timeDate1\n");
+   printf("Make phone clinic appointment::Patient makes selection 1\n");
+   if
+   :: skip -> printf("Make phone clinic appointment::select timeDate1::yes\n");
+   :: skip -> printf("Make phone clinic appointment::select timeDate1::no\n");
+      printf("Make phone clinic appointment::PC offers timeDate2\n");
+      printf("Make phone clinic appointment::Patient makes selection 2\n");
+	  if
+      :: skip -> printf("Make phone clinic appointment::select timeDate2::yes\n");
+	  :: skip -> printf("Make phone clinic appointment::select timeDate2::no\n");
+         printf("Make phone clinic appointment::PC call the clinic scheduler\n");
+		 run pc_call_the_clinic_scheduler(rv);
+		 rv?_
+	  fi;
+   fi;
+   printf("Make phone clinic appointment::close Xor timeDate (XOR)\n");
+   if
+   :: skip -> d_step{printf("PC resolve contact\n");
+              cp.resolveDateTime = nonNull;}
+   :: skip ->d_step{printf("PC write appt on doc schedule and log accptDateTime and resolve\n");
+   	  	     cp.convSchedDateTime = nonNull;
+             cp.appAccptDateTime = nonNull;
+			 cp.resolveDateTime = nonNull;}
+   fi;
+   parent!true;
 }
 
 /*********************************************************************
@@ -327,17 +354,13 @@ proctype carry_out_contact_plan(chan parent, resolvedByDoctor, resolvedByPC) {
             printf("Carry out contact plan::PC leave voicemail and update log P4\n");
 	        printf("Carry out contact plan::Patient voicemail actions\n");
 	        run patient_voicemail_actions(rv);
-	        rv?_
+	        rv?_;
 		    printf("Carry out contact plan::Make phone clinic apointment\n");			
 	        run make_phone_clinic_appointment(rv);
-	        rv?_
+	        rv?_;
 		 fi;
  		 resolvedByPC!p4;
 	  fi;
-   fi;
-progress_p3:   
-	  
-      fi;
    } unless {
 	  resolvedByDoctor?by;
  	  printf("Carry out contact plan::INTERRUPTED %e\n", by);
