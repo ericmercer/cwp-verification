@@ -2,15 +2,27 @@
 
 mtype = {taskID};
 
-proctype task(chan in, out, done, terminate; mtype id) {
-  byte x = 0;
+proctype split_and_gate(chan in, out1, out2, done, terminate; mtype id) {
+  byte x = 0, i = 0;
+  bool send1 = false, send2 = false;
 L0:
   atomic {
 	in?x;
 	printf("%e(%d)\n", taskID, x);
 	if
 	  :: !(done??[eval(x)]) ->
-		 out!x;
+		 send1 = false;
+		 send2 = false;
+		 do
+		   :: nfull(out1) ->
+			  out1!x;
+			  send1 = true;
+		   :: nfull(out2) -> 
+			  out2!x;
+			  send2 = true;
+		   :: send1 && send2 ->
+			  break;
+		 od;		 
 		 printf("send(%d)\n", x);
 	  :: done??[eval(x)] ->
 		 printf("done(%d)\n", x);
@@ -25,10 +37,11 @@ L0:
 
 init {
   chan in = [1] of {byte};
-  chan out = [1] of {byte};
+  chan out1 = [1] of {byte};
+  chan out2 = [1] of {byte};
   chan done = [N] of {byte};
   chan terminate = [1] of {bool};
-  run task(in, out, done, terminate, taskID);
+  run split_and_gate(in, out1, out2, done, terminate, taskID);
   
   byte x;
   {
@@ -54,9 +67,14 @@ init {
 		   printf("terminate\n");
 		   terminate!true;
 	     }
-      :: out?[_] ->
+      :: out1?[_] ->
 	     atomic {
-		   out?x;
+		   out1?x;
+		   printf("receive(%d)\n", x);
+		 }
+	  :: out2?[_] ->
+	     atomic {
+		   out2?x;
 		   printf("receive(%d)\n", x);
 		 }
 	od;
