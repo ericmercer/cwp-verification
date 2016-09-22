@@ -3,11 +3,10 @@ bool apptMade = false;
 proctype PC_autocall(chan in1, in2, out) {
 end:
    if
-   :: in1?_ -> goto L0;
-   :: in2?_ -> goto L0;
+   :: in1?_ -> skip;
+   :: in2?_ -> skip;
    fi;
-L0:
-   atomic{ 
+   atomic {
       printf("PC autocall\n");
       out!true;
 	  goto end;
@@ -31,13 +30,12 @@ end:
 proctype Pt_makes_appt_with_PC(chan in1, in2, out) {
 end:
    if
-   :: in1?_ -> goto L0;
-   :: in2?_ -> goto L0;
+   :: in1?_ -> skip;
+   :: in2?_ -> skip;
    fi;
-L0:
    atomic{
       printf("Pt makes appt with PC\n");
-	  assert(!apptMade);
+	  // assert(!apptMade);
       apptMade = true;
 	  out!true;
 	  goto end;
@@ -69,7 +67,6 @@ proctype minutes_patient_delay(chan in, out) {
 end:
    in?_;
    atomic{
-
       printf("minutes patient delay\n");
       out!true;
 	  goto end;
@@ -101,16 +98,22 @@ end:
   }
 }
 
-proctype close_and(chan in1, in2, out) {
-end:
-   in1?_;
-end2:
-   in2?_;
+proctype close_ior(chan in1, in2, out) {
+end1:
+   if 
+   :: in1?_ -> goto L0;
+   :: in2?_ -> goto L0;
+   fi;
+L0:
    atomic{
-      printf("close and *\n");
+      printf("close ior *\n");
  	  out!true;
-	  goto end;
    }
+end2:
+   do
+   :: in1?_ -> skip;
+   :: in2?_ -> skip;
+   od;
 }
 
 proctype pt_VM_procedures(chan in, out) {
@@ -118,8 +121,8 @@ end:
    in?_;
    atomic {
       printf("pt VM procedures\n");
-end1:	  out!true;
-	  goto end;
+	  out!true;
+      goto end;
    }
 }
 
@@ -130,7 +133,7 @@ end:
       printf("vm count *\n");
       if
 	  :: apptMade -> printf("yes215\n");
-end2:	                 out1!true;
+	                 out1!true;
 	  :: !apptMade -> printf("no\n");
                       out2!true;
       fi;
@@ -143,8 +146,21 @@ end:
    in?_;
    atomic {
       printf("pt delete redundant VMs\n");
-end1:	  out!true;
+	  out!true;
 	  goto end;
+   }
+}
+
+proctype end26(chan in1, in2) {
+end:
+   if 
+   :: in1?_ -> skip;
+   :: in2?_ -> skip;
+   fi;
+   atomic {
+      printf("End26\n");
+      assert(apptMade);
+      goto end;
    }
 }
 
@@ -161,10 +177,10 @@ init {
    chan and_to_seconds_wait_60_min = [1] of {bool};
    chan minutes_patient_delay_to_pt_VM_procedures = [1] of {bool};
    chan seconds_wait_60_min_was_appt_made = [1] of {bool};
-   chan was_appt_made_to_close_and = [1] of {bool};
+   chan was_appt_made_to_close_ior = [1] of {bool};
    chan was_appt_made_to_PC_autocall = [1] of {bool};
-   chan Pt_delete_rundundant_VMs_to_close_and = [1] of {bool};
-   chan close_and_to_end_26 = [1] of {bool};
+   chan Pt_delete_rundundant_VMs_to_close_ior = [1] of {bool};
+   chan close_ior_to_end_26 = [1] of {bool};
    chan pt_VM_procedures_to_vm_count = [1] of {bool};
 
    run PC_autocall(start_to_PC_autocall, was_appt_made_to_PC_autocall, PC_autocall_to_Xor);
@@ -175,21 +191,14 @@ init {
    run and(PC_leave_VM_to_and, and_to_minutes_patient_delay, and_to_seconds_wait_60_min)
    run minutes_patient_delay(and_to_minutes_patient_delay, minutes_patient_delay_to_pt_VM_procedures);
    run seconds_wait_60_min(and_to_seconds_wait_60_min, seconds_wait_60_min_was_appt_made);
-   run was_appt_made(seconds_wait_60_min_was_appt_made, was_appt_made_to_close_and, was_appt_made_to_PC_autocall);
-   run close_and(was_appt_made_to_close_and, Pt_delete_rundundant_VMs_to_close_and, close_and_to_end_26);
+   run was_appt_made(seconds_wait_60_min_was_appt_made, was_appt_made_to_close_ior, was_appt_made_to_PC_autocall);
+   run close_ior(was_appt_made_to_close_ior, Pt_delete_rundundant_VMs_to_close_ior, close_ior_to_end_26);
    run pt_VM_procedures(minutes_patient_delay_to_pt_VM_procedures, pt_VM_procedures_to_vm_count);
    run vm_count(pt_VM_procedures_to_vm_count, Vm_count_to_Pt_delete_redundant_VMs, Vm_count_to_Pt_makes_appt_with_PC);
-   run pt_delete_redundant_VMs(Vm_count_to_Pt_delete_redundant_VMs, Pt_delete_rundundant_VMs_to_close_and);
-   
+   run pt_delete_redundant_VMs(Vm_count_to_Pt_delete_redundant_VMs, Pt_delete_rundundant_VMs_to_close_ior);
+   run end26(Pt_makes_appt_with_PC_to_end26, close_ior_to_end_26);
+
    printf("Start\n");
    start_to_PC_autocall!true;
- end:  if 
-   :: Pt_makes_appt_with_PC_to_end26?_ -> goto L0;
-   :: close_and_to_end_26?_ -> goto L0;
-   fi;
-L0:
-   printf("End26\n");
-   assert(apptMade);
-   goto end;
 }
 
