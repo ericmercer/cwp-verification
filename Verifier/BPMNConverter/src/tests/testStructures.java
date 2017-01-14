@@ -24,7 +24,6 @@ public class testStructures {
 		
 		
 
-		//
 		// // Basic Task Structure
 		// BasicStartEvent start = new BasicStartEvent("start");
 		// Task task = new Task("Task1");
