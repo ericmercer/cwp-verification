@@ -1,4 +1,4 @@
-package templates;
+package promela.templates;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
