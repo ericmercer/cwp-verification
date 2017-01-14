@@ -10,14 +10,17 @@ public class FlowElement {
 	public int id;
 	public boolean visited = false;
 
-	public ArrayList<FlowElement> sequenceFlow = new ArrayList<FlowElement>();
-
+	public ArrayList<FlowElement> sequenceFlowOut = new ArrayList<FlowElement>();
+	public ArrayList<FlowElement> sequenceFlowIn = new ArrayList<FlowElement>();
+	
 	public FlowElement(String name) {
 		this.name = name;
 	}
 
 	public void addSequenceFlow(FlowElement f) {
-		sequenceFlow.add(f);
+		sequenceFlowOut.add(f);
+		f.sequenceFlowIn.add(this);
+	
 	}
 
 	public void addMessageFlow(FlowElement f) {

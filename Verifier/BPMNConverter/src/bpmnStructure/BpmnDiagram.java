@@ -7,6 +7,7 @@ import bpmnStructure.activities.Task;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
 import bpmnStructure.gateways.ExclusiveGateway;
+import bpmnStructure.gateways.ParallelGateway;
 
 public class BpmnDiagram {
 	// this will be used as the interface into creating BPMN structures
@@ -49,6 +50,10 @@ public class BpmnDiagram {
 	}
 	public void addExclusiveGateway(String id){
 		addFlowElement(id, new ExclusiveGateway(id));
+	}
+	
+	public void addParallelGateway(String id){
+		addFlowElement(id, new ParallelGateway(id));
 	}
 	//TODO: Implement
 	//Add structure to keep track of variable values

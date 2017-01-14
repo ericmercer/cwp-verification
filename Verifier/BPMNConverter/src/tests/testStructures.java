@@ -35,10 +35,10 @@ public class testStructures {
 		BpmnDiagram b1 = new BpmnDiagram();
 		
 		b1.addStartEvent("start");
-		b1.addExclusiveGateway("DivGateway");
+		b1.addParallelGateway("DivGateway");
 		b1.addTask("Task1");
 		b1.addTask("Task2");
-		b1.addExclusiveGateway("ConvGateway");
+		b1.addParallelGateway("ConvGateway");
 		b1.addEndEvent("end");
 		
 		b1.addSequenceFlow("start", "DivGateway");
