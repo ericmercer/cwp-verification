@@ -10,17 +10,26 @@ public class FlowElement {
 	public int id;
 	public boolean visited = false;
 
-	public ArrayList<FlowElement> sequenceFlowOut = new ArrayList<FlowElement>();
-	public ArrayList<FlowElement> sequenceFlowIn = new ArrayList<FlowElement>();
-	
+	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();
+	public ArrayList<SequenceFlow> sequenceFlowIn = new ArrayList<SequenceFlow>();
+
 	public FlowElement(String name) {
 		this.name = name;
 	}
 
+	/*
+	 * if there is a way that an element can be split into less ambiguous
+	 * pieces, then do it other wise return
+	 */
+	public void splitIntoPieces() {
+
+	}
+
 	public void addSequenceFlow(FlowElement f) {
-		sequenceFlowOut.add(f);
-		f.sequenceFlowIn.add(this);
-	
+		SequenceFlow connector = new SequenceFlow(this, f);
+		sequenceFlowOut.add(connector);
+		f.sequenceFlowIn.add(connector);
+
 	}
 
 	public void addMessageFlow(FlowElement f) {

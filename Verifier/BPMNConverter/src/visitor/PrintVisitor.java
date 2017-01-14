@@ -1,6 +1,7 @@
 package visitor;
 
 import bpmnStructure.FlowElement;
+import bpmnStructure.SequenceFlow;
 import bpmnStructure.activities.Task;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
@@ -16,9 +17,9 @@ public class PrintVisitor implements Visitor {
 		System.out.println(f.name);
 		f.visited = true;
 
-		for (FlowElement f1 : f.sequenceFlowOut) {
-			if (!f1.visited) {
-				f1.accept(this);
+		for (SequenceFlow f1 : f.sequenceFlowOut) {
+			if (!f1.end.visited) {
+				f1.end.accept(this);
 			}
 		}
 	}
@@ -64,9 +65,9 @@ public class PrintVisitor implements Visitor {
 		System.out.println(f.name);
 		f.visited = true;
 
-		for (FlowElement f1 : f.sequenceFlowOut) {
-			if (!f1.visited) {
-				f1.accept(this);
+		for (SequenceFlow f1 : f.sequenceFlowOut) {
+			if (!f1.end.visited) {
+				f1.end.accept(this);
 			}
 		}
 	}

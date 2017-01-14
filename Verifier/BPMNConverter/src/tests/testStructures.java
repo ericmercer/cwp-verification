@@ -35,19 +35,19 @@ public class testStructures {
 		BpmnDiagram b1 = new BpmnDiagram();
 		
 		b1.addStartEvent("start");
-		b1.addParallelGateway("DivGateway");
+		b1.addParallelGateway("Gateway1");
 		b1.addTask("Task1");
 		b1.addTask("Task2");
-		b1.addParallelGateway("ConvGateway");
+		b1.addParallelGateway("Gateway2");
 		b1.addEndEvent("end");
 		
-		b1.addSequenceFlow("start", "DivGateway");
-		b1.addSequenceFlow("DivGateway", "Task1");
-		b1.addSequenceFlow("DivGateway", "Task2");
-		b1.addSequenceFlow("Task1", "ConvGateway");
-		b1.addSequenceFlow("Task2", "ConvGateway");
-		b1.addSequenceFlow("ConvGateway", "end");
-		
+		b1.addSequenceFlow("start", "Gateway1");
+		b1.addSequenceFlow("Gateway1", "Task1");
+		b1.addSequenceFlow("Gateway1", "Task2");
+		b1.addSequenceFlow("Task1", "Gateway2");
+		b1.addSequenceFlow("Task2", "Gateway2");
+		b1.addSequenceFlow("Gateway2", "end");
+		b1.splitIntoPieces();
 		
 //		BasicStartEvent start2 = new BasicStartEvent("start");
 //		ExclusiveGateway gateway1 = new ExclusiveGateway("DivGatway");

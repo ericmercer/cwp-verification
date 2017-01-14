@@ -1,6 +1,8 @@
 package bpmnStructure;
 
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import bpmnStructure.activities.Task;
@@ -71,6 +73,16 @@ public class BpmnDiagram {
 		
 	}
 
+	/*find generic gateways and split into two gateways*/
+	public void splitIntoPieces(){
+		for(Entry<String, FlowElement> entry : elements.entrySet()) {
+//			  String key = entry.getKey();
+			  entry.getValue().splitIntoPieces();
+
+//			  System.out.println(key + " => " + value);
+			}
+	}
+	
 	//Generate the PROMELA code as a string
 	public String generatePromelaString(){
 		return "";
