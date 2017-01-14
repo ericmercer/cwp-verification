@@ -60,6 +60,11 @@ public class BpmnDiagram {
 	public void addDataState(){
 		
 	}
+	
+	//add a condition to an existing condition flow
+	public void setSequenceFlowCondition(String idFrom, String idTo){
+		
+	}
 
 	//Generate the PROMELA code as a string
 	public String generatePromelaString(){
