@@ -19,7 +19,7 @@ public class ParallelGateway extends Gateway {
 		/* if diverging, converging, or both */
 		// Converging
 		if (this.sequenceFlowIn.size() > 1) {
-//			return;
+			// return;
 			convergingGateway = new ConvergingParallelGateway("Converging" + this.name);
 		}
 
@@ -34,29 +34,17 @@ public class ParallelGateway extends Gateway {
 		}
 
 		if (convergingGateway == null) {
-//			System.out.println("here1" + this.name);
 			convergingGateway = divergingGateway;
 		}
 
 		if (divergingGateway == null) {
-//			System.out.println("here2" + this.name);
 			divergingGateway = convergingGateway;
 		}
 
-		// Redirect incoming sequence flows to new convergingGateway
-		for (SequenceFlow f : this.sequenceFlowIn) {
-//			System.out.println("inflows for " + this.name + " " + f.start.name + " -> " + f.end.name);
-//			System.out.println("replace " + f.start.name + " -> " + divergingGateway.name);
-			f.end = divergingGateway;
-			divergingGateway.sequenceFlowIn.add(f);
-		}
-
-		for (SequenceFlow f : this.sequenceFlowOut) {
-//			System.out.println("outFlows for " + this.name + " " + f.start.name + " -> " + f.end.name);
-//			System.out.println("replace " + f.start.name + " with " + convergingGateway.name);
-			f.start = convergingGateway;
-			convergingGateway.sequenceFlowOut.add(f);
-		}
+		// TODO: Make sure this actually works when the gateway as multiple
+		// incoming and outbound flows
+		this.RedirectInboundFlowsTo(divergingGateway);
+		this.RedirectOutboundFlowsTo(convergingGateway);
 
 	}
 }

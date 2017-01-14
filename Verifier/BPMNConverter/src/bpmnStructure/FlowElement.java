@@ -52,6 +52,24 @@ public class FlowElement {
 
 	}
 
+	public void RedirectInboundFlowsTo(FlowElement newElement) {
+		// Redirect incoming sequence flows to new element
+		for (SequenceFlow f : this.sequenceFlowIn) {
+			f.end = newElement;
+			newElement.sequenceFlowIn.add(f);
+		}
+
+	}
+
+	public void RedirectOutboundFlowsTo(FlowElement newElement) {
+		// Redirect outbound sequence flows to new element
+		for (SequenceFlow f : this.sequenceFlowOut) {
+			f.start = newElement;
+			newElement.sequenceFlowOut.add(f);
+		}
+
+	}
+
 	public FlowElement() {
 		id = flowElementCount++;
 	}
