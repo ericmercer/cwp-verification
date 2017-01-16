@@ -9,6 +9,7 @@ import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
 import bpmnStructure.gateways.ExclusiveGateway;
 import bpmnStructure.gateways.ParallelGateway;
+import promela.templates.promelaTemplate1;
 
 public class BpmnDiagram {
 	// this will be used as the interface into creating BPMN structures
@@ -16,6 +17,8 @@ public class BpmnDiagram {
 	// TODO: Add method to export structure to BPMN xml format
 
 	TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
+	// TODO: Somehow guarantee the uniqueness of the initial element
+	InitialElement firstElement = new InitialElement("InitialElement");
 
 	private void addFlowElement(String id, FlowElement f) {
 		if (!elements.containsKey(id)) {
@@ -40,6 +43,8 @@ public class BpmnDiagram {
 	// ids must be unique
 	public void addStartEvent(String id) {
 		addFlowElement(id, new BasicStartEvent(id));
+
+		firstElement.addSequenceFlow(this.getFlowElement(id));
 	}
 
 	public void addTask(String id) {
@@ -105,13 +110,22 @@ public class BpmnDiagram {
 			entry.getValue().splitIntoPieces();
 			returnElements.add(entry.getValue());
 		}
+		// returnElements.add(firstElement);
 
 		return returnElements;
 	}
 
 	// Generate the PROMELA code as a string
 	public String generatePromelaString() {
-		return "";
+		promelaTemplate1 pt = new promelaTemplate1();
+		String channels = "";
+		String runCommands = "";
+		for (FlowElement f: this.getFlowelements()){
+			channels += pt.getProcessChannel(f.name);
+			runCommands += pt.getProcessRunCommand(f);
+		}
+		
+		return pt.getFoundationalStructure("proctype test;\n", channels, runCommands);
 	}
 
 }

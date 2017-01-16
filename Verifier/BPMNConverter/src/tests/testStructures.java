@@ -51,30 +51,15 @@ public class testStructures {
 		b1.addSequenceFlow("Gateway2", "end");
 		b1.splitIntoPieces();
 		
-		PromelaVisitor1 pmv = new PromelaVisitor1();
-		for (FlowElement f: b1.getFlowelements()){
-			pmv.Visit(f);
-		}
+//		PromelaVisitor1 pmv = new PromelaVisitor1();
+//		for (FlowElement f: b1.getFlowelements()){
+//			pmv.Visit(f);
+//		}
 		
-//		BasicStartEvent start2 = new BasicStartEvent("start");
-//		ExclusiveGateway gateway1 = new ExclusiveGateway("DivGatway");
-//		Task task1 = new Task("Task1");
-//		Task task2 = new Task("Task2");
-//		ExclusiveGateway gateway2 = new ExclusiveGateway("ConvGateway");
-//		BasicEndEvent end2 = new BasicEndEvent("end");
-//
-//		start2.addSequenceFlow(gateway1);
-//		gateway1.addSequenceFlow(task1);
-//		gateway1.addSequenceFlow(task2);
-//
-//		task1.addSequenceFlow(gateway2);
-//		task2.addSequenceFlow(gateway2);
-//
-//		gateway2.addSequenceFlow(end2);
-//		PrintVisitor pv = new PrintVisitor();
-//		b1.getFlowElement("start").accept(pv);
 
-		System.out.println("done");
+
+		
+		System.out.println(b1.generatePromelaString());
 
 	}
 
