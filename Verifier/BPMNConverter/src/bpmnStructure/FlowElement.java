@@ -21,7 +21,8 @@ public class FlowElement {
 	 * if there is a way that an element can be split into less ambiguous
 	 * pieces, then do it other wise return
 	 */
-	public void splitIntoPieces() {
+	public ArrayList<FlowElement> splitIntoPieces() {
+		return null;
 
 	}
 

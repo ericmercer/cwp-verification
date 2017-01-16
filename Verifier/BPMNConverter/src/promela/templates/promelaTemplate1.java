@@ -146,64 +146,63 @@ public class promelaTemplate1 {
 	// out += " " + groupChannels.get(0) + "?x;\n";
 	// return out;
 	// }
-	//
-	// public String getTaskTemplate() {
-	// String s = "proctype task(chan in, out, done, terminate; mtype id) {\n";
-	// s += " byte x = 0;\n";
-	// s += " L0:\n";
-	// s += " atomic {\n";
-	// s += " in?x;\n";
-	// s += " printf(\"%e(%d)\\n\", taskID, x);\n";
-	// s += " if\n";
-	// s += " :: !(done??[eval(x)]) ->\n";
-	// s += " out!x;\n";
-	// s += " printf(\"send(%d)\\n\", x);\n";
-	// s += " :: done??[eval(x)] ->\n";
-	// s += " printf(\"done(%d)\\n\", x);\n";
-	// s += " fi;\n";
-	// s += " goto L0;\n";
-	// s += " } unless {\n";
-	// s += " if\n";
-	// s += " :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n";
-	// s += " fi;\n";
-	// s += " }\n";
-	// return s;
-	// }
-	//
-	// public String getSplitAndGate() {
-	// String s = "proctype split_and_gate(chan in, out1, out2, done, terminate;
-	// mtype id) {\n"
-	// + " byte x = 0, i = 0;\n"
-	// + " bool send1 = false, send2 = false;\n"
-	// + "L0:\n"
-	// + " atomic {\n"
-	// + " in?x;\n"
-	// + " printf(\"%e(%d)\\n\", taskID, x);\n"
-	// + " if\n"
-	// + " :: !(done??[eval(x)]) ->\n"
-	// + " send1 = false;\n"
-	// + " send2 = false;\n"
-	// + " do\n"
-	// + " :: nfull(out1) ->\n"
-	// + " out1!x;\n"
-	// + " send1 = true;\n"
-	// + " :: nfull(out2) -> \n"
-	// + " out2!x;\n"
-	// + " send2 = true;\n"
-	// + " :: send1 && send2 ->\n"
-	// + " break;\n"
-	// + " od; \n"
-	// + " printf(\"send(%d)\\n\", x);\n"
-	// + " :: done??[eval(x)] ->\n"
-	// + " printf(\"done(%d)\\n\", x);\n"
-	// + " fi;\n"
-	// + " goto L0;\n"
-	// + " } unless {\n"
-	// + " if\n"
-	// + " :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n"
-	// + " fi;\n" + " }\n" + "}\n";
-	// return s;
-	// }
+	
+	 public String getTaskTemplate() {
+	 String s = "proctype task(chan in, out, done, terminate; mtype id) {\n";
+	 s += " byte x = 0;\n";
+	 s += " L0:\n";
+	 s += " atomic {\n";
+	 s += " in?x;\n";
+	 s += " printf(\"%e(%d)\\n\", taskID, x);\n";
+	 s += " if\n";
+	 s += " :: !(done??[eval(x)]) ->\n";
+	 s += " out!x;\n";
+	 s += " printf(\"send(%d)\\n\", x);\n";
+	 s += " :: done??[eval(x)] ->\n";
+	 s += " printf(\"done(%d)\\n\", x);\n";
+	 s += " fi;\n";
+	 s += " goto L0;\n";
+	 s += " } unless {\n";
+	 s += " if\n";
+	 s += " :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n";
+	 s += " fi;\n";
+	 s += " }\n";
+	 return s;
+	 }
+	
+	 public String getSplitAndGate() {
+	 String s = "proctype split_and_gate(chan in, out1, out2, done, terminate;	 mtype id) {\n"
+	 + " byte x = 0, i = 0;\n"
+	 + " bool send1 = false, send2 = false;\n"
+	 + "L0:\n"
+	 + " atomic {\n"
+	 + " in?x;\n"
+	 + " printf(\"%e(%d)\\n\", taskID, x);\n"
+	 + " if\n"
+	 + " :: !(done??[eval(x)]) ->\n"
+	 + " send1 = false;\n"
+	 + " send2 = false;\n"
+	 + " do\n"
+	 + " :: nfull(out1) ->\n"
+	 + " out1!x;\n"
+	 + " send1 = true;\n"
+	 + " :: nfull(out2) -> \n"
+	 + " out2!x;\n"
+	 + " send2 = true;\n"
+	 + " :: send1 && send2 ->\n"
+	 + " break;\n"
+	 + " od; \n"
+	 + " printf(\"send(%d)\\n\", x);\n"
+	 + " :: done??[eval(x)] ->\n"
+	 + " printf(\"done(%d)\\n\", x);\n"
+	 + " fi;\n"
+	 + " goto L0;\n"
+	 + " } unless {\n"
+	 + " if\n"
+	 + " :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n"
+	 + " fi;\n" + " }\n" + "}\n";
+	 return s;
+	 }
 	//
 	// public String getStandardMethodSignature(int channelsIn, int channelsOut)
 	// {

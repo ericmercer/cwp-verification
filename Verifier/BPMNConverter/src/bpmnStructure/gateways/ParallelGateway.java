@@ -1,8 +1,9 @@
 package bpmnStructure.gateways;
 
+import java.util.ArrayList;
+
 import bpmnStructure.FlowElement;
 import bpmnStructure.Gateway;
-import bpmnStructure.SequenceFlow;
 
 public class ParallelGateway extends Gateway {
 
@@ -12,7 +13,7 @@ public class ParallelGateway extends Gateway {
 		super(name);
 	}
 
-	public void splitIntoPieces() {
+	public ArrayList<FlowElement> splitIntoPieces() {
 
 		Gateway convergingGateway = null;
 		Gateway divergingGateway = null;
@@ -33,18 +34,25 @@ public class ParallelGateway extends Gateway {
 			convergingGateway.addSequenceFlow(divergingGateway);
 		}
 
+		ArrayList<FlowElement> newElements = new ArrayList<FlowElement>();
 		if (convergingGateway == null) {
 			convergingGateway = divergingGateway;
+		} else {
+			newElements.add(convergingGateway);
 		}
 
 		if (divergingGateway == null) {
 			divergingGateway = convergingGateway;
+		} else {
+			newElements.add(divergingGateway);
 		}
 
 		// TODO: Make sure this actually works when the gateway as multiple
 		// incoming and outbound flows
 		this.RedirectInboundFlowsTo(divergingGateway);
 		this.RedirectOutboundFlowsTo(convergingGateway);
+
+		return newElements;
 
 	}
 }
