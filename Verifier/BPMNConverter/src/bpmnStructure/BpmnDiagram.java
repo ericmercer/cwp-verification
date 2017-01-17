@@ -10,6 +10,7 @@ import bpmnStructure.events.BasicStartEvent;
 import bpmnStructure.gateways.ExclusiveGateway;
 import bpmnStructure.gateways.ParallelGateway;
 import promela.templates.promelaTemplate1;
+import visitor.ProcessCodeVisitor;
 
 public class BpmnDiagram {
 	// this will be used as the interface into creating BPMN structures
@@ -120,12 +121,17 @@ public class BpmnDiagram {
 		promelaTemplate1 pt = new promelaTemplate1();
 		String channels = "";
 		String runCommands = "";
-		for (FlowElement f: this.getFlowelements()){
+		String proctypeFunctions = "";
+		for (FlowElement f : this.getFlowelements()) {
 			channels += pt.getProcessChannel(f.name);
 			runCommands += pt.getProcessRunCommand(f);
+			ProcessCodeVisitor codeVisitor = new ProcessCodeVisitor();
+			f.accept(codeVisitor);
+
+			proctypeFunctions += codeVisitor.code;
 		}
-		
-		return pt.getFoundationalStructure("proctype test;\n", channels, runCommands);
+
+		return pt.getFoundationalStructure(proctypeFunctions, channels, runCommands);
 	}
 
 }

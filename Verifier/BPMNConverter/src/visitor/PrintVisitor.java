@@ -6,7 +6,9 @@ import bpmnStructure.activities.Task;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
 import bpmnStructure.gateways.ConvergingExclusiveGateway;
+import bpmnStructure.gateways.ConvergingParallelGateway;
 import bpmnStructure.gateways.DivergingExclusiveGateway;
+import bpmnStructure.gateways.DivergingParallelGateway;
 import bpmnStructure.gateways.ExclusiveGateway;
 
 public class PrintVisitor implements Visitor {
@@ -70,6 +72,18 @@ public class PrintVisitor implements Visitor {
 				f1.end.accept(this);
 			}
 		}
+	}
+
+	@Override
+	public void Visit(ConvergingParallelGateway f) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Visit(DivergingParallelGateway f) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
