@@ -53,7 +53,10 @@ public class promelaTemplate1 {
 		s += "atomic {\n";
 		s += "select(x : 1 .. N);\n";
 		s += "printf(\"send(%d)\\n\", x);\n";
-		s += "in!x;\n";
+		// s += "in!x;\n";
+		// replace with more generic solution
+		s += "processChannelstart!x;\n";
+
 		s += "}\n";
 		s += ":: nfull(done) ->\n";
 		s += "atomic {\n";
@@ -146,6 +149,27 @@ public class promelaTemplate1 {
 		return s;
 	}
 
+	
+	
+	public String getEnd(String processName) {
+
+		String s = "proctype " + processName + "(chan in done, terminate; mtype id) {\n";
+		s += "  byte x = 0, i = 0;\n";
+		s += "  bool send1 = false, send2 = false;\n";
+		s += "L0:\n";
+		s += "  atomic {\n";
+		s += "	in?x;\n";
+		s += "	goto L0;\n";
+		s += "  } unless {\n";
+		s += "	if\n";
+		s += "	  :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n";
+		s += "	fi;\n";
+		s += "  }\n";
+		s += "}\n";
+		return s;
+
+	}
+	
 	public String getDivergingAndGate(String processName) {
 
 		String s = "proctype " + processName + "(chan in, out1, out2, done, terminate; mtype id) {\n";
@@ -173,6 +197,27 @@ public class promelaTemplate1 {
 		s += "	  :: done??[eval(x)] ->\n";
 		s += "		 printf(\"done(%d)\\n\", x);\n";
 		s += "	fi;\n";
+		s += "	goto L0;\n";
+		s += "  } unless {\n";
+		s += "	if\n";
+		s += "	  :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n";
+		s += "	fi;\n";
+		s += "  }\n";
+		s += "}\n";
+		return s;
+
+	}
+
+	public String getConvergingAndGate(String processName) {
+
+		String s = "proctype " + processName + "(chan in, in2, out, done, terminate; mtype id) {\n";
+		s += "  byte x = 0, i = 0;\n";
+		s += "  bool send1 = false, send2 = false;\n";
+		s += "L0:\n";
+		s += "  atomic {\n";
+		s += "	in?x;\n";
+		s += "  in2?i;\n";
+		s += "  out!x;\n";
 		s += "	goto L0;\n";
 		s += "  } unless {\n";
 		s += "	if\n";

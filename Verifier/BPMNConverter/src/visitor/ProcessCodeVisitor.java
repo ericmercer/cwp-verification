@@ -40,7 +40,7 @@ public class ProcessCodeVisitor implements Visitor{
 	@Override
 	public void Visit(BasicEndEvent f) {
 		// TODO Auto-generated method stub
-		
+		code = pt.getEnd("process"+f.name);
 	}
 
 	@Override
@@ -53,6 +53,7 @@ public class ProcessCodeVisitor implements Visitor{
 	@Override
 	public void Visit(ConvergingExclusiveGateway f) {
 		// TODO Auto-generated method stub
+
 		
 	}
 
@@ -72,7 +73,7 @@ public class ProcessCodeVisitor implements Visitor{
 	@Override
 	public void Visit(ConvergingParallelGateway f) {
 		// TODO Auto-generated method stub
-		
+		code = pt.getConvergingAndGate("process"+f.name);
 	}
 	//TODO: Currently this assumes the parallel gateway only has two branches, will need to modify here
 	// or in BpmnDiagram code so that it breaks it down into multiple binary splits
