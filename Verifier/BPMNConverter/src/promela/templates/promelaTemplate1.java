@@ -20,6 +20,10 @@ public class promelaTemplate1 {
 
 		s += "processChannel" + f.name + ", ";
 
+//		for (SequenceFlow sf : f.sequenceFlowIn) {
+//			//TODO:I'm not sure exactly how there can be a reference, but the name is null
+//			s += "processChannel" + sf.start.name + ", ";
+//		}
 		for (SequenceFlow sf : f.sequenceFlowOut) {
 			s += "processChannel" + sf.end.name + ", ";
 		}
@@ -49,7 +53,9 @@ public class promelaTemplate1 {
 		s += "byte x;\n";
 		s += "{\n";
 		s += "do\n";
-		s += ":: nfull(in) ->\n";
+		//		s += ":: nfull(in) ->\n";
+		
+		s += ":: nfull(processChannelstart) ->\n";
 		s += "atomic {\n";
 		s += "select(x : 1 .. N);\n";
 		s += "printf(\"send(%d)\\n\", x);\n";
@@ -73,11 +79,11 @@ public class promelaTemplate1 {
 		s += "printf(\"terminate\\n\")\n";
 		s += "terminate!true;\n";
 		s += "}\n";
-		s += ":: out?[_] ->\n";
+		/*s += ":: out?[_] ->\n";
 		s += "atomic {\n";
 		s += "out?x;\n";
 		s += "printf(\"receive(%d)\\n\", x);\n";
-		s += "}\n";
+		s += "}\n";*/
 		s += "od;\n";
 		s += "} unless {\n";
 		s += "if\n";
@@ -146,14 +152,35 @@ public class promelaTemplate1 {
 		s += " :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n";
 		s += " fi;\n";
 		s += " }\n";
+		s += " }\n";
 		return s;
 	}
 
 	
+	public String getStart(String processName) {
+
+		String s = "proctype " + processName + "(chan in,out, done, terminate; mtype id) {\n";
+		s += "  byte x = 0, i = 0;\n";
+		s += "  bool send1 = false, send2 = false;\n";
+		s += "L0:\n";
+		s += "  atomic {\n";
+		s += "	in?x;\n";
+		s += "  out!x;\n";
+		s += "	goto L0;\n";
+		s += "  } unless {\n";
+		s += "	if\n";
+		s += "	  :: terminate?[_] -> printf(\"terminate(%d)\\n\", _pid);\n";
+		s += "	fi;\n";
+		s += "  }\n";
+		s += "}\n";
+		return s;
+
+	}
+	
 	
 	public String getEnd(String processName) {
 
-		String s = "proctype " + processName + "(chan in done, terminate; mtype id) {\n";
+		String s = "proctype " + processName + "(chan in, done, terminate; mtype id) {\n";
 		s += "  byte x = 0, i = 0;\n";
 		s += "  bool send1 = false, send2 = false;\n";
 		s += "L0:\n";
@@ -210,13 +237,13 @@ public class promelaTemplate1 {
 
 	public String getConvergingAndGate(String processName) {
 
-		String s = "proctype " + processName + "(chan in, in2, out, done, terminate; mtype id) {\n";
+		String s = "proctype " + processName + "(chan in, /*in2,*/ out, done, terminate; mtype id) {\n";
 		s += "  byte x = 0, i = 0;\n";
 		s += "  bool send1 = false, send2 = false;\n";
 		s += "L0:\n";
 		s += "  atomic {\n";
 		s += "	in?x;\n";
-		s += "  in2?i;\n";
+		//s += "  in2?i;\n";
 		s += "  out!x;\n";
 		s += "	goto L0;\n";
 		s += "  } unless {\n";
@@ -231,13 +258,12 @@ public class promelaTemplate1 {
 
 	public String getProcessProcTypeCode(FlowElement f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name + " here??????????????????");
+	
 		return "";
 	}
 
 	public String getProcessProcTypeCode(Task t) {
 		// TODO Auto-generated method stub
-		System.out.println("here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		return this.getTaskTemplate("process" + t.name);
 	}
 

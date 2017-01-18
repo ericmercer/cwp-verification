@@ -34,6 +34,7 @@ public class ProcessCodeVisitor implements Visitor{
 	@Override
 	public void Visit(BasicStartEvent f) {
 		// TODO Auto-generated method stub
+		code = pt.getStart("process"+f.name);
 		
 	}
 
@@ -79,7 +80,7 @@ public class ProcessCodeVisitor implements Visitor{
 	// or in BpmnDiagram code so that it breaks it down into multiple binary splits
 	@Override
 	public void Visit(DivergingParallelGateway f) {
-		System.out.println(f.name + " here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		
 		code = pt.getDivergingAndGate("process"+ f.name);
 		
 	}
