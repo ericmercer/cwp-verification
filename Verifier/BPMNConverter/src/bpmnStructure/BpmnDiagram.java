@@ -12,7 +12,7 @@ import bpmnStructure.gateways.ParallelGateway;
 import promela.templates.promelaTemplate1;
 import visitor.ProcessCodeVisitor;
 
-public class BpmnDiagram {
+public class BpmnDiagram extends FlowElement {
 	// this will be used as the interface into creating BPMN structures
 
 	// TODO: Add method to export structure to BPMN xml format
@@ -20,6 +20,10 @@ public class BpmnDiagram {
 	TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
 	// TODO: Somehow guarantee the uniqueness of the initial element
 	InitialElement firstElement = new InitialElement("InitialElement");
+
+	public BpmnDiagram(String id) {
+		super(id);
+	}
 
 	private void addFlowElement(String id, FlowElement f) {
 		if (!elements.containsKey(id)) {
@@ -39,6 +43,12 @@ public class BpmnDiagram {
 		FlowElement f1 = elements.get(idFrom);
 		FlowElement f2 = elements.get(idTo);
 		f1.addSequenceFlow(f2);
+	}
+
+	public BpmnDiagram addSubProcess(String id) {
+		BpmnDiagram subProcess = new BpmnDiagram(id);
+		addFlowElement(id, subProcess);
+		return subProcess;
 	}
 
 	// ids must be unique
@@ -80,28 +90,28 @@ public class BpmnDiagram {
 	}
 
 	/* find generic gateways and split into two gateways */
-	public void splitIntoPieces() {
-
-		ArrayList<FlowElement> itemsToAdd = new ArrayList<FlowElement>();
-		ArrayList<String> keysToRemove = new ArrayList<String>();
-
-		for (Entry<String, FlowElement> entry : elements.entrySet()) {
-
-			ArrayList<FlowElement> newElements = entry.getValue().splitIntoPieces();
-			if (newElements != null) {
-				itemsToAdd.addAll(newElements);
-				keysToRemove.add(entry.getKey());
-			}
-		}
-
-		for (String key : keysToRemove) {
-			elements.remove(key);
-		}
-
-		for (FlowElement f : itemsToAdd) {
-			elements.put(f.name, f);
-		}
-	}
+	// public void splitIntoPieces() {
+	//
+	// ArrayList<FlowElement> itemsToAdd = new ArrayList<FlowElement>();
+	// ArrayList<String> keysToRemove = new ArrayList<String>();
+	//
+	// for (Entry<String, FlowElement> entry : elements.entrySet()) {
+	//
+	// ArrayList<FlowElement> newElements = entry.getValue().splitIntoPieces();
+	// if (newElements != null) {
+	// itemsToAdd.addAll(newElements);
+	// keysToRemove.add(entry.getKey());
+	// }
+	// }
+	//
+	// for (String key : keysToRemove) {
+	// elements.remove(key);
+	// }
+	//
+	// for (FlowElement f : itemsToAdd) {
+	// elements.put(f.name, f);
+	// }
+	// }
 
 	public ArrayList<FlowElement> getFlowelements() {
 
@@ -114,24 +124,6 @@ public class BpmnDiagram {
 		// returnElements.add(firstElement);
 
 		return returnElements;
-	}
-
-	// Generate the PROMELA code as a string
-	public String generatePromelaString() {
-		promelaTemplate1 pt = new promelaTemplate1();
-		String channels = "";
-		String runCommands = "";
-		String proctypeFunctions = "";
-		for (FlowElement f : this.getFlowelements()) {
-			channels += pt.getProcessChannel(f.name);
-			runCommands += pt.getProcessRunCommand(f);
-			ProcessCodeVisitor codeVisitor = new ProcessCodeVisitor();
-			f.accept(codeVisitor);
-
-			proctypeFunctions += codeVisitor.code;
-		}
-
-		return pt.getFoundationalStructure(proctypeFunctions, channels, runCommands);
 	}
 
 }
