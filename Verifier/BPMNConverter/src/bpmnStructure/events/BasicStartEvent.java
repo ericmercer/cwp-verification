@@ -12,5 +12,8 @@ public class BasicStartEvent extends StartEvent {
 		v.Visit(this);
 
 	}
+	public String getProcessTemplateName(){
+		return "start";
+	}
 
 }

@@ -27,4 +27,8 @@ L0:
 	  :: terminate?[_] -> printf("terminate(%d)\n", _pid);
 	fi;
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2cbee965206f1b7857e4ec85a4a231b38dc049f5

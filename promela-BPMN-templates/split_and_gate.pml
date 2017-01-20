@@ -10,15 +10,14 @@ L0:
 	in?x;
 	printf("%e(%d)\n", taskID, x);
 	if
+	  // Terminating-end to block passing tokens as needed. 
 	  :: !(done??[eval(x)]) ->
 		 send1 = false;
 		 send2 = false;
 		 do
-		   :: nfull(out1) ->
-			  out1!x;
+		   :: out1!x ->
 			  send1 = true;
-		   :: nfull(out2) -> 
-			  out2!x;
+		   :: out2!x -> 
 			  send2 = true;
 		   :: send1 && send2 ->
 			  break;
@@ -28,7 +27,7 @@ L0:
 		 printf("done(%d)\n", x);
 	fi;
 	goto L0;
-  } unless {
+  } unless { // Poison pill to shut down all processes
 	if
 	  :: terminate?[_] -> printf("terminate(%d)\n", _pid);
 	fi;
