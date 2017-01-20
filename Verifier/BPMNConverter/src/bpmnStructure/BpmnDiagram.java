@@ -7,19 +7,24 @@ import java.util.TreeMap;
 import bpmnStructure.activities.Task;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
+import bpmnStructure.events.StartEvent;
 import bpmnStructure.gateways.ExclusiveGateway;
 import bpmnStructure.gateways.ParallelGateway;
-import promela.templates.promelaTemplate1;
-import visitor.ProcessCodeVisitor;
+import bpmnStructure.subProcesses.NormalSubProcess;
 
 public class BpmnDiagram extends FlowElement {
 	// this will be used as the interface into creating BPMN structures
+
+	// Assumptions for now:
+	// -Only one start
+	// -Gates only split into two and converge from two directions
 
 	// TODO: Add method to export structure to BPMN xml format
 
 	TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
 	// TODO: Somehow guarantee the uniqueness of the initial element
-	InitialElement firstElement = new InitialElement("InitialElement");
+	// InitialElement firstElement = new InitialElement("InitialElement");
+	StartEvent start = null;
 
 	public BpmnDiagram(String id) {
 		super(id);
@@ -45,17 +50,18 @@ public class BpmnDiagram extends FlowElement {
 		f1.addSequenceFlow(f2);
 	}
 
-	public BpmnDiagram addSubProcess(String id) {
-		BpmnDiagram subProcess = new BpmnDiagram(id);
+	public BpmnDiagram addNormalSubProcess(String id) {
+		NormalSubProcess subProcess = new NormalSubProcess(id);
 		addFlowElement(id, subProcess);
 		return subProcess;
 	}
 
 	// ids must be unique
 	public void addStartEvent(String id) {
-		addFlowElement(id, new BasicStartEvent(id));
 
-		firstElement.addSequenceFlow(this.getFlowElement(id));
+		start = new BasicStartEvent(id);
+		addFlowElement(id, start);
+
 	}
 
 	public void addTask(String id) {
@@ -89,29 +95,31 @@ public class BpmnDiagram extends FlowElement {
 
 	}
 
+	// TODO: Improve this, possibly move outside of method
+	// Also this will not reach to subprocesses currently
 	/* find generic gateways and split into two gateways */
-	// public void splitIntoPieces() {
-	//
-	// ArrayList<FlowElement> itemsToAdd = new ArrayList<FlowElement>();
-	// ArrayList<String> keysToRemove = new ArrayList<String>();
-	//
-	// for (Entry<String, FlowElement> entry : elements.entrySet()) {
-	//
-	// ArrayList<FlowElement> newElements = entry.getValue().splitIntoPieces();
-	// if (newElements != null) {
-	// itemsToAdd.addAll(newElements);
-	// keysToRemove.add(entry.getKey());
-	// }
-	// }
-	//
-	// for (String key : keysToRemove) {
-	// elements.remove(key);
-	// }
-	//
-	// for (FlowElement f : itemsToAdd) {
-	// elements.put(f.name, f);
-	// }
-	// }
+	public void unambiguate() {
+
+		ArrayList<FlowElement> itemsToAdd = new ArrayList<FlowElement>();
+		ArrayList<String> keysToRemove = new ArrayList<String>();
+
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+
+			ArrayList<FlowElement> newElements = entry.getValue().splitIntoPieces();
+			if (newElements != null) {
+				itemsToAdd.addAll(newElements);
+				keysToRemove.add(entry.getKey());
+			}
+		}
+
+		for (String key : keysToRemove) {
+			elements.remove(key);
+		}
+
+		for (FlowElement f : itemsToAdd) {
+			elements.put(f.name, f);
+		}
+	}
 
 	public ArrayList<FlowElement> getFlowelements() {
 

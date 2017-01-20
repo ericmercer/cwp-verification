@@ -74,5 +74,10 @@ public class FlowElement {
 	public FlowElement() {
 		id = flowElementCount++;
 	}
+	
+	public String getProcessTemplateName(){
+		return "FlowElement";
+	}
+	
 
 }

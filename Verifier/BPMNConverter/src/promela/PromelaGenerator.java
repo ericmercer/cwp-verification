@@ -19,17 +19,17 @@ public class PromelaGenerator {
 		promelaTemplate1 pt = new promelaTemplate1();
 		String channels = "";
 		String runCommands = "";
-		String proctypeFunctions = "";
+		// String proctypeFunctions = "";
 		for (FlowElement f : diagram.getFlowelements()) {
 			channels += pt.getProcessChannel(f.name);
 			runCommands += pt.getProcessRunCommand(f);
 			ProcessCodeVisitor codeVisitor = new ProcessCodeVisitor();
 			f.accept(codeVisitor);
 
-			proctypeFunctions += codeVisitor.code;
+			// proctypeFunctions += codeVisitor.code;
 		}
 
-		return pt.getFoundationalStructure(proctypeFunctions, channels, runCommands);
+		return pt.getFoundationalStructure(channels, runCommands);
 	}
 
 }

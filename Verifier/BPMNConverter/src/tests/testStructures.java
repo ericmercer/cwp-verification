@@ -39,7 +39,8 @@ public class testStructures {
 		// for (FlowElement f: b1.getFlowelements()){
 		// pmv.Visit(f);
 		// }
-
+		b1.unambiguate();
+		
 		PromelaGenerator pg = new PromelaGenerator(b1);
 
 		System.out.println(pg.generatePromela());

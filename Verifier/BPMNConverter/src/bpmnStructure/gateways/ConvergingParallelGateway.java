@@ -14,4 +14,7 @@ public class ConvergingParallelGateway extends Gateway {
 		v.Visit(this);
 
 	}
+	public String getProcessTemplateName(){
+		return "merge_and_gate_only";
+	}
 }
