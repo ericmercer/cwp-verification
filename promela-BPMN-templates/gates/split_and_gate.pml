@@ -1,20 +1,23 @@
 proctype split_and_gate(chan in, out1, out2, terminated_tokens, shutdown) {
   byte token = 0;
-  bool send1 = false, send2 = false;
 loop:
   atomic {
 	in?token;
 	printf("gate%d.receive(%d)\n", _pid, token);
+
 	if
 	  :: !(terminated_tokens??[eval(token)]) ->
+
 		 /* Assumes order does not matter since receiving processes */
 		 /* are able to schedule in any order.                      */
 		 out1!token; 
 		 out2!token; 
-		 printf("gate%d.send(%d)\n", _pid, token);
-	  :: terminated_tokens??[eval(token)] ->
+		 printf("gate%d.send(%d)\n", _pid, token)
+
+	  :: else ->
 		 printf("gate%d.terminating(%d)\n", _pid, token)
 	fi;
+
 	goto loop
   } unless {
 	atomic {
