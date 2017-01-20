@@ -11,4 +11,7 @@ public class BasicEndEvent extends EndEvent {
 		
 
 	}
+	public String getProcessTemplateName(){
+		return "end";
+	}
 }

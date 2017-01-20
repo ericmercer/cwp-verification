@@ -37,7 +37,11 @@ public class promelaTemplate1 {
 	public String getFoundationalStructure(String processChannels, String processInitializers) {
 		String s = "#define N 3\n";
 		s += "mtype = {taskID}\n";
-		s += "#include split_and_gate.pml\n";
+		s += "#include split_and_gate_only.pml\n";
+		s += "#include task_only.pml\n";
+		s += "#include start_only.pml\n";
+		s += "#include merge_and_gate_only.pml\n";
+		s += "#include end_only.pml\n";
 		// s += processProctypes;
 
 		s += "init {\n";

@@ -27,6 +27,7 @@ public class PromelaGenerator {
 			f.accept(codeVisitor);
 
 			// proctypeFunctions += codeVisitor.code;
+			
 		}
 
 		return pt.getFoundationalStructure(channels, runCommands);
