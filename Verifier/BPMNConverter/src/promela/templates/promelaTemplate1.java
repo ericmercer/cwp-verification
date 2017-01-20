@@ -9,8 +9,17 @@ import bpmnStructure.activities.Task;
 
 public class promelaTemplate1 {
 
-	public String getProcessChannel(String processName) {
-		return "chan processChannel" + processName + " = [1] of {byte};\n";
+	public String getProcessChannel(FlowElement f) {
+		String channelString = "";
+		for(SequenceFlow flow: f.sequenceFlowIn){
+			channelString += "chan processChannel" + f.name + "_" + flow.getIdNumber() + " = [1] of {byte};\n";
+		}
+		/*if there are no inflows, then assume it is called from the main code and give one inbound channel*/
+		if (f.sequenceFlowIn.size()== 0){
+			channelString += "chan processChannel" + f.name + " = [1] of {byte};\n";
+		}
+		return channelString;
+		
 	}
 
 	public String getProcessRunCommand(FlowElement f) {
@@ -18,15 +27,23 @@ public class promelaTemplate1 {
 		// TODO: Do I trust that it has the right number of flows in and out?
 		s += "run " + f.getProcessTemplateName() + "(";
 
-		s += "processChannel" + f.name + ", ";
+		//s += "processChannel" + f.name + ", ";
 
+		for (SequenceFlow sf : f.sequenceFlowIn) {
+			s += "processChannel" + sf.end.name + "_" + sf.getIdNumber() + ", ";
+		}
+		
+		if (f.sequenceFlowIn.size()== 0){
+			s += "processChannel" + f.name + ", ";
+		}
+		
 		// for (SequenceFlow sf : f.sequenceFlowIn) {
 		// //TODO:I'm not sure exactly how there can be a reference, but the
 		// name is null
 		// s += "processChannel" + sf.start.name + ", ";
 		// }
 		for (SequenceFlow sf : f.sequenceFlowOut) {
-			s += "processChannel" + sf.end.name + ", ";
+			s += "processChannel" + sf.end.name + "_" + sf.getIdNumber()+ ", ";
 		}
 
 		s += "done, terminate, taskID);\n";

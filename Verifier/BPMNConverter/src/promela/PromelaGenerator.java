@@ -21,7 +21,7 @@ public class PromelaGenerator {
 		String runCommands = "";
 		// String proctypeFunctions = "";
 		for (FlowElement f : diagram.getFlowelements()) {
-			channels += pt.getProcessChannel(f.name);
+			channels += pt.getProcessChannel(f);
 			runCommands += pt.getProcessRunCommand(f);
 			ProcessCodeVisitor codeVisitor = new ProcessCodeVisitor();
 			f.accept(codeVisitor);

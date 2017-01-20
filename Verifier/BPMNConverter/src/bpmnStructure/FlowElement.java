@@ -9,7 +9,8 @@ public class FlowElement {
 	public String name;
 	public int id;
 	public boolean visited = false;
-
+	static int sequenceFlowCount = 1;
+	
 	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();
 	public ArrayList<SequenceFlow> sequenceFlowIn = new ArrayList<SequenceFlow>();
 
@@ -27,7 +28,7 @@ public class FlowElement {
 	}
 
 	public void addSequenceFlow(FlowElement f) {
-		SequenceFlow connector = new SequenceFlow(this, f);
+		SequenceFlow connector = new SequenceFlow(this, f,sequenceFlowCount++);
 		sequenceFlowOut.add(connector);
 		f.sequenceFlowIn.add(connector);
 
