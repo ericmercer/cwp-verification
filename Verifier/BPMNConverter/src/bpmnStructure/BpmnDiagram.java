@@ -134,4 +134,20 @@ public class BpmnDiagram extends FlowElement {
 		return returnElements;
 	}
 
+	public boolean equals(Object o) {
+		// return elements.equals(o);
+		BpmnDiagram otherElement = (BpmnDiagram) o;
+		if (!this.name.equals(otherElement.name)) {
+			return false;
+		}
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement currentObject = entry.getValue();
+			FlowElement otherObject = otherElement.elements.get(entry.getKey());
+			if (otherObject == null || !currentObject.equals(otherObject)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

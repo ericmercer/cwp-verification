@@ -10,7 +10,7 @@ public class FlowElement {
 	public int id;
 	public boolean visited = false;
 	static int sequenceFlowCount = 1;
-	
+
 	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();
 	public ArrayList<SequenceFlow> sequenceFlowIn = new ArrayList<SequenceFlow>();
 
@@ -28,7 +28,7 @@ public class FlowElement {
 	}
 
 	public void addSequenceFlow(FlowElement f) {
-		SequenceFlow connector = new SequenceFlow(this, f,sequenceFlowCount++);
+		SequenceFlow connector = new SequenceFlow(this, f, sequenceFlowCount++);
 		sequenceFlowOut.add(connector);
 		f.sequenceFlowIn.add(connector);
 
@@ -75,10 +75,48 @@ public class FlowElement {
 	public FlowElement() {
 		id = flowElementCount++;
 	}
-	
-	public String getProcessTemplateName(){
+
+	public String getProcessTemplateName() {
 		return "FlowElement";
 	}
-	
+
+	public boolean equals(Object o) {
+		FlowElement otherElement = (FlowElement) o;
+		if (!otherElement.name.equals(this.name)) {
+			return false;
+		}
+
+		for (SequenceFlow f : this.sequenceFlowOut) {
+			boolean found = false;
+			for (SequenceFlow f1 : otherElement.sequenceFlowOut) {
+				if (f1.end.name.equals(f.end.name)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				System.out.println("false");
+				return false;
+			}
+
+		}
+
+		for (SequenceFlow f : this.sequenceFlowIn) {
+			boolean found = false;
+			for (SequenceFlow f1 : otherElement.sequenceFlowIn) {
+				if (f1.start.name.equals(f.start.name)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				System.out.println("false");
+				return false;
+			}
+
+		}
+
+		return true;
+	}
 
 }
