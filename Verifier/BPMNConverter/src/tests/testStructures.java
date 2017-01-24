@@ -1,16 +1,7 @@
 package tests;
 
 import bpmnStructure.BpmnDiagram;
-import bpmnStructure.FlowElement;
-import bpmnStructure.activities.Task;
-import bpmnStructure.events.BasicEndEvent;
-import bpmnStructure.events.BasicStartEvent;
-import bpmnStructure.gateways.ConvergingExclusiveGateway;
-import bpmnStructure.gateways.DivergingExclusiveGateway;
-import bpmnStructure.gateways.ExclusiveGateway;
 import promela.PromelaGenerator;
-import visitor.PrintVisitor;
-import visitor.PromelaVisitor1;
 
 public class testStructures {
 
@@ -33,15 +24,14 @@ public class testStructures {
 		b1.addSequenceFlow("Task1", "Gateway2");
 		b1.addSequenceFlow("Task2", "Gateway2");
 		b1.addSequenceFlow("Gateway2", "end");
-//		b1.splitIntoPieces();
+		// b1.splitIntoPieces();
 
 		// PromelaVisitor1 pmv = new PromelaVisitor1();
 		// for (FlowElement f: b1.getFlowelements()){
 		// pmv.Visit(f);
 		// }
-//		b1.unambiguate();
+		// b1.unambiguate();
 
-		
 		// Simple Gateway Structure
 		BpmnDiagram b2 = new BpmnDiagram("test");
 
@@ -58,13 +48,13 @@ public class testStructures {
 		b2.addSequenceFlow("Task1", "Gateway2");
 		b2.addSequenceFlow("Task2", "Gateway2");
 		b2.addSequenceFlow("Gateway2", "end");
-//		b1.splitIntoPieces();
-		
-		System.out.println("b1 == b2 ? " + b2.equals(b1));
-		
-//		PromelaGenerator pg = new PromelaGenerator(b1);
+		// b1.splitIntoPieces();
 
-//		System.out.println(pg.generatePromela());
+		System.out.println("b1 == b2 ? " + b2.equals(b1));
+
+		 PromelaGenerator pg = new PromelaGenerator(b1);
+
+		 System.out.println(pg.generatePromela());
 
 	}
 
