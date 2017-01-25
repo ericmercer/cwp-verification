@@ -27,10 +27,10 @@ public class PromelaGenerator {
 			f.accept(codeVisitor);
 
 			// proctypeFunctions += codeVisitor.code;
-			
+
 		}
 
-		return pt.getFoundationalStructure(channels, runCommands);
+		return pt.getFoundationalStructure(channels, runCommands, "processChannel" + diagram.getStart().getName());
 	}
 
 }

@@ -42,6 +42,11 @@ public class BpmnDiagram extends FlowElement {
 		return elements.get(id);
 	}
 
+	/************************************************************************************/
+	/*
+	 * Methods to generally be used in XML import
+	 *****************************************/
+
 	// TODO: Consider how to handler errors if one of the elements does not
 	// exist
 	public void addSequenceFlow(String idFrom, String idTo) {
@@ -59,8 +64,8 @@ public class BpmnDiagram extends FlowElement {
 	// ids must be unique
 	public void addStartEvent(String id) {
 
-		start = new BasicStartEvent(id);
-		addFlowElement(id, start);
+		setStart(new BasicStartEvent(id));
+		addFlowElement(id, getStart());
 
 	}
 
@@ -79,6 +84,47 @@ public class BpmnDiagram extends FlowElement {
 	public void addParallelGateway(String id) {
 		addFlowElement(id, new ParallelGateway(id));
 	}
+
+	/**** End of XML interface methods **************/
+
+	/************************************************************************************/
+	/**
+	 * This may be useful in testing to determine if two BPMN Diagrams are equal
+	 * to one another. At this point the equals method has not been validated
+	 * yet.
+	 */
+	public boolean equals(Object o) {
+		// return elements.equals(o);
+		BpmnDiagram otherElement = (BpmnDiagram) o;
+		if (!this.getName().equals(otherElement.getName())) {
+			return false;
+		}
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement currentObject = entry.getValue();
+			FlowElement otherObject = otherElement.elements.get(entry.getKey());
+			if (otherObject == null || !currentObject.equals(otherObject)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/********************
+	 * Works in progress - may change frequently
+	 *************************/
+	public ArrayList<FlowElement> getFlowelements() {
+
+		ArrayList<FlowElement> returnElements = new ArrayList<FlowElement>();
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+
+			entry.getValue().splitIntoPieces();
+			returnElements.add(entry.getValue());
+		}
+		// returnElements.add(firstElement);
+
+		return returnElements;
+	}
+
 	// TODO: Implement
 	// Add structure to keep track of variable values
 	// Will need variable name, type, and initial value
@@ -121,33 +167,11 @@ public class BpmnDiagram extends FlowElement {
 		}
 	}
 
-	public ArrayList<FlowElement> getFlowelements() {
-
-		ArrayList<FlowElement> returnElements = new ArrayList<FlowElement>();
-		for (Entry<String, FlowElement> entry : elements.entrySet()) {
-
-			entry.getValue().splitIntoPieces();
-			returnElements.add(entry.getValue());
-		}
-		// returnElements.add(firstElement);
-
-		return returnElements;
+	public StartEvent getStart() {
+		return start;
 	}
 
-	public boolean equals(Object o) {
-		// return elements.equals(o);
-		BpmnDiagram otherElement = (BpmnDiagram) o;
-		if (!this.getName().equals(otherElement.getName())) {
-			return false;
-		}
-		for (Entry<String, FlowElement> entry : elements.entrySet()) {
-			FlowElement currentObject = entry.getValue();
-			FlowElement otherObject = otherElement.elements.get(entry.getKey());
-			if (otherObject == null || !currentObject.equals(otherObject)) {
-				return false;
-			}
-		}
-		return true;
+	public void setStart(StartEvent start) {
+		this.start = start;
 	}
-
 }

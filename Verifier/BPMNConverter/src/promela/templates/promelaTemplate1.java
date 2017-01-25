@@ -1,8 +1,5 @@
 package promela.templates;
 
-import java.util.ArrayList;
-import java.util.TreeSet;
-
 import bpmnStructure.FlowElement;
 import bpmnStructure.SequenceFlow;
 import bpmnStructure.activities.Task;
@@ -11,15 +8,18 @@ public class promelaTemplate1 {
 
 	public String getProcessChannel(FlowElement f) {
 		String channelString = "";
-		for(SequenceFlow flow: f.sequenceFlowIn){
+		for (SequenceFlow flow : f.sequenceFlowIn) {
 			channelString += "chan processChannel" + f.getName() + "_" + flow.getIdNumber() + " = [1] of {byte};\n";
 		}
-		/*if there are no inflows, then assume it is called from the main code and give one inbound channel*/
-		if (f.sequenceFlowIn.size()== 0){
+		/*
+		 * if there are no inflows, then assume it is called from the main code
+		 * and give one inbound channel
+		 */
+		if (f.sequenceFlowIn.size() == 0) {
 			channelString += "chan processChannel" + f.getName() + " = [1] of {byte};\n";
 		}
 		return channelString;
-		
+
 	}
 
 	public String getProcessRunCommand(FlowElement f) {
@@ -27,23 +27,23 @@ public class promelaTemplate1 {
 		// TODO: Do I trust that it has the right number of flows in and out?
 		s += "run " + f.getProcessTemplateName() + "(";
 
-		//s += "processChannel" + f.name + ", ";
+		// s += "processChannel" + f.name + ", ";
 
 		for (SequenceFlow sf : f.sequenceFlowIn) {
 			s += "processChannel" + sf.getEnd().getName() + "_" + sf.getIdNumber() + ", ";
 		}
-		
-		if (f.sequenceFlowIn.size()== 0){
+
+		if (f.sequenceFlowIn.size() == 0) {
 			s += "processChannel" + f.getName() + ", ";
 		}
-		
+
 		// for (SequenceFlow sf : f.sequenceFlowIn) {
 		// //TODO:I'm not sure exactly how there can be a reference, but the
 		// name is null
 		// s += "processChannel" + sf.start.name + ", ";
 		// }
 		for (SequenceFlow sf : f.sequenceFlowOut) {
-			s += "processChannel" + sf.getEnd().getName() + "_" + sf.getIdNumber()+ ", ";
+			s += "processChannel" + sf.getEnd().getName() + "_" + sf.getIdNumber() + ", ";
 		}
 
 		s += "done, terminate, taskID);\n";
@@ -51,7 +51,7 @@ public class promelaTemplate1 {
 
 	}
 
-	public String getFoundationalStructure(String processChannels, String processInitializers) {
+	public String getFoundationalStructure(String processChannels, String processInitializers,String startChannelName) {
 		String s = "#define N 3\n";
 		s += "mtype = {taskID}\n";
 		s += "#include split_and_gate_only.pml\n";
@@ -75,7 +75,7 @@ public class promelaTemplate1 {
 		s += "do\n";
 		// s += ":: nfull(in) ->\n";
 
-		s += "  :: nfull(processChannelstart) ->\n";
+		s += "  :: nfull("+startChannelName+") ->\n";
 		s += "    atomic {\n";
 		s += "      select(x : 1 .. N);\n";
 		s += "      printf(\"send(%d)\\n\", x);\n";
