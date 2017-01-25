@@ -10,11 +10,9 @@ L0:
 		 send1 = false;
 		 send2 = false;
 		 do
-		   :: nfull(out1) ->
-			  out1!x;
+		   :: out1!x ->
 			  send1 = true;
-		   :: nfull(out2) -> 
-			  out2!x;
+		   :: out2!x -> 
 			  send2 = true;
 		   :: send1 && send2 ->
 			  break;
@@ -29,4 +27,8 @@ L0:
 	  :: terminate?[_] -> printf("terminate(%d)\n", _pid);
 	fi;
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2cbee965206f1b7857e4ec85a4a231b38dc049f5

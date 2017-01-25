@@ -2,6 +2,20 @@
 
 mtype = {taskID};
 
+/* TODO: the done channel needs messages to include scope:
+ unsigned id
+ unsigned level
+ The token is dropped if the id matches and level is greater-than-equal the current level
+ Top level is 0
+ The task needs to have another parameter, level, so it knows what level it is started out
+*/
+
+/* TODO: need interation counter on gates to handle loops
+*/
+
+/* TODO: add assertion to be sure iteration counters do not roll over. Make the iteration count a parameter
+   so the assertion is tied to the parameter  
+*/
 proctype task(chan in, out, done, terminate; mtype id) {
   byte x = 0;
 L0:
