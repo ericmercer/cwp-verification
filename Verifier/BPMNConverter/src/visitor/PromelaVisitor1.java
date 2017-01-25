@@ -22,44 +22,44 @@ public class PromelaVisitor1 implements Visitor {
 	@Override
 	public void Visit(BasicStartEvent f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
+		System.out.println(f.getName());
 
 	}
 
 	@Override
 	public void Visit(BasicEndEvent f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
+		System.out.println(f.getName());
 	}
 
 	@Override
 	public void Visit(Task f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
+		System.out.println(f.getName());
 	}
 
 	@Override
 	public void Visit(ConvergingExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
+		System.out.println(f.getName());
 	}
 
 	@Override
 	public void Visit(DivergingExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
+		System.out.println(f.getName());
 	}
 
 	@Override
 	public void Visit(ExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
+		System.out.println(f.getName());
 	}
 
 	@Override
 	public void Visit(FlowElement f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
+		System.out.println(f.getName());
 
 	}
 

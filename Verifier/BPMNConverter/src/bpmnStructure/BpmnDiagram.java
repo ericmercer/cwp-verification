@@ -21,10 +21,10 @@ public class BpmnDiagram extends FlowElement {
 
 	// TODO: Add method to export structure to BPMN xml format
 
-	TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
+	private TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
 	// TODO: Somehow guarantee the uniqueness of the initial element
 	// InitialElement firstElement = new InitialElement("InitialElement");
-	StartEvent start = null;
+	private StartEvent start = null;
 
 	public BpmnDiagram(String id) {
 		super(id);
@@ -117,7 +117,7 @@ public class BpmnDiagram extends FlowElement {
 		}
 
 		for (FlowElement f : itemsToAdd) {
-			elements.put(f.name, f);
+			elements.put(f.getName(), f);
 		}
 	}
 
@@ -137,7 +137,7 @@ public class BpmnDiagram extends FlowElement {
 	public boolean equals(Object o) {
 		// return elements.equals(o);
 		BpmnDiagram otherElement = (BpmnDiagram) o;
-		if (!this.name.equals(otherElement.name)) {
+		if (!this.getName().equals(otherElement.getName())) {
 			return false;
 		}
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {

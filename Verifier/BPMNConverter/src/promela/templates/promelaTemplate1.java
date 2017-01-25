@@ -12,11 +12,11 @@ public class promelaTemplate1 {
 	public String getProcessChannel(FlowElement f) {
 		String channelString = "";
 		for(SequenceFlow flow: f.sequenceFlowIn){
-			channelString += "chan processChannel" + f.name + "_" + flow.getIdNumber() + " = [1] of {byte};\n";
+			channelString += "chan processChannel" + f.getName() + "_" + flow.getIdNumber() + " = [1] of {byte};\n";
 		}
 		/*if there are no inflows, then assume it is called from the main code and give one inbound channel*/
 		if (f.sequenceFlowIn.size()== 0){
-			channelString += "chan processChannel" + f.name + " = [1] of {byte};\n";
+			channelString += "chan processChannel" + f.getName() + " = [1] of {byte};\n";
 		}
 		return channelString;
 		
@@ -30,11 +30,11 @@ public class promelaTemplate1 {
 		//s += "processChannel" + f.name + ", ";
 
 		for (SequenceFlow sf : f.sequenceFlowIn) {
-			s += "processChannel" + sf.end.name + "_" + sf.getIdNumber() + ", ";
+			s += "processChannel" + sf.getEnd().getName() + "_" + sf.getIdNumber() + ", ";
 		}
 		
 		if (f.sequenceFlowIn.size()== 0){
-			s += "processChannel" + f.name + ", ";
+			s += "processChannel" + f.getName() + ", ";
 		}
 		
 		// for (SequenceFlow sf : f.sequenceFlowIn) {
@@ -43,7 +43,7 @@ public class promelaTemplate1 {
 		// s += "processChannel" + sf.start.name + ", ";
 		// }
 		for (SequenceFlow sf : f.sequenceFlowOut) {
-			s += "processChannel" + sf.end.name + "_" + sf.getIdNumber()+ ", ";
+			s += "processChannel" + sf.getEnd().getName() + "_" + sf.getIdNumber()+ ", ";
 		}
 
 		s += "done, terminate, taskID);\n";
@@ -243,7 +243,7 @@ public class promelaTemplate1 {
 
 	public String getProcessProcTypeCode(Task t) {
 		// TODO Auto-generated method stub
-		return this.getTaskTemplate("process" + t.name);
+		return this.getTaskTemplate("process" + t.getName());
 	}
 
 }

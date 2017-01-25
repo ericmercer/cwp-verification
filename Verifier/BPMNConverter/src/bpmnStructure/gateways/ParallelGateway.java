@@ -21,13 +21,13 @@ public class ParallelGateway extends Gateway {
 		// Converging
 		if (this.sequenceFlowIn.size() > 1) {
 			// return;
-			convergingGateway = new ConvergingParallelGateway("Converging" + this.name);
+			convergingGateway = new ConvergingParallelGateway("Converging" + this.getName());
 		}
 
 		// Diverging
 		if (this.sequenceFlowOut.size() > 1) {
 
-			divergingGateway = new DivergingParallelGateway("Diverging" + this.name);
+			divergingGateway = new DivergingParallelGateway("Diverging" + this.getName());
 		}
 
 		if (convergingGateway != null && divergingGateway != null) {
@@ -54,5 +54,9 @@ public class ParallelGateway extends Gateway {
 
 		return newElements;
 
+	}
+	
+	public String getProcessTemplateName(){
+		return "generic_parallel_gateway";
 	}
 }

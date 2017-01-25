@@ -16,61 +16,61 @@ public class PrintVisitor implements Visitor {
 	@Override
 	public void Visit(BasicStartEvent f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
-		f.visited = true;
+		System.out.println(f.getName());
+//		f.visited = true;
 
 		for (SequenceFlow f1 : f.sequenceFlowOut) {
-			if (!f1.end.visited) {
-				f1.end.accept(this);
-			}
+//			if (!f1.getEnd().visited) {
+//				f1.getEnd().accept(this);
+//			}
 		}
 	}
 
 	@Override
 	public void Visit(BasicEndEvent f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
-		f.visited = true;
+		System.out.println(f.getName());
+//		f.visited = true;
 	}
 
 	@Override
 	public void Visit(Task f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
-		f.visited = true;
+		System.out.println(f.getName());
+//		f.visited = true;
 	}
 
 	@Override
 	public void Visit(ConvergingExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
-		f.visited = true;
+		System.out.println(f.getName());
+//		f.visited = true;
 	}
 
 	@Override
 	public void Visit(DivergingExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
-		f.visited = true;
+		System.out.println(f.getName());
+//		f.visited = true;
 	}
 
 	@Override
 	public void Visit(ExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
-		f.visited = true;
+		System.out.println(f.getName());
+//		f.visited = true;
 	}
 
 	@Override
 	public void Visit(FlowElement f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.name);
-		f.visited = true;
+		System.out.println(f.getName());
+//		f.visited = true;
 
 		for (SequenceFlow f1 : f.sequenceFlowOut) {
-			if (!f1.end.visited) {
-				f1.end.accept(this);
-			}
+//			if (!f1.getEnd().visited) {
+//				f1.getEnd().accept(this);
+//			}
 		}
 	}
 

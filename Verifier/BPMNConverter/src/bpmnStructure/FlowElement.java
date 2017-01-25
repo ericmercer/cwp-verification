@@ -6,16 +6,16 @@ import visitor.Visitor;
 public class FlowElement {
 
 	public static int flowElementCount = 0;
-	public String name;
-	public int id;
-	public boolean visited = false;
+	private String name;
+	//public int id;
+	//public boolean visited = false;
 	static int sequenceFlowCount = 1;
 
 	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();
 	public ArrayList<SequenceFlow> sequenceFlowIn = new ArrayList<SequenceFlow>();
 
 	public FlowElement(String name) {
-		this.name = name;
+		this.setName(name);
 	}
 
 	/*
@@ -57,7 +57,7 @@ public class FlowElement {
 	public void RedirectInboundFlowsTo(FlowElement newElement) {
 		// Redirect incoming sequence flows to new element
 		for (SequenceFlow f : this.sequenceFlowIn) {
-			f.end = newElement;
+			f.setEnd(newElement);
 			newElement.sequenceFlowIn.add(f);
 		}
 
@@ -66,14 +66,14 @@ public class FlowElement {
 	public void RedirectOutboundFlowsTo(FlowElement newElement) {
 		// Redirect outbound sequence flows to new element
 		for (SequenceFlow f : this.sequenceFlowOut) {
-			f.start = newElement;
+			f.setStart(newElement);
 			newElement.sequenceFlowOut.add(f);
 		}
 
 	}
 
 	public FlowElement() {
-		id = flowElementCount++;
+		//id = flowElementCount++;
 	}
 
 	public String getProcessTemplateName() {
@@ -82,14 +82,14 @@ public class FlowElement {
 
 	public boolean equals(Object o) {
 		FlowElement otherElement = (FlowElement) o;
-		if (!otherElement.name.equals(this.name)) {
+		if (!otherElement.getName().equals(this.getName())) {
 			return false;
 		}
 
 		for (SequenceFlow f : this.sequenceFlowOut) {
 			boolean found = false;
 			for (SequenceFlow f1 : otherElement.sequenceFlowOut) {
-				if (f1.end.name.equals(f.end.name)) {
+				if (f1.getEnd().getName().equals(f.getEnd().getName())) {
 					found = true;
 					break;
 				}
@@ -104,7 +104,7 @@ public class FlowElement {
 		for (SequenceFlow f : this.sequenceFlowIn) {
 			boolean found = false;
 			for (SequenceFlow f1 : otherElement.sequenceFlowIn) {
-				if (f1.start.name.equals(f.start.name)) {
+				if (f1.getStart().getName().equals(f.getStart().getName())) {
 					found = true;
 					break;
 				}
@@ -117,6 +117,14 @@ public class FlowElement {
 		}
 
 		return true;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
