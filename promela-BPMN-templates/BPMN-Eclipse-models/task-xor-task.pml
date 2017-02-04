@@ -22,30 +22,12 @@ proctype start_task_end(chan report; byte start) {
 	   fi
 	   out_tokens(seq2)
 	   
-	:: in_tokens(seq2) ->
-	   if
-	   :: (condition == true) ->
-		  printf("xor-split (seq3)\n")
-		  out_tokens(seq3)
-	   :: else -> 
-		  if
-		  ::(condition == false) ->
-			 printf("xor-split (seq4)\n")
-			 out_tokens(seq4)
-		  :: else ->
-			 exception!xor_split_false
-			 break
-		  fi
-	   fi
+	:: xor_option(seq2,1/*xor-split (seq3)*/,condition == true, seq3, 2/*xor-split (seq4)*/,condition == false, seq4)
+	
+	:: task(seq3,3/*Reject Application*/, seq5)
 
-	:: in_tokens(seq3) ->
-	   printf("Reject Application\n")
-	   out_tokens(seq5)
-
-	:: in_tokens(seq4)
-	   printf("Accept Application\n")
-	   out_tokens(seq6)
-
+	:: task(seq4,4/*Accept Application*/, seq6)
+	
 	:: in_tokens(seq5) ->
 	   printf("xor-merge (seq5)\n")
 	   out_tokens(seq7)
