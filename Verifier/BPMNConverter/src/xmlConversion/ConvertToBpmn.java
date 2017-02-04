@@ -36,26 +36,39 @@ public class ConvertToBpmn {
 			Document document = builder.parse( inputFile );
 			document.getDocumentElement().normalize();
 //	        System.out.println("Root element: " + document.getDocumentElement().getNodeName());
-	        NodeList process = document.getElementsByTagName( "bpmn:process" );
+	        NodeList process = document.getElementsByTagName( "bpmn2:process" );
+	        if(process == null) {
+	        	process = document.getElementsByTagName( "bpmn:process" );
+	        	if(process == null) {
+	        		process = document.getElementsByTagName( "process" );
+	        		if(process == null) {
+	        			throw new Exception();
+	        		}
+	        		blankVersion(document, process);
+	        		return diagram;
+	        	}
+	        	bpmnVersion(document, process);
+	        	return diagram;
+	        }
 	        String id = ( (Element) process.item(0) ).getAttribute( "id" );
 			diagram = new BpmnDiagram(id);
 			
-			subProcess = document.getElementsByTagName( "bpmn:subProcess" );
+			subProcess = document.getElementsByTagName( "bpmn2:subProcess" );
 			initSubProcess();
 			
-	        startEvents = document.getElementsByTagName( "bpmn:startEvent" );
+	        startEvents = document.getElementsByTagName( "bpmn2:startEvent" );
 	        initStartEvents();
 	        
-			tasks = document.getElementsByTagName( "bpmn:task" );
+			tasks = document.getElementsByTagName( "bpmn2:task" );
 			initTasks();
 	        
-			exclusiveGates = document.getElementsByTagName( "bpmn:exclusiveGateway" );
+			exclusiveGates = document.getElementsByTagName( "bpmn2:exclusiveGateway" );
 			initExclusiveGates();
 	        
-			endEvents = document.getElementsByTagName( "bpmn:endEvent" );
+			endEvents = document.getElementsByTagName( "bpmn2:endEvent" );
 			initEndEvents();
 	        
-			sequenceFlows = document.getElementsByTagName("bpmn:sequenceFlow");
+			sequenceFlows = document.getElementsByTagName("bpmn2:sequenceFlow");
 			initSequenceFlows();
 	         
 //	        close(); 
@@ -67,7 +80,10 @@ public class ConvertToBpmn {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("The file doesn't exist!");
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("Not a valid input file!");
 			e.printStackTrace();
 		}
 		
@@ -148,6 +164,53 @@ public class ConvertToBpmn {
         		}
         	}
         }
+	}
+	
+	private void bpmnVersion(Document document, NodeList process) {
+        String id = ( (Element) process.item(0) ).getAttribute( "id" );
+		diagram = new BpmnDiagram(id);
+		
+		subProcess = document.getElementsByTagName( "bpmn:subProcess" );
+		initSubProcess();
+		
+        startEvents = document.getElementsByTagName( "bpmn:startEvent" );
+        initStartEvents();
+        
+		tasks = document.getElementsByTagName( "bpmn:task" );
+		initTasks();
+        
+		exclusiveGates = document.getElementsByTagName( "bpmn:exclusiveGateway" );
+		initExclusiveGates();
+        
+		endEvents = document.getElementsByTagName( "bpmn:endEvent" );
+		initEndEvents();
+        
+		sequenceFlows = document.getElementsByTagName("bpmn:sequenceFlow");
+		initSequenceFlows();
+	}
+	
+	
+	private void blankVersion(Document document, NodeList process) {
+        String id = ( (Element) process.item(0) ).getAttribute( "id" );
+		diagram = new BpmnDiagram(id);
+		
+		subProcess = document.getElementsByTagName( "subProcess" );
+		initSubProcess();
+		
+        startEvents = document.getElementsByTagName( "startEvent" );
+        initStartEvents();
+        
+		tasks = document.getElementsByTagName( "task" );
+		initTasks();
+        
+		exclusiveGates = document.getElementsByTagName( "exclusiveGateway" );
+		initExclusiveGates();
+        
+		endEvents = document.getElementsByTagName( "endEvent" );
+		initEndEvents();
+        
+		sequenceFlows = document.getElementsByTagName("sequenceFlow");
+		initSequenceFlows();
 	}
 
 }

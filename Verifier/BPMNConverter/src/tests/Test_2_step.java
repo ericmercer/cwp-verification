@@ -8,7 +8,7 @@ public class Test_2_step {
 	public static void main( String args[] ) {
 		
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML(args[0]);
+		BpmnDiagram diagram = convert.importXML("tests/2_step.bpmn");
 		
 		BpmnDiagram correct = new BpmnDiagram("Process_1");
 		correct.addStartEvent("StartEvent_1");
