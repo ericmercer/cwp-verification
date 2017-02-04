@@ -12,11 +12,13 @@ public class TestDiagram {
 	public static void main( String args[] ) {
 		
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("theFile");
+		BpmnDiagram diagram = convert.importXML(args[0]);
 		
 		diagram.addStartEvent("");
 		diagram.addEndEvent("");
 		diagram.addSequenceFlow("", "");
 	}
+	
+	
 
 }
