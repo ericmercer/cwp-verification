@@ -1,6 +1,8 @@
 /bpmnStructure/
+/mathflow/
+/promela/
 /state/
-/templates/
 /tests/
 /visitor/
-/promela/
+/xml/
+/xmlConversion/
