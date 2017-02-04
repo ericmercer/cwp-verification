@@ -75,7 +75,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("Task_1", "ExclusiveGateway_1");
 		correct.addSequenceFlow("ExclusiveGateway_1", "EndEvent_1aqgj4v");
 		
-		System.out.print("Testing: ");
+		System.out.print("Test: ");
 		System.out.println( correct.equals(diagram) );
 	}
 	
@@ -85,14 +85,25 @@ public class TestDiagram {
 		
 		BpmnDiagram correct = new BpmnDiagram("Process_1");
 		correct.addStartEvent("StartEvent_1");
-		correct.addEndEvent("EndEvent_1aqgj4v");
-		correct.addTask("Task_1");
-		correct.addExclusiveGateway("ExclusiveGateway_1");
-		correct.addSequenceFlow("StartEvent_1", "Task_1");
-		correct.addSequenceFlow("Task_1", "ExclusiveGateway_1");
-		correct.addSequenceFlow("ExclusiveGateway_1", "EndEvent_1aqgj4v");
+		correct.addEndEvent("EndEvent_1");
 		
-		System.out.print("Testing: ");
+		correct.addTask("Task_1");
+		
+		correct.addExclusiveGateway("ExclusiveGateway_1");
+		correct.addExclusiveGateway("ExclusiveGateway_2");
+		
+		correct.addNormalSubProcess("SubProcess_1");
+		correct.addNormalSubProcess("AdHocSubProcess_1");
+		
+		correct.addSequenceFlow("StartEvent_1", "ExclusiveGateway_2");
+		correct.addSequenceFlow("ExclusiveGateway_2", "Task_1");
+		correct.addSequenceFlow("ExclusiveGateway_2", "AdHocSubProcess_1");
+		correct.addSequenceFlow("Task_1", "ExclusiveGateway_1");
+		correct.addSequenceFlow("AdHocSubProcess_1", "SubProcess_1");
+		correct.addSequenceFlow("SubProcess_1", "ExclusiveGateway_1");
+		correct.addSequenceFlow("ExclusiveGateway_1", "EndEvent_1");
+		
+		System.out.print("Test: ");
 		System.out.println( correct.equals(diagram) );
 	}
 

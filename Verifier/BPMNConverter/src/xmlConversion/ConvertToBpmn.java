@@ -22,6 +22,7 @@ public class ConvertToBpmn {
 	private NodeList exclusiveGates;
 	private NodeList endEvents;
 	private NodeList subProcess;
+	private NodeList adhocSubProcess;
 	private NodeList sequenceFlows;
 	
 	private BpmnDiagram diagram;
@@ -54,6 +55,9 @@ public class ConvertToBpmn {
 			diagram = new BpmnDiagram(id);
 			
 			subProcess = document.getElementsByTagName( "bpmn2:subProcess" );
+			initSubProcess();
+			
+			adhocSubProcess = document.getElementsByTagName( "bpmn2:adHocSubProcess" );
 			initSubProcess();
 			
 	        startEvents = document.getElementsByTagName( "bpmn2:startEvent" );
@@ -173,6 +177,9 @@ public class ConvertToBpmn {
 		subProcess = document.getElementsByTagName( "bpmn:subProcess" );
 		initSubProcess();
 		
+		adhocSubProcess = document.getElementsByTagName( "bpmn:adHocSubProcess" );
+		initSubProcess();
+		
         startEvents = document.getElementsByTagName( "bpmn:startEvent" );
         initStartEvents();
         
@@ -195,6 +202,9 @@ public class ConvertToBpmn {
 		diagram = new BpmnDiagram(id);
 		
 		subProcess = document.getElementsByTagName( "subProcess" );
+		initSubProcess();
+		
+		adhocSubProcess = document.getElementsByTagName( "adHocSubProcess" );
 		initSubProcess();
 		
         startEvents = document.getElementsByTagName( "startEvent" );
