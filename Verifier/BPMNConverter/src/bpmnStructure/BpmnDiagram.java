@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import bpmnStructure.activities.Task;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
+import bpmnStructure.events.IntermediateEvent;
 import bpmnStructure.events.StartEvent;
 import bpmnStructure.gateways.ExclusiveGateway;
 import bpmnStructure.gateways.ParallelGateway;
@@ -83,6 +84,10 @@ public class BpmnDiagram extends FlowElement {
 
 	public void addParallelGateway(String id) {
 		addFlowElement(id, new ParallelGateway(id));
+	}
+	
+	public void addIntermediateEvent(String id) {
+		addFlowElement(id, new IntermediateEvent(id));
 	}
 
 	/**** End of XML interface methods **************/

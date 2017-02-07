@@ -153,8 +153,8 @@ public class ConvertToBpmn {
         	for( int i = 0; i < intermediateEvents.getLength(); i++ ) {
         		if( intermediateEvents.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) intermediateEvents.item(i);
-        			writer.println( "intermed.Events(" + i + "): " + element.getAttribute( "id" ) );
-        			diagram.addTask( element.getAttribute("id") );
+        			writer.println( "intermediateEvents(" + i + "): " + element.getAttribute( "id" ) );
+        			diagram.addIntermediateEvent( element.getAttribute("id") );
         		}
         	}
         }
