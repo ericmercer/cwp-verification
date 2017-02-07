@@ -37,7 +37,7 @@ public class TestDiagram {
 	
 	public void test_2_step() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/2_step.bpmn");
+		BpmnDiagram diagram = convert.importXML("tests/diagrams/2_step.bpmn");
 		
 		BpmnDiagram correct = new BpmnDiagram("Process_1");
 		correct.addStartEvent("StartEvent_1");
@@ -50,7 +50,7 @@ public class TestDiagram {
 	
 	public void test_4_step() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/4_step.bpmn");
+		BpmnDiagram diagram = convert.importXML("tests/diagrams/4_step.bpmn");
 		
 		BpmnDiagram correct = new BpmnDiagram("Process_1");
 		correct.addStartEvent("StartEvent_1");
@@ -67,7 +67,7 @@ public class TestDiagram {
 	
 	public void test_sub_process_test1() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/sub_process_test1.bpmn");
+		BpmnDiagram diagram = convert.importXML("tests/diagrams/sub_process_test1.bpmn");
 		
 		BpmnDiagram correct = new BpmnDiagram("sub_process_test1");
 		correct.addStartEvent("StartEvent_1");
@@ -95,7 +95,7 @@ public class TestDiagram {
 	
 	public void test_book_example10() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/book_example10.1.bpmn");
+		BpmnDiagram diagram = convert.importXML("tests/diagrams/book_example10.1.bpmn");
 		
 		BpmnDiagram correct = new BpmnDiagram("book_example10Test");
 		correct.addStartEvent("StartEvent_1");
@@ -133,7 +133,7 @@ public class TestDiagram {
 	
 	public void test_MyName() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/MyName.bpmn");
+		BpmnDiagram diagram = convert.importXML("tests/diagrams/MyName.bpmn");
 		
 		BpmnDiagram correct = new BpmnDiagram("Process_1");
 		correct.addStartEvent("StartEvent_1");

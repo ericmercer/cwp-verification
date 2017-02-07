@@ -1,29 +1,15 @@
-worked?bpmn version: 
-startEvents: SubProcess_0zaafna
-startEvents: SubProcess_0zaafna
+bpmn2 version: 
+startEvents: SubProcess_1
+startEvents: AdHocSubProcess_1
 startEvents: StartEvent_1
-task(0): Task_0q22whk
-task(1): Task_12uwadk
-task(2): Task_1vukq14
-task(3): Task_1c3wjjf
-exclusiveGateway(0): ExclusiveGateway_1jr1gc4
-exclusiveGateway(1): ExclusiveGateway_1anf5gt
-exclusiveGateway(2): ExclusiveGateway_0hpt3dk
-exclusiveGateway(3): ExclusiveGateway_1
-intermed.Events(0): IntermediateThrowEvent_060vul7
-intermed.Events(1): IntermediateThrowEvent_1bva7ei
-endEvent: EndEvent_0259rfj
-sourceRef: ExclusiveGateway_1jr1gc4 targetRef: Task_0q22whk
-sourceRef: ExclusiveGateway_1jr1gc4 targetRef: Task_12uwadk
-sourceRef: Task_12uwadk targetRef: ExclusiveGateway_1anf5gt
-sourceRef: Task_0q22whk targetRef: ExclusiveGateway_1anf5gt
-sourceRef: ExclusiveGateway_1jr1gc4 targetRef: IntermediateThrowEvent_060vul7
-sourceRef: IntermediateThrowEvent_060vul7 targetRef: IntermediateThrowEvent_1bva7ei
-sourceRef: IntermediateThrowEvent_1bva7ei targetRef: ExclusiveGateway_1anf5gt
-sourceRef: StartEvent_1 targetRef: ExclusiveGateway_0hpt3dk
-sourceRef: ExclusiveGateway_0hpt3dk targetRef: SubProcess_0zaafna
-sourceRef: SubProcess_0zaafna targetRef: Task_1vukq14
-sourceRef: ExclusiveGateway_0hpt3dk targetRef: Task_1c3wjjf
-sourceRef: Task_1c3wjjf targetRef: ExclusiveGateway_1
-sourceRef: Task_1vukq14 targetRef: ExclusiveGateway_1
-sourceRef: ExclusiveGateway_1 targetRef: EndEvent_0259rfj
+task(0): Task_1
+exclusiveGateway(0): ExclusiveGateway_1
+exclusiveGateway(1): ExclusiveGateway_2
+endEvent: EndEvent_1
+sourceRef: AdHocSubProcess_1 targetRef: SubProcess_1
+sourceRef: SubProcess_1 targetRef: ExclusiveGateway_1
+sourceRef: StartEvent_1 targetRef: ExclusiveGateway_2
+sourceRef: ExclusiveGateway_2 targetRef: AdHocSubProcess_1
+sourceRef: ExclusiveGateway_1 targetRef: EndEvent_1
+sourceRef: ExclusiveGateway_2 targetRef: Task_1
+sourceRef: Task_1 targetRef: ExclusiveGateway_1
