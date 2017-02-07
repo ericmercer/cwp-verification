@@ -135,7 +135,7 @@ public class TestDiagram {
 		ConvertToBpmn convert = new ConvertToBpmn();
 		BpmnDiagram diagram = convert.importXML("tests/MyName.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("book_example10Test");
+		BpmnDiagram correct = new BpmnDiagram("Process_1");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_0259rfj");
 		
