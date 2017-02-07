@@ -5,9 +5,9 @@ import xmlConversion.ConvertToBpmn;
 
 public class TestDiagram {
 	
-	private static String[] tests = {
-			"Test_2_step", "Test_4_Step", "Test_book_example10"
-	};
+//	private static String[] tests = {
+//			"Test_2_step", "Test_4_Step", "sub_process_test1", "Test_book_example10", "MyName"
+//	};
 	
 	public static void main( String args[] ) {
 		

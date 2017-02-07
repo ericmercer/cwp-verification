@@ -1,10 +1,7 @@
 package xmlConversion;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,11 +27,8 @@ public class ConvertToBpmn {
 	private NodeList sequenceFlows;
 	
 	private BpmnDiagram diagram;
-	private PrintWriter writer;
 	
 	public BpmnDiagram importXML( String fileName ) {
-		
-		initExport();
 		
 		try {
 			File inputFile = new File( fileName );
@@ -60,6 +54,7 @@ public class ConvertToBpmn {
         		blankVersion(document, process);
         		return diagram;
 	        }
+	        System.out.println("bpmn2 version: ");
 	        String id = ( (Element) process.item(0) ).getAttribute( "id" );
 			diagram = new BpmnDiagram(id);
 			
@@ -87,7 +82,6 @@ public class ConvertToBpmn {
 			sequenceFlows = document.getElementsByTagName("bpmn2:sequenceFlow");
 			initSequenceFlows();
 	         
-//	        close(); 
 	        
 		} catch (ParserConfigurationException e) {
 			System.out.println( "You have an error in the configuration of your xml file!" );
@@ -101,7 +95,7 @@ public class ConvertToBpmn {
 			System.out.println("Not a valid input file!");
 			e.printStackTrace();
 		}
-		writer.close();
+		
 		return diagram;
 	}
 	
@@ -112,7 +106,7 @@ public class ConvertToBpmn {
         	for( int i = 0; i < subProcess.getLength(); i++ ) {
         		if( subProcess.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) subProcess.item(i);
-        			writer.println( "startEvents: " + element.getAttribute( "id" ) );
+        			System.out.println( "startEvents: " + element.getAttribute( "id" ) );
         			diagram.addNormalSubProcess( element.getAttribute("id") );
         		}
         		
@@ -125,7 +119,7 @@ public class ConvertToBpmn {
         	for( int i = 0; i < adhocSubProcess.getLength(); i++ ) {
         		if( adhocSubProcess.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) adhocSubProcess.item(i);
-        			writer.println( "startEvents: " + element.getAttribute( "id" ) );
+        			System.out.println( "startEvents: " + element.getAttribute( "id" ) );
         			diagram.addNormalSubProcess( element.getAttribute("id") );
         		}
         		
@@ -138,7 +132,7 @@ public class ConvertToBpmn {
         	for( int i = 0; i < startEvents.getLength(); i++ ) {
         		if( startEvents.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) startEvents.item(i);
-        			writer.println( "startEvents: " + element.getAttribute( "id" ) );
+        			System.out.println( "startEvents: " + element.getAttribute( "id" ) );
         			diagram.addStartEvent( element.getAttribute("id") );
         		}
         		
@@ -151,7 +145,7 @@ public class ConvertToBpmn {
         	for( int i = 0; i < endEvents.getLength(); i++ ) {
         		if( endEvents.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) endEvents.item(i);
-        			writer.println( "endEvent: " + element.getAttribute( "id" ) );
+        			System.out.println( "endEvent: " + element.getAttribute( "id" ) );
         			diagram.addEndEvent( element.getAttribute("id") );
         		}
         	}
@@ -163,7 +157,7 @@ public class ConvertToBpmn {
         	for( int i = 0; i < tasks.getLength(); i++ ) {
         		if( tasks.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) tasks.item(i);
-        			writer.println( "task(" + i + "): " + element.getAttribute( "id" ) );
+        			System.out.println( "task(" + i + "): " + element.getAttribute( "id" ) );
         			diagram.addTask( element.getAttribute("id") );
         		}
         	}
@@ -175,7 +169,7 @@ public class ConvertToBpmn {
         	for( int i = 0; i < intermediateEvents.getLength(); i++ ) {
         		if( intermediateEvents.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) intermediateEvents.item(i);
-        			writer.println( "intermed.Events(" + i + "): " + element.getAttribute( "id" ) );
+        			System.out.println( "intermed.Events(" + i + "): " + element.getAttribute( "id" ) );
         			diagram.addTask( element.getAttribute("id") );
         		}
         	}
@@ -187,7 +181,7 @@ public class ConvertToBpmn {
         	for( int i = 0; i < exclusiveGates.getLength(); i++ ) {
         		if( exclusiveGates.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) exclusiveGates.item(i);
-        			writer.println( "exclusiveGateway(" + i + "): " + element.getAttribute( "id" ) );
+        			System.out.println( "exclusiveGateway(" + i + "): " + element.getAttribute( "id" ) );
         			diagram.addExclusiveGateway( element.getAttribute("id") );
         		}
         	}
@@ -200,7 +194,7 @@ public class ConvertToBpmn {
         		if( sequenceFlows.item(i).getNodeType() == Node.ELEMENT_NODE ) {
         			Element element = (Element) sequenceFlows.item(i);
         			String one = element.getAttribute("sourceRef"), two = element.getAttribute("targetRef");
-        			writer.println( "sourceRef: " + one + " targetRef: " + two );
+        			System.out.println( "sourceRef: " + one + " targetRef: " + two );
         			diagram.addSequenceFlow( one, two );
         		}
         	}
@@ -208,6 +202,7 @@ public class ConvertToBpmn {
 	}
 	
 	private void bpmnVersion(Document document, NodeList process) {
+		System.out.println("bpmn version: ");
         String id = ( (Element) process.item(0) ).getAttribute( "id" );
 		diagram = new BpmnDiagram(id);
 		
@@ -238,6 +233,7 @@ public class ConvertToBpmn {
 	
 	
 	private void blankVersion(Document document, NodeList process) {
+		System.out.println("blank version: ");
         String id = ( (Element) process.item(0) ).getAttribute( "id" );
 		diagram = new BpmnDiagram(id);
 		
@@ -266,13 +262,5 @@ public class ConvertToBpmn {
 		initSequenceFlows();
 	}
 	
-	private void initExport() {
-		try {
-			writer = new PrintWriter( new BufferedWriter( new FileWriter("tests/output.txt") ) );
-			writer.print("worked?");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 }
