@@ -1,29 +1,28 @@
-bpmn version: 
-startEvents: SubProcess_0zaafna
-startEvents: SubProcess_0zaafna
+bpmn2 version: 
+startEvents: SubProcess_2
 startEvents: StartEvent_1
-task(0): Task_0q22whk
-task(1): Task_12uwadk
-task(2): Task_1vukq14
-task(3): Task_1c3wjjf
-intermediateEvents(0): IntermediateThrowEvent_060vul7
-intermediateEvents(1): IntermediateThrowEvent_1bva7ei
-exclusiveGateway(0): ExclusiveGateway_1jr1gc4
-exclusiveGateway(1): ExclusiveGateway_1anf5gt
-exclusiveGateway(2): ExclusiveGateway_0hpt3dk
-exclusiveGateway(3): ExclusiveGateway_1
-endEvent: EndEvent_0259rfj
-sourceRef: ExclusiveGateway_1jr1gc4 targetRef: Task_0q22whk
-sourceRef: ExclusiveGateway_1jr1gc4 targetRef: Task_12uwadk
-sourceRef: Task_12uwadk targetRef: ExclusiveGateway_1anf5gt
-sourceRef: Task_0q22whk targetRef: ExclusiveGateway_1anf5gt
-sourceRef: ExclusiveGateway_1jr1gc4 targetRef: IntermediateThrowEvent_060vul7
-sourceRef: IntermediateThrowEvent_060vul7 targetRef: IntermediateThrowEvent_1bva7ei
-sourceRef: IntermediateThrowEvent_1bva7ei targetRef: ExclusiveGateway_1anf5gt
-sourceRef: StartEvent_1 targetRef: ExclusiveGateway_0hpt3dk
-sourceRef: ExclusiveGateway_0hpt3dk targetRef: SubProcess_0zaafna
-sourceRef: SubProcess_0zaafna targetRef: Task_1vukq14
-sourceRef: ExclusiveGateway_0hpt3dk targetRef: Task_1c3wjjf
-sourceRef: Task_1c3wjjf targetRef: ExclusiveGateway_1
-sourceRef: Task_1vukq14 targetRef: ExclusiveGateway_1
-sourceRef: ExclusiveGateway_1 targetRef: EndEvent_0259rfj
+startEvents: StartEvent_2
+task(0): UserTask_1
+task(1): UserTask_2
+exclusiveGateway(0): ExclusiveGateway_1
+exclusiveGateway(1): ExclusiveGateway_2
+exclusiveGateway(2): ExclusiveGateway_3
+exclusiveGateway(3): ExclusiveGateway_4
+exclusiveGateway(4): ExclusiveGateway_5
+exclusiveGateway(5): ExclusiveGateway_6
+endEvent: EndEvent_2
+endEvent: EndEvent_3
+endEvent: EndEvent_4
+endEvent: EndEvent_5
+sourceRef: UserTask_1 targetRef: ExclusiveGateway_1
+sourceRef: ExclusiveGateway_1 targetRef: ExclusiveGateway_3
+sourceRef: ExclusiveGateway_2 targetRef: EndEvent_2
+sourceRef: ExclusiveGateway_3 targetRef: EndEvent_3
+sourceRef: ExclusiveGateway_2 targetRef: ExclusiveGateway_3
+sourceRef: ExclusiveGateway_4 targetRef: EndEvent_4
+sourceRef: ExclusiveGateway_4 targetRef: EndEvent_5
+sourceRef: UserTask_2 targetRef: ExclusiveGateway_4
+sourceRef: StartEvent_2 targetRef: UserTask_2
+sourceRef: ExclusiveGateway_6 targetRef: ExclusiveGateway_2
+sourceRef: ExclusiveGateway_1 targetRef: SubProcess_2
+sourceRef: BoundaryEvent_3 targetRef: ExclusiveGateway_5

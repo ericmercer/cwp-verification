@@ -62,6 +62,12 @@ public class ConvertToBpmn {
         		writer.close();
         		return diagram;
     		}
+    		process = document.getElementsByTagName( "semantic:process" );
+    		if(process.item(0) != null) {
+    			semanticVersion(document, process);
+        		writer.close();
+        		return diagram;
+    		}
 
 			throw new Exception();
 	         
@@ -148,6 +154,18 @@ public class ConvertToBpmn {
         }
 	}
 	
+	private void initUserTasks() {
+        if( tasks != null ) {
+        	for( int i = 0; i < tasks.getLength(); i++ ) {
+        		if( tasks.item(i).getNodeType() == Node.ELEMENT_NODE ) {
+        			Element element = (Element) tasks.item(i);
+        			writer.println( "task(" + i + "): " + element.getAttribute( "id" ) );
+        			diagram.addTask( element.getAttribute("id") );
+        		}
+        	}
+        }
+	}
+	
 	private void initIntermediateEvents() {
         if( intermediateEvents != null ) {
         	for( int i = 0; i < intermediateEvents.getLength(); i++ ) {
@@ -202,6 +220,9 @@ public class ConvertToBpmn {
 		tasks = document.getElementsByTagName( "bpmn2:task" );
 		initTasks();
 		
+		tasks = document.getElementsByTagName( "bpmn2:userTask" );
+		initUserTasks();
+		
 		intermediateEvents = document.getElementsByTagName( "bpmn2:intermediateThrowEvent" );
 		initIntermediateEvents();
         
@@ -231,6 +252,9 @@ public class ConvertToBpmn {
         
 		tasks = document.getElementsByTagName( "bpmn:task" );
 		initTasks();
+		
+		tasks = document.getElementsByTagName( "bpmn:userTask" );
+		initUserTasks();
 		
 		intermediateEvents = document.getElementsByTagName( "bpmn:intermediateThrowEvent" );
 		initIntermediateEvents();
@@ -263,6 +287,9 @@ public class ConvertToBpmn {
 		tasks = document.getElementsByTagName( "task" );
 		initTasks();
 		
+		tasks = document.getElementsByTagName( "userTask" );
+		initUserTasks();
+		
 		intermediateEvents = document.getElementsByTagName( "intermediateThrowEvent" );
 		initIntermediateEvents();
         
@@ -273,6 +300,36 @@ public class ConvertToBpmn {
 		initEndEvents();
         
 		sequenceFlows = document.getElementsByTagName("sequenceFlow");
+		initSequenceFlows();
+	}
+	
+	private void semanticVersion(Document document, NodeList process) {
+		writer.println("blank version: ");
+        String id = ( (Element) process.item(0) ).getAttribute( "id" );
+		diagram = new BpmnDiagram(id);
+		
+		subProcess = document.getElementsByTagName( "semantic:subProcess" );
+		initSubProcess();
+		
+		adhocSubProcess = document.getElementsByTagName( "semantic:adHocSubProcess" );
+		initSubProcess();
+		
+        startEvents = document.getElementsByTagName( "semantic:startEvent" );
+        initStartEvents();
+        
+		tasks = document.getElementsByTagName( "semantic:task" );
+		initTasks();
+		
+		intermediateEvents = document.getElementsByTagName( "semantic:intermediateThrowEvent" );
+		initIntermediateEvents();
+        
+		exclusiveGates = document.getElementsByTagName( "semantic:exclusiveGateway" );
+		initExclusiveGates();
+        
+		endEvents = document.getElementsByTagName( "semantic:endEvent" );
+		initEndEvents();
+        
+		sequenceFlows = document.getElementsByTagName("semantic:sequenceFlow");
 		initSequenceFlows();
 	}
 	
