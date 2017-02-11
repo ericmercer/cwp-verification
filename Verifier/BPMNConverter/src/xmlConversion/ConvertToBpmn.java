@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,46 +45,34 @@ public class ConvertToBpmn {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse( inputFile );
 			document.getDocumentElement().normalize();
-//	        System.out.println("Root element: " + document.getDocumentElement().getNodeName());
-	        NodeList process = document.getElementsByTagName( "bpmn2:process" );
-	        if(process.item(0) != null) {
-	        	bpmn2Version(document, process);
-	        	writer.close();
-	        	return diagram;
+			
+			String namespace = "";
+			StringBuilder temp = new StringBuilder( document.getDocumentElement().getNodeName() );
+			int semicolon = temp.indexOf(":");
+			if(semicolon != -1) {
+				namespace = temp.substring(0, semicolon + 1);
+			}
+//	        System.out.println("NameSpace: " + namespace);
+	        NodeList process = document.getElementsByTagName( namespace + "process" );
+	        if(process.item(0) == null) {
+	        	throw new Exception();
 	        }
-	        process = document.getElementsByTagName( "bpmn:process" );
-	        if(process.item(0) != null) {
-	        	bpmnVersion(document, process);
-	        	writer.close();
-	        	return diagram;
-	        }
-    		process = document.getElementsByTagName( "process" );
-    		if(process.item(0) != null) {
-        		blankVersion(document, process);
-        		writer.close();
-        		return diagram;
-    		}
-    		process = document.getElementsByTagName( "semantic:process" );
-    		if(process.item(0) != null) {
-    			semanticVersion(document, process);
-        		writer.close();
-        		return diagram;
-    		}
-
-			throw new Exception();
-	         
-//	        close(); 
+	        
+	        init(document, process, namespace);
 	        
 		} catch (ParserConfigurationException e) {
-			System.out.println( "You have an error in the configuration of your xml file!" );
+			System.err.println( "You have an error in the configuration of your xml file!" );
 			e.printStackTrace();
-		} catch (SAXException e) {
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("The namespace stops at the semicolon?");
+			e.printStackTrace();
+		}catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("The file doesn't exist!");
+			System.err.println("The file doesn't exist!");
 			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println("Not a valid input file!");
+			System.err.println("Not a valid input file!");
 			e.printStackTrace();
 		}
 		writer.close();
@@ -90,247 +80,69 @@ public class ConvertToBpmn {
 	}
 	
 	
-	
-	private void initSubProcess() {
-        if( subProcess != null ) {
-        	for( int i = 0; i < subProcess.getLength(); i++ ) {
-        		if( subProcess.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) subProcess.item(i);
-        			writer.println( "startEvents: " + element.getAttribute( "id" ) );
-        			diagram.addNormalSubProcess( element.getAttribute("id") );
-        		}
-        		
-        	}
+	private void init(Document document, NodeList processList, String namespace) throws WrongTypeException {
+        writer.println(namespace + " version: ");
+        if(processList.item(0).getNodeType() != Node.ELEMENT_NODE) {
+        	throw new WrongTypeException();
         }
+        Element process = (Element) processList.item(0);
+        
+        String id = process.getAttribute( "id" );
+		BpmnDiagram diagram = new BpmnDiagram(id);
+		
+		initProcess(process, diagram, namespace);
+		
+		this.diagram = diagram;
 	}
 	
-	private void initAdHocSubProcess() {
-        if( adhocSubProcess != null ) {
-        	for( int i = 0; i < adhocSubProcess.getLength(); i++ ) {
-        		if( adhocSubProcess.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) adhocSubProcess.item(i);
-        			writer.println( "startEvents: " + element.getAttribute( "id" ) );
-        			diagram.addNormalSubProcess( element.getAttribute("id") );
-        		}
-        		
-        	}
-        }
-	}
-	
-	private void initStartEvents() {
-        if( startEvents != null ) {
-        	for( int i = 0; i < startEvents.getLength(); i++ ) {
-        		if( startEvents.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) startEvents.item(i);
-        			writer.println( "startEvents: " + element.getAttribute( "id" ) );
-        			diagram.addStartEvent( element.getAttribute("id") );
-        		}
-        		
-        	}
-        }
-	}
-	
-	private void initEndEvents() {
-        if( endEvents != null ) {
-        	for( int i = 0; i < endEvents.getLength(); i++ ) {
-        		if( endEvents.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) endEvents.item(i);
-        			writer.println( "endEvent: " + element.getAttribute( "id" ) );
-        			diagram.addEndEvent( element.getAttribute("id") );
-        		}
-        	}
-        }
-	}
-	
-	private void initTasks() {
-        if( tasks != null ) {
-        	for( int i = 0; i < tasks.getLength(); i++ ) {
-        		if( tasks.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) tasks.item(i);
-        			writer.println( "task(" + i + "): " + element.getAttribute( "id" ) );
-        			diagram.addTask( element.getAttribute("id") );
-        		}
-        	}
-        }
-	}
-	
-	private void initUserTasks() {
-        if( tasks != null ) {
-        	for( int i = 0; i < tasks.getLength(); i++ ) {
-        		if( tasks.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) tasks.item(i);
-        			writer.println( "task(" + i + "): " + element.getAttribute( "id" ) );
-        			diagram.addTask( element.getAttribute("id") );
-        		}
-        	}
-        }
-	}
-	
-	private void initIntermediateEvents() {
-        if( intermediateEvents != null ) {
-        	for( int i = 0; i < intermediateEvents.getLength(); i++ ) {
-        		if( intermediateEvents.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) intermediateEvents.item(i);
-        			writer.println( "intermediateEvents(" + i + "): " + element.getAttribute( "id" ) );
-        			diagram.addIntermediateEvent( element.getAttribute("id") );
-        		}
-        	}
-        }
-	}
-	
-	private void initExclusiveGates() {
-        if( exclusiveGates != null ) {
-        	for( int i = 0; i < exclusiveGates.getLength(); i++ ) {
-        		if( exclusiveGates.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) exclusiveGates.item(i);
-        			writer.println( "exclusiveGateway(" + i + "): " + element.getAttribute( "id" ) );
-        			diagram.addExclusiveGateway( element.getAttribute("id") );
-        		}
-        	}
-        }
-	}
-	
-	private void initSequenceFlows() {
-        if( sequenceFlows != null ) {
-        	for( int i = 0; i < sequenceFlows.getLength(); i++ ) {
-        		if( sequenceFlows.item(i).getNodeType() == Node.ELEMENT_NODE ) {
-        			Element element = (Element) sequenceFlows.item(i);
-        			String one = element.getAttribute("sourceRef"), two = element.getAttribute("targetRef");
-        			writer.println( "sourceRef: " + one + " targetRef: " + two );
-        			diagram.addSequenceFlow( one, two );
-        		}
-        	}
-        }
-	}
-	
-	private void bpmn2Version(Document document, NodeList process) {
-        writer.println("bpmn2 version: ");
-        String id = ( (Element) process.item(0) ).getAttribute( "id" );
-		diagram = new BpmnDiagram(id);
+	private void initProcess(Element process, BpmnDiagram diagram, String namespace) {
+		NodeList children = process.getChildNodes();
+		ArrayList<Element> flowSequences = new ArrayList<>();
+		for(int i = 0; i < children.getLength(); i++) {
+			if(children.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element child = (Element) children.item(i);
+				String tag = child.getTagName();
+//				System.out.println("type: " + tag);
+				
+				if(tag.equals(namespace + "subProcess")) {
+					writer.println();
+					writer.println( "subProcess: " + child.getAttribute( "id" ) );
+					initProcess(child, diagram.addNormalSubProcess(child.getAttribute("id")), namespace);
+					writer.println();
+				}
+				else if(tag.equals(namespace + "adHocSubProcess")) {
+					writer.println();
+					writer.println( "subProcess: " + child.getAttribute( "id" ) );
+					initProcess(child, diagram.addNormalSubProcess(child.getAttribute("id")), namespace);
+					writer.println();
+				}
+				else if(tag.equals(namespace + "startEvent")) {
+					initStartEvent(child, diagram);
+				}
+				else if(tag.equals(namespace + "endEvent")) {
+					initEndEvent(child, diagram);
+				}
+				else if(tag.equals(namespace + "task")) {
+					initTask(child, diagram);
+				}
+				else if(tag.equals(namespace + "userTask")) {
+					initUserTask(child, diagram);
+				}
+				else if(tag.equals(namespace + "exclusiveGateway")) {
+					initExclusiveGate(child, diagram);
+				}
+				else if(tag.equals(namespace + "intermediateThrowEvent")) {
+					initIntermediateEvent(child, diagram);
+				}
+				else if(tag.equals(namespace + "sequenceFlow")) {
+					flowSequences.add(child);
+				}
+			}
+		}
 		
-		subProcess = document.getElementsByTagName( "bpmn2:subProcess" );
-		initSubProcess();
+		initSequenceFlows(flowSequences, diagram);
 		
-		adhocSubProcess = document.getElementsByTagName( "bpmn2:adHocSubProcess" );
-		initAdHocSubProcess();
-		
-        startEvents = document.getElementsByTagName( "bpmn2:startEvent" );
-        initStartEvents();
-        
-		tasks = document.getElementsByTagName( "bpmn2:task" );
-		initTasks();
-		
-		tasks = document.getElementsByTagName( "bpmn2:userTask" );
-		initUserTasks();
-		
-		intermediateEvents = document.getElementsByTagName( "bpmn2:intermediateThrowEvent" );
-		initIntermediateEvents();
-        
-		exclusiveGates = document.getElementsByTagName( "bpmn2:exclusiveGateway" );
-		initExclusiveGates();
-        
-		endEvents = document.getElementsByTagName( "bpmn2:endEvent" );
-		initEndEvents();
-        
-		sequenceFlows = document.getElementsByTagName("bpmn2:sequenceFlow");
-		initSequenceFlows();
-	}
-	
-	private void bpmnVersion(Document document, NodeList process) {
-		writer.println("bpmn version: ");
-        String id = ( (Element) process.item(0) ).getAttribute( "id" );
-		diagram = new BpmnDiagram(id);
-		
-		subProcess = document.getElementsByTagName( "bpmn:subProcess" );
-		initSubProcess();
-		
-		adhocSubProcess = document.getElementsByTagName( "bpmn:adHocSubProcess" );
-		initSubProcess();
-		
-        startEvents = document.getElementsByTagName( "bpmn:startEvent" );
-        initStartEvents();
-        
-		tasks = document.getElementsByTagName( "bpmn:task" );
-		initTasks();
-		
-		tasks = document.getElementsByTagName( "bpmn:userTask" );
-		initUserTasks();
-		
-		intermediateEvents = document.getElementsByTagName( "bpmn:intermediateThrowEvent" );
-		initIntermediateEvents();
-        
-		exclusiveGates = document.getElementsByTagName( "bpmn:exclusiveGateway" );
-		initExclusiveGates();
-        
-		endEvents = document.getElementsByTagName( "bpmn:endEvent" );
-		initEndEvents();
-        
-		sequenceFlows = document.getElementsByTagName("bpmn:sequenceFlow");
-		initSequenceFlows();
-	}
-	
-	
-	private void blankVersion(Document document, NodeList process) {
-		writer.println("blank version: ");
-        String id = ( (Element) process.item(0) ).getAttribute( "id" );
-		diagram = new BpmnDiagram(id);
-		
-		subProcess = document.getElementsByTagName( "subProcess" );
-		initSubProcess();
-		
-		adhocSubProcess = document.getElementsByTagName( "adHocSubProcess" );
-		initSubProcess();
-		
-        startEvents = document.getElementsByTagName( "startEvent" );
-        initStartEvents();
-        
-		tasks = document.getElementsByTagName( "task" );
-		initTasks();
-		
-		tasks = document.getElementsByTagName( "userTask" );
-		initUserTasks();
-		
-		intermediateEvents = document.getElementsByTagName( "intermediateThrowEvent" );
-		initIntermediateEvents();
-        
-		exclusiveGates = document.getElementsByTagName( "exclusiveGateway" );
-		initExclusiveGates();
-        
-		endEvents = document.getElementsByTagName( "endEvent" );
-		initEndEvents();
-        
-		sequenceFlows = document.getElementsByTagName("sequenceFlow");
-		initSequenceFlows();
-	}
-	
-	private void semanticVersion(Document document, NodeList process) {
-		writer.println("blank version: ");
-        String id = ( (Element) process.item(0) ).getAttribute( "id" );
-		diagram = new BpmnDiagram(id);
-		
-		subProcess = document.getElementsByTagName( "semantic:subProcess" );
-		initSubProcess();
-		
-		adhocSubProcess = document.getElementsByTagName( "semantic:adHocSubProcess" );
-		initSubProcess();
-		
-        startEvents = document.getElementsByTagName( "semantic:startEvent" );
-        initStartEvents();
-        
-		tasks = document.getElementsByTagName( "semantic:task" );
-		initTasks();
-		
-		intermediateEvents = document.getElementsByTagName( "semantic:intermediateThrowEvent" );
-		initIntermediateEvents();
-        
-		exclusiveGates = document.getElementsByTagName( "semantic:exclusiveGateway" );
-		initExclusiveGates();
-        
-		endEvents = document.getElementsByTagName( "semantic:endEvent" );
-		initEndEvents();
-        
-		sequenceFlows = document.getElementsByTagName("semantic:sequenceFlow");
-		initSequenceFlows();
+		return;
 	}
 	
 	private void initExport() {
@@ -340,6 +152,67 @@ public class ConvertToBpmn {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return;
 	}
-
+	
+	private void initStartEvent(Element startEvent, BpmnDiagram diagram) {
+		writer.println( "startEvent: " + startEvent.getAttribute( "id" ) );
+		diagram.addEndEvent( startEvent.getAttribute("id") );
+	}
+	
+	private void initEndEvent(Element endEvent, BpmnDiagram diagram) {
+		writer.println( "endEvent: " + endEvent.getAttribute( "id" ) );
+		diagram.addEndEvent( endEvent.getAttribute("id") );
+	}
+	
+	private void initTask(Element task, BpmnDiagram diagram) {
+		writer.println( "task: " + task.getAttribute( "id" ) );
+		diagram.addTask( task.getAttribute("id") );
+	}
+	
+	private void initUserTask(Element task, BpmnDiagram diagram) {
+		writer.println( "userTask: " + task.getAttribute( "id" ) );
+		diagram.addTask( task.getAttribute("id") );
+	}
+	
+	private void initIntermediateEvent(Element intermediateEvent, BpmnDiagram diagram) {
+		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
+		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id") );
+	}
+	
+	private void initExclusiveGate(Element exclusiveGate, BpmnDiagram diagram) {
+		writer.println( "exclusiveGateway: " + exclusiveGate.getAttribute( "id" ) );
+		diagram.addExclusiveGateway( exclusiveGate.getAttribute("id") );
+	}
+	
+	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnDiagram diagram) {
+        if(sequenceFlows.isEmpty()) {
+        	return;
+        }
+        
+        Element current = null;
+        Iterator<Element> iter = sequenceFlows.iterator();
+        while(iter.hasNext()) {
+        	current = iter.next();
+        	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
+			writer.println( "sourceRef: " + source + " targetRef: " + target );
+			diagram.addSequenceFlow( source, target );
+        }
+        
+        return;
+	}
+	
+	@SuppressWarnings("serial")
+	public class WrongTypeException extends Exception {
+	}
+	
+	
+//	end of class
 }
+
+
+
+
+
+

@@ -142,20 +142,26 @@ public class TestDiagram {
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_0259rfj");
 		
-		correct.addTask("Task_0q22whk");
-		correct.addTask("Task_12uwadk");
 		correct.addTask("Task_1vukq14");
 		correct.addTask("Task_1c3wjjf");
 		
-		correct.addIntermediateEvent("IntermediateThrowEvent_060vul7");
-		correct.addIntermediateEvent("IntermediateThrowEvent_1bva7ei");
-		
-		correct.addExclusiveGateway("ExclusiveGateway_1jr1gc4");
-		correct.addExclusiveGateway("ExclusiveGateway_1anf5gt");
 		correct.addExclusiveGateway("ExclusiveGateway_0hpt3dk");
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		
-		correct.addNormalSubProcess("SubProcess_0zaafna");
+		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_0zaafna");
+		sub.addExclusiveGateway("ExclusiveGateway_1jr1gc4");
+		sub.addTask("Task_0q22whk");
+		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "Task_0q22whk");
+		sub.addTask("Task_12uwadk");
+		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "Task_12uwadk");
+		sub.addExclusiveGateway("ExclusiveGateway_1anf5gt");
+		sub.addSequenceFlow("Task_0q22whk", "ExclusiveGateway_1anf5gt");
+		sub.addSequenceFlow("Task_12uwadk", "ExclusiveGateway_1anf5gt");
+		sub.addIntermediateEvent("IntermediateThrowEvent_060vul7");
+		sub.addIntermediateEvent("IntermediateThrowEvent_1bva7ei");
+		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "IntermediateThrowEvent_060vul7");
+		sub.addSequenceFlow("IntermediateThrowEvent_060vul7", "IntermediateThrowEvent_1bva7ei");
+		sub.addSequenceFlow("IntermediateThrowEvent_1bva7ei", "ExclusiveGateway_1anf5gt");
 		
 		correct.addSequenceFlow("StartEvent_1", "ExclusiveGateway_0hpt3dk");
 		correct.addSequenceFlow("ExclusiveGateway_0hpt3dk", "SubProcess_0zaafna");
@@ -164,23 +170,16 @@ public class TestDiagram {
 		correct.addSequenceFlow("Task_1c3wjjf", "ExclusiveGateway_1");
 		correct.addSequenceFlow("Task_1vukq14", "ExclusiveGateway_1");
 		correct.addSequenceFlow("ExclusiveGateway_1", "EndEvent_0259rfj");
-		correct.addSequenceFlow("ExclusiveGateway_1jr1gc4", "Task_0q22whk");
-		correct.addSequenceFlow("ExclusiveGateway_1jr1gc4", "Task_12uwadk");
-		correct.addSequenceFlow("Task_12uwadk", "ExclusiveGateway_1anf5gt");
-		correct.addSequenceFlow("Task_0q22whk", "ExclusiveGateway_1anf5gt");
-		correct.addSequenceFlow("ExclusiveGateway_1jr1gc4", "IntermediateThrowEvent_060vul7");
-		correct.addSequenceFlow("IntermediateThrowEvent_060vul7", "IntermediateThrowEvent_1bva7ei");
-		correct.addSequenceFlow("IntermediateThrowEvent_1bva7ei", "ExclusiveGateway_1anf5gt");
 		
 		System.out.print("Test: ");
-		System.out.println( correct.equals(diagram) );
+		System.out.println( diagram.equals(correct) );
 	}
 	
 	public void test_Order_fulfillment() {
 		ConvertToBpmn convert = new ConvertToBpmn();
 		BpmnDiagram diagram = convert.importXML("tests/diagrams/orderFulfillment.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("Process_1");
+		BpmnDiagram correct = new BpmnDiagram("orderFulfillment");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_2");
 		correct.addEndEvent("EndEvent_3");
@@ -193,25 +192,17 @@ public class TestDiagram {
 		correct.addExclusiveGateway("ExclusiveGateway_5");
 		correct.addExclusiveGateway("ExclusiveGateway_6");
 		
-		correct.addNormalSubProcess("SubProcess_2");
-			correct.addStartEvent("StartEvent_2");
-			correct.addEndEvent("EndEvent_4");
-			correct.addEndEvent("EndEvent_5");
-			correct.addTask("UserTask_2");
-			correct.addExclusiveGateway("ExclusiveGateway_4");
-			correct.addSequenceFlow("ExclusiveGateway_4", "EndEvent_4");
-			correct.addSequenceFlow("ExclusiveGateway_4", "EndEvent_5");
-			correct.addSequenceFlow("UserTask_2", "ExclusiveGateway_4");
-			correct.addSequenceFlow("StartEvent_2", "UserTask_2");
+		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_2");
+		sub.addStartEvent("StartEvent_2");
+		sub.addEndEvent("EndEvent_4");
+		sub.addEndEvent("EndEvent_5");
+		sub.addTask("UserTask_2");
+		sub.addExclusiveGateway("ExclusiveGateway_4");
+		sub.addSequenceFlow("ExclusiveGateway_4", "EndEvent_4");
+		sub.addSequenceFlow("ExclusiveGateway_4", "EndEvent_5");
+		sub.addSequenceFlow("UserTask_2", "ExclusiveGateway_4");
+		sub.addSequenceFlow("StartEvent_2", "UserTask_2");
 		
-//		    <bpmn2:boundaryEvent id="BoundaryEvent_3" name="" attachedToRef="SubProcess_2">
-//		      <bpmn2:outgoing>SequenceFlow_22</bpmn2:outgoing>
-//		      <bpmn2:signalEventDefinition id="SignalEventDefinition_2"/>
-//		    </bpmn2:boundaryEvent>
-//		    <bpmn2:boundaryEvent id="BoundaryEvent_4" name="" attachedToRef="SubProcess_2">
-//		      <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
-//		      <bpmn2:timerEventDefinition id="TimerEventDefinition_2"/>
-//		    </bpmn2:boundaryEvent>
 		
 		correct.addSequenceFlow("UserTask_1", "ExclusiveGateway_1");
 		correct.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_3");
@@ -220,14 +211,12 @@ public class TestDiagram {
 		correct.addSequenceFlow("ExclusiveGateway_2", "ExclusiveGateway_3");
 		correct.addSequenceFlow("ExclusiveGateway_6", "ExclusiveGateway_2");
 		correct.addSequenceFlow("ExclusiveGateway_1", "SubProcess_2");
-		correct.addSequenceFlow("BoundaryEvent_3", "ExclusiveGateway_5");
 		correct.addSequenceFlow("StartEvent_1", "ExclusiveGateway_5");
 		correct.addSequenceFlow("ExclusiveGateway_5", "UserTask_1");
 		correct.addSequenceFlow("SubProcess_2", "ExclusiveGateway_6");
-		correct.addSequenceFlow("BoundaryEvent_4", "ExclusiveGateway_6");
 		
 		System.out.print("Test: ");
-		System.out.println( correct.equals(diagram) );
+		System.out.println( diagram.equals(correct) );
 	}
 
 }
