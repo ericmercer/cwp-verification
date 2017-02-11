@@ -13,28 +13,33 @@ inline out_tokens(token_count) {
 }
 
 inline print(number){
-	printf("message: %d\n",number)
+	printf("message: %d, PID: %d\n",number,_pid)
 }
 
-inline xor_option(inseq,messageNumber1,expr1, outseq1, messageNumber2,expr2, outseq2){
+inline xor_option(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outseq2,exceptionChannel){
 	in_tokens(inseq) ->
 	if
-	:: (expr1) ->
+	:: (expr1==true) ->
 		print(messageNumber1)
 		out_tokens(outseq1)
 	:: else -> 
 		if
-		::(expr2) ->
+		::(expr2==true) ->
 			print(messageNumber2)
 			out_tokens(outseq2)
 		:: else ->
-			exception!xor_split_false
+			exceptionChannel!xor_split_false
 			break
 		fi
 	fi
 }
 
 inline task(inseq, messageNumber,outseq){
+	in_tokens(inseq) ->
+	   print(messageNumber)
+	   out_tokens(outseq)
+}
+inline script_task(inseq, messageNumber,outseq){
 	in_tokens(inseq) ->
 	   print(messageNumber)
 	   out_tokens(outseq)
