@@ -5,33 +5,39 @@ import xmlConversion.ConvertToBpmn;
 
 public class TestDiagram {
 	
-//	private static String[] tests = {
-//			"Test_2_step", "Test_4_Step", "sub_process_test1", "Test_book_example10", "MyName", "test_Order_fulfillment"
-//	};
+	private static String[] tests = {
+			"Test_2_step", "Test_4_Step", "sub_process_test1", "MyName", "test_Order_fulfillment", "jamie"
+	};
 	
 	public static void main( String args[] ) {
 		
 		int selection = Integer.parseInt(args[0]);
 		TestDiagram tester = new TestDiagram();
 		
+		System.out.println("Here are your options:");
+		for(int i = 0; i < tests.length; i++) {
+			System.out.println(i + ": " + tests[i]);
+		}
+		System.out.print("You chose: " + tests[selection]);
+		
 		switch(selection) {
-		case 1: 
+		case 0: 
 			tester.test_2_step();
 			break;
-		case 2:
+		case 1:
 			tester.test_4_step();
 			break;
-		case 3:
+		case 2:
 			tester.test_sub_process_test1();
 			break;
-		case 4:
-			tester.test_book_example10();
-			break;
-		case 5:
+		case 3:
 			tester.test_MyName();
 			break;
-		case 6:
+		case 4:
 			tester.test_Order_fulfillment();
+			break;
+		case 5:
+			tester.test_jamie();
 			break;
 		}
 		
@@ -224,10 +230,50 @@ public class TestDiagram {
 	
 	public void test_jamie() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/orderFulfillment.bpmn");
+		BpmnDiagram diagram = convert.importXML("tests/diagrams/jamie.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("orderFulfillment");
-		correct.addStartEvent("");
+		BpmnDiagram correct = new BpmnDiagram("process_1");
+		correct.addStartEvent("StartEvent_1");
+		correct.addEndEvent("EndEvent_1");
+		
+		correct.addTask("ScriptTask_1"); // should be a scriptTask but that doesn't exist yet
+		correct.addTask("ScriptTask_2");
+		
+		correct.addExclusiveGateway("ExclusiveGateway_1");
+		correct.addExclusiveGateway("ExclusiveGateway_2");
+		
+		correct.addSequenceFlow("ScriptTask_1", "ExclusiveGateway_1");
+		correct.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_2");
+		correct.addSequenceFlow("ScriptTask_2", "ExclusiveGateway_2");
+		correct.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_2");
+		correct.addSequenceFlow("StartEvent_1", "ScriptTask_1");
+		
+		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_1");
+		sub.addStartEvent("StartEvent_2");
+		sub.addEndEvent("EndEvent_2");
+		sub.addTask("ScriptTask_4");
+		sub.addSequenceFlow("StartEvent_2", "ScriptTask_4");
+		sub.addSequenceFlow("ScriptTask_4", "EndEvent_2");
+		
+		correct.addSequenceFlow("ExclusiveGateway_2", "SubProcess_1");
+		correct.addSequenceFlow("SubProcess_1", "EndEvent_1");
+		
+		System.out.print("Test: ");
+		System.out.println( diagram.equals(correct) );
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
