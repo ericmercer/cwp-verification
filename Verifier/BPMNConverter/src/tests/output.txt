@@ -1,32 +1,9 @@
 bpmn2: version: 
 startEvent: StartEvent_1
-userTask: UserTask_1
 exclusiveGateway: ExclusiveGateway_1
 endEvent: EndEvent_2
-endEvent: EndEvent_3
 exclusiveGateway: ExclusiveGateway_2
+userTask: UserTask_1
 exclusiveGateway: ExclusiveGateway_3
-
-subProcess: SubProcess_2
-startEvent: StartEvent_2
-endEvent: EndEvent_4
 exclusiveGateway: ExclusiveGateway_4
-endEvent: EndEvent_5
-userTask: UserTask_2
-sourceRef: ExclusiveGateway_4 targetRef: EndEvent_4
-sourceRef: ExclusiveGateway_4 targetRef: EndEvent_5
-sourceRef: UserTask_2 targetRef: ExclusiveGateway_4
-sourceRef: StartEvent_2 targetRef: UserTask_2
-
-exclusiveGateway: ExclusiveGateway_5
-exclusiveGateway: ExclusiveGateway_6
-sourceRef: UserTask_1 targetRef: ExclusiveGateway_1
-sourceRef: ExclusiveGateway_1 targetRef: ExclusiveGateway_3
-sourceRef: ExclusiveGateway_2 targetRef: EndEvent_2
-sourceRef: ExclusiveGateway_3 targetRef: EndEvent_3
-sourceRef: ExclusiveGateway_2 targetRef: ExclusiveGateway_3
-sourceRef: ExclusiveGateway_6 targetRef: ExclusiveGateway_2
-sourceRef: ExclusiveGateway_1 targetRef: SubProcess_2
-sourceRef: StartEvent_1 targetRef: ExclusiveGateway_5
-sourceRef: ExclusiveGateway_5 targetRef: UserTask_1
-sourceRef: SubProcess_2 targetRef: ExclusiveGateway_6
+sourceRef: EventBasedGateway_1 targetRef: IntermediateCatchEvent_3

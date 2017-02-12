@@ -128,9 +128,15 @@ public class ConvertToBpmn {
 				else if(tag.equals(namespace + "userTask")) {
 					initUserTask(child, diagram);
 				}
+				else if(tag.equals(namespace + "scriptTask")) {
+					initScriptTask(child, diagram);
+				}
 				else if(tag.equals(namespace + "exclusiveGateway")) {
 					initExclusiveGate(child, diagram);
 				}
+//				else if(tag.equals(namespace + "inclusiveGateway")) {
+//					initInclusiveGate(child, diagram);
+//				}
 				else if(tag.equals(namespace + "intermediateThrowEvent")) {
 					initIntermediateEvent(child, diagram);
 				}
@@ -176,6 +182,12 @@ public class ConvertToBpmn {
 		diagram.addTask( task.getAttribute("id") );
 	}
 	
+	private void initScriptTask(Element task, BpmnDiagram diagram) {
+		task.getElementsByTagName("script");
+		writer.println( "scriptTask: " + task.getAttribute( "id" ) );
+		diagram.addTask( task.getAttribute("id") );
+	}
+	
 	private void initIntermediateEvent(Element intermediateEvent, BpmnDiagram diagram) {
 		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
 		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id") );
@@ -185,6 +197,11 @@ public class ConvertToBpmn {
 		writer.println( "exclusiveGateway: " + exclusiveGate.getAttribute( "id" ) );
 		diagram.addExclusiveGateway( exclusiveGate.getAttribute("id") );
 	}
+	
+//	private void initInclusiveGate(Element inclusiveGate, BpmnDiagram diagram) {
+//		writer.println( "inclusiveGateway: " + inclusiveGate.getAttribute( "id" ) );
+//		diagram.addInclusiveGateway( inclusiveGate.getAttribute("id") );
+//	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnDiagram diagram) {
         if(sequenceFlows.isEmpty()) {

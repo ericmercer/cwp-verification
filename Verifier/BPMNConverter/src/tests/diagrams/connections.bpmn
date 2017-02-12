@@ -48,20 +48,6 @@
       <bpmn2:dataState id="DataState_1" name="StateOther"/>
     </bpmn2:dataObject>
     <bpmn2:dataObjectReference id="DataObjectReference_1" name="Data Object 3" dataObjectRef="DataObject_4"/>
-    <bpmn2:task id="Task_2" name="Task 2">
-      <bpmn2:ioSpecification id="InputOutputSpecification_3">
-        <bpmn2:dataOutput id="DataOutput_3" name="output1"/>
-        <bpmn2:inputSet id="InputSet_3" name="Input Set 3"/>
-        <bpmn2:outputSet id="OutputSet_3" name="Output Set 3">
-          <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
-        </bpmn2:outputSet>
-      </bpmn2:ioSpecification>
-      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
-        <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
-        <bpmn2:targetRef>DataObjectReference_1</bpmn2:targetRef>
-        <bpmn2:transformation xsi:type="bpmn2:tFormalExpression" id="FormalExpression_3" language="http://www.w3.org/1999/XPath">CHange to other</bpmn2:transformation>
-      </bpmn2:dataOutputAssociation>
-    </bpmn2:task>
     <bpmn2:association id="Association_1" sourceRef="DataObject_2" targetRef="DataInput_1"/>
     <bpmn2:association id="Association_2" sourceRef="DataOutput_1" targetRef="DataObject_4"/>
   </bpmn2:process>
@@ -121,12 +107,6 @@
           <dc:Bounds height="14.0" width="74.0" x="721.0" y="304.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="835.0" y="245.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_15" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="36.0" x="872.0" y="263.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_1" targetElement="BPMNShape_Task_1">
         <di:waypoint xsi:type="dc:Point" x="136.0" y="118.0"/>
         <di:waypoint xsi:type="dc:Point" x="206.0" y="118.0"/>
@@ -164,13 +144,6 @@
         <di:waypoint xsi:type="dc:Point" x="458.0" y="125.0"/>
         <di:waypoint xsi:type="dc:Point" x="458.0" y="240.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_DataOutputAssociation_1" bpmnElement="DataOutputAssociation_1" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_DataObjectReference_1">
-        <di:waypoint xsi:type="dc:Point" x="835.0" y="270.0"/>
-        <di:waypoint xsi:type="dc:Point" x="806.0" y="270.0"/>
-        <di:waypoint xsi:type="dc:Point" x="806.0" y="279.0"/>
-        <di:waypoint xsi:type="dc:Point" x="776.0" y="279.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_16"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
