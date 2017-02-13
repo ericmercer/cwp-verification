@@ -6,22 +6,22 @@ typedef process_struct/*name defined in xsd*/{
 	int count;
 };
 
-process_struct var[1];/*possibly give this a const value for number*/
+process_struct var[3];/*possibly give this a const value for number*/
 
 
-proctype main(chan report; byte start, token_id) {
+proctype main(chan report; byte token_id) {
   /*indicates token entering object*/
-  byte initScript = 0
+  byte initScript = 1
   byte gateway1 = 0
   byte gateway2 = 0
   byte incrementCount = 0
   byte end = 0
-  
+
+#ifdef ATOMIC
   atomic {
+#endif
+	
 	do
-	:: in_tokens(start) -> /* start */
-	   print(1)
-	   out_tokens(initScript)
 	   
 	:: in_tokens(initScript) -> 
 	   print(2)
@@ -51,37 +51,49 @@ proctype main(chan report; byte start, token_id) {
 	   
 	:: in_tokens(end) -> /* End Event */
 	   print(7)
+	   if
+	   :: (initScript == 0 && gateway1 == 0 &&  gateway2 == 0  && incrementCount == 0 && end == 0) ->
+		  report!normal(token_id)
+	   :: else ->
+		  report!abnormal(token_id)
+	   fi
 	   break
    
 	od
 
 	/* Check completion: all tokens must be consumed */
 	
-
-
-	if
-	:: (start == 0 && initScript == 0 && gateway1 == 0 &&  gateway2 == 0  && incrementCount == 0 && end == 0) ->
-	   report!normal
-	:: else ->
-	   report!abnormal
-	fi
-
+	
+#ifdef ATOMIC
   }
+#endif
+
 }
 
 #ifdef VERIFY
 init {
   atomic{
-	chan end = [1] of {mtype}
+	chan end0 = [1] of {mtype,byte}
+	chan end1 = [1] of {mtype,byte}
+	chan end2 = [1] of {mtype,byte}
 
-	run main(end,1,0)
-	
-	if
-	:: end?normal
-	   printf("normal\n")
-	:: end?abnormal
-	   printf("abnormal\n")
-	fi
+	mtype msg
+	byte token_id = 0
+
+	run main(end0,0)
+	run main(end1,1)
+	run main(end2,2)
+
+	do
+	:: end0?msg(token_id)
+	   printf("%e: %d\n", msg, token_id)
+	:: end1?msg(token_id)
+	   printf("%e: %d\n", msg, token_id)
+	:: end2?msg(token_id)
+	   printf("%e: %d\n", msg, token_id)
+	:: timeout ->
+	   break
+	od
 
   }
 }
