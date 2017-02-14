@@ -1,22 +1,4 @@
-bpmn2: version: 
+ version: 
 startEvent: StartEvent_1
-endEvent: EndEvent_1
-scriptTask: ScriptTask_1
-exclusiveGateway: ExclusiveGateway_1
-exclusiveGateway: ExclusiveGateway_2
-scriptTask: ScriptTask_2
-
-subProcess: SubProcess_1
-startEvent: StartEvent_2
-endEvent: EndEvent_2
-scriptTask: ScriptTask_4
-sourceRef: StartEvent_2 targetRef: ScriptTask_4
-sourceRef: ScriptTask_4 targetRef: EndEvent_2
-
-sourceRef: ScriptTask_1 targetRef: ExclusiveGateway_1
-sourceRef: ExclusiveGateway_1 targetRef: ScriptTask_2
-sourceRef: ScriptTask_2 targetRef: ExclusiveGateway_2
-sourceRef: ExclusiveGateway_1 targetRef: ExclusiveGateway_2
-sourceRef: StartEvent_1 targetRef: ScriptTask_1
-sourceRef: ExclusiveGateway_2 targetRef: SubProcess_1
-sourceRef: SubProcess_1 targetRef: EndEvent_1
+endEvent: EndEvent_1aqgj4v
+sourceRef: StartEvent_1 targetRef: EndEvent_1aqgj4v

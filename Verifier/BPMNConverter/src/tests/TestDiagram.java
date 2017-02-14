@@ -1,26 +1,31 @@
 package tests;
 
+import java.util.Scanner;
+
 import bpmnStructure.BpmnDiagram;
 import xmlConversion.ConvertToBpmn;
 
 public class TestDiagram {
 	
 	private static String[] tests = {
-			"Test_2_step", "Test_4_Step", "sub_process_test1", "MyName", "test_Order_fulfillment", "jamie"
+			"Test_2_step", "Test_4_Step", "sub_process_test1", "MyName", "test_Order_fulfillment", "jamie", "vendingMachine",
 	};
 	
 	public static void main( String args[] ) {
 		
-		int selection = Integer.parseInt(args[0]);
+//		int selection = Integer.parseInt(args[0]);
+		String selection;
 		TestDiagram tester = new TestDiagram();
+		Scanner input = new Scanner(System.in);
 		
 		System.out.println("Here are your options:");
 		for(int i = 0; i < tests.length; i++) {
 			System.out.println(i + ": " + tests[i]);
 		}
-		System.out.print("You chose: " + tests[selection]);
-		
-		switch(selection) {
+		System.out.print("Choose: ");
+		selection = input.next();
+		int test = Integer.parseInt(selection);
+		switch(test) {
 		case 0: 
 			tester.test_2_step();
 			break;
@@ -38,6 +43,12 @@ public class TestDiagram {
 			break;
 		case 5:
 			tester.test_jamie();
+			break;
+		case 6:
+			
+			break;
+		case 7:
+			
 			break;
 		}
 		
@@ -257,6 +268,18 @@ public class TestDiagram {
 		
 		correct.addSequenceFlow("ExclusiveGateway_2", "SubProcess_1");
 		correct.addSequenceFlow("SubProcess_1", "EndEvent_1");
+		
+		System.out.print("Test: ");
+		System.out.println( diagram.equals(correct) );
+	}
+	
+	public void test_vendingMachine() {
+		ConvertToBpmn convert = new ConvertToBpmn();
+		BpmnDiagram diagram = convert.importXML("tests/diagrams/jamie.bpmn");
+		
+		BpmnDiagram correct = new BpmnDiagram("process_1");
+		
+		
 		
 		System.out.print("Test: ");
 		System.out.println( diagram.equals(correct) );

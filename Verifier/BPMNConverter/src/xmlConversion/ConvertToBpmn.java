@@ -185,7 +185,7 @@ public class ConvertToBpmn {
 	private void initScriptTask(Element task, BpmnDiagram diagram) {
 		task.getElementsByTagName("script");
 		writer.println( "scriptTask: " + task.getAttribute( "id" ) );
-		diagram.addTask( task.getAttribute("id") );
+		diagram.addScriptTask( task.getAttribute("id") );
 	}
 	
 	private void initIntermediateEvent(Element intermediateEvent, BpmnDiagram diagram) {
