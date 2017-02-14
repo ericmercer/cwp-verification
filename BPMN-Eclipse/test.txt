@@ -1,0 +1,7 @@
+<bpmn:process id="Process_1" isExecutable="false">
+<bpmn:events id="EndEvent_1sqxtb4" isExecutable="false">
+<bpmn:gateways id="ExclusiveGateway_1ywoo9g" isExecutable="false">
+<bpmn:events id="StartEvent_1" isExecutable="false">
+<bpmn:activities id="Task_0jy8pim" isExecutable="false">
+<bpmn:activities id="Task_0lvt6fl" isExecutable="false">
+<bpmn:activities id="Task_1ra6nmj" isExecutable="false">
