@@ -22,15 +22,6 @@ import bpmnStructure.BpmnDiagram;
 
 public class ConvertToBpmn {
 	
-	private NodeList startEvents;
-	private NodeList tasks;
-	private NodeList exclusiveGates;
-	private NodeList intermediateEvents;
-	private NodeList endEvents;
-	private NodeList subProcess;
-	private NodeList adhocSubProcess;
-	private NodeList sequenceFlows;
-	
 	private BpmnDiagram diagram;
 	private PrintWriter writer;
 	
@@ -128,6 +119,15 @@ public class ConvertToBpmn {
 				else if(tag.equals(namespace + "userTask")) {
 					initUserTask(child, diagram);
 				}
+				else if (tag.equals(namespace + "sendTask")) {
+					initSendTask(child, diagram);
+				}
+				else if (tag.equals(namespace + "receiveTask")) {
+					initReceiveTask(child, diagram);
+				}
+				else if (tag.equals(namespace + "manualTask")) {
+					initManualTask(child, diagram);
+				}
 				else if(tag.equals(namespace + "scriptTask")) {
 					initScriptTask(child, diagram);
 				}
@@ -179,6 +179,21 @@ public class ConvertToBpmn {
 	
 	private void initUserTask(Element task, BpmnDiagram diagram) {
 		writer.println( "userTask: " + task.getAttribute( "id" ) );
+		diagram.addTask( task.getAttribute("id") );
+	}
+	
+	private void initSendTask(Element task, BpmnDiagram diagram) {
+		writer.println( "sendTask: " + task.getAttribute( "id" ) );
+		diagram.addTask( task.getAttribute("id") );
+	}
+	
+	private void initReceiveTask(Element task, BpmnDiagram diagram) {
+		writer.println( "receiveTask: " + task.getAttribute( "id" ) );
+		diagram.addTask( task.getAttribute("id") );
+	}
+	
+	private void initManualTask(Element task, BpmnDiagram diagram) {
+		writer.println( "manualTask: " + task.getAttribute( "id" ) );
 		diagram.addTask( task.getAttribute("id") );
 	}
 	
