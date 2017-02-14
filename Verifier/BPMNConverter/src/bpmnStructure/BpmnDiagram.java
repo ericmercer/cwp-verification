@@ -130,16 +130,7 @@ public class BpmnDiagram extends FlowElement {
 		return returnElements;
 	}
 
-	// TODO: Implement
-	// Add structure to keep track of variable values
-	// Will need variable name, type, and initial value
-	// probably want String, integer, or boolean types
 
-	// Maybe FlowElements should have an optional reference to a
-	// data source?
-	public void addDataState() {
-
-	}
 
 	// add a condition to an existing condition flow
 	public void setSequenceFlowCondition(String idFrom, String idTo) {
