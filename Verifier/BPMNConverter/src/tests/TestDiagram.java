@@ -15,7 +15,6 @@ public class TestDiagram {
 	public static void main( String args[] ) {
 		
 //		int selection = Integer.parseInt(args[0]);
-		String selection;
 		TestDiagram tester = new TestDiagram();
 		Scanner input = new Scanner(System.in);
 		
@@ -24,8 +23,7 @@ public class TestDiagram {
 			System.out.println(i + ": " + tests[i]);
 		}
 		System.out.print("Choose: ");
-		selection = input.next();
-		int test = Integer.parseInt(selection);
+		int test = Integer.parseInt(input.next());
 		switch(test) {
 		case 0: 
 			tester.test_2_step();
@@ -55,7 +53,7 @@ public class TestDiagram {
 			tester.test_sub_processes();
 			break;
 		}
-		
+//		tester.test_2_step();
 		return;
 	}
 	
@@ -63,7 +61,9 @@ public class TestDiagram {
 		ConvertToBpmn convert = new ConvertToBpmn();
 		BpmnDiagram diagram = convert.importXML("tests/diagrams/2_step.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("Process_1");
+		BpmnDiagram correct;
+		correct = new BpmnDiagram("Process_1");
+//		correct = convert.importXML("tests/diagrams/2_step.bpmn");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1aqgj4v");
 		correct.addSequenceFlow("StartEvent_1", "EndEvent_1aqgj4v");
@@ -155,7 +155,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("ExclusiveGateway_1", "EndEvent_0259rfj");
 		
 		System.out.print("Test: ");
-		System.out.println( diagram.equals(correct) );
+		System.out.println( correct.equals(diagram) );
 	}
 	
 	public void test_Order_fulfillment() {
@@ -199,7 +199,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("SubProcess_2", "ExclusiveGateway_6");
 		
 		System.out.print("Test: ");
-		System.out.println( diagram.equals(correct) );
+		System.out.println( correct.equals(diagram) );
 	}
 	
 	public void test_jamie() {
@@ -210,8 +210,8 @@ public class TestDiagram {
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
 		
-		correct.addTask("ScriptTask_1"); // should be a scriptTask but that doesn't exist yet
-		correct.addTask("ScriptTask_2");
+		correct.addScriptTask("ScriptTask_1"); // should be a scriptTask but that doesn't exist yet
+		correct.addScriptTask("ScriptTask_2");
 		
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		correct.addExclusiveGateway("ExclusiveGateway_2");
@@ -233,7 +233,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("SubProcess_1", "EndEvent_1");
 		
 		System.out.print("Test: ");
-		System.out.println( diagram.equals(correct) );
+		System.out.println( correct.equals(diagram) );
 	}
 	
 	public void test_vendingMachine() {
@@ -270,7 +270,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("Task_2", "Task_3");
 		
 		System.out.print("Test: ");
-		System.out.println( diagram.equals(correct) );
+		System.out.println( correct.equals(diagram) );
 	}
 	
 	public void test_MedicalRecords() {
@@ -297,7 +297,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("Task_3", "ExclusiveGateway_3");
 		
 		System.out.print("Test: ");
-		System.out.println( diagram.equals(correct) );
+		System.out.println( correct.equals(diagram) );
 	}
 	
 	public void test_sub_processes() {
@@ -344,7 +344,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("AdHocSubProcess_1", "ExclusiveGateway_2");
 		
 		System.out.print("Test: ");
-		System.out.println( diagram.equals(correct) );
+		System.out.println( correct.equals(diagram) );
 	}
 
 }

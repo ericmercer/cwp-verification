@@ -72,7 +72,7 @@ public class ConvertToBpmn {
 	
 	
 	private void init(Document document, NodeList processList, String namespace) throws WrongTypeException {
-        writer.println(namespace + " version: ");
+//        writer.println(namespace + " version: ");
         if(processList.item(0).getNodeType() != Node.ELEMENT_NODE) {
         	throw new WrongTypeException();
         }
@@ -164,7 +164,7 @@ public class ConvertToBpmn {
 	
 	private void initStartEvent(Element startEvent, BpmnDiagram diagram) {
 		writer.println( "startEvent: " + startEvent.getAttribute( "id" ) );
-		diagram.addEndEvent( startEvent.getAttribute("id") );
+		diagram.addStartEvent( startEvent.getAttribute("id") );
 	}
 	
 	private void initEndEvent(Element endEvent, BpmnDiagram diagram) {

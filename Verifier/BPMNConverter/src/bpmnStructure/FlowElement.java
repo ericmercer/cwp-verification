@@ -85,7 +85,10 @@ public class FlowElement {
 		if (!otherElement.getName().equals(this.getName())) {
 			return false;
 		}
-
+		if(otherElement.getClass() != this.getClass()) {
+			System.out.println("classes: " + this.getClass() + ", " + otherElement.getClass());
+			return false;
+		}
 		for (SequenceFlow f : this.sequenceFlowOut) {
 			boolean found = false;
 			for (SequenceFlow f1 : otherElement.sequenceFlowOut) {
