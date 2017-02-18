@@ -1,9 +1,6 @@
 /bpmnStructure/
-<<<<<<< HEAD
-=======
-/xmlConversion/
->>>>>>> iain
+/promela/
+/state/
 /tests/
-/mathflow/
 /visitor/
-/xml/
+/xmlConversion/
