@@ -1,0 +1,3 @@
+startEvent: StartEvent_1
+endEvent: EndEvent_1aqgj4v
+sourceRef: StartEvent_1 targetRef: EndEvent_1aqgj4v
