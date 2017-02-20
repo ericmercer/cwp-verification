@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://vv.cs.byu.edu/purchaseCWP" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://vv.cs.byu.edu/purchaseCWP">
+
+<xsd:element name="cwpType">
+  <xsd:complexType>
+    <xsd:sequence>
+      <xsd:element name="seller" type="xsd:byte"/>
+      <xsd:element name="buyer" type="xsd:byte"/>
+      <xsd:element name="item" type="xsd:byte"/>
+      <xsd:element name="amount" type="xsd:byte"/>
+      <xsd:element name="itemOwner" type="xsd:byte"/>
+      <xsd:element name="paymentOwner" type="xsd:byte"/>
+    </xsd:sequence>
+ </xsd:complexType>   
+</xsd:element>
+
+<xsd:element name="msgType">
+<xsd:complexType>
+  <xsd:sequence>
+    <xsd:element name="msg">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="order"/>
+          <xsd:enumeration value="outOfStock"/>
+          <xsd:enumeration value="shipped"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:element>  
+    <xsd:element name="item" type="xsd:byte"/>
+    <xsd:element name="cost" type="xsd:byte"/>
+    <xsd:element name="buyer" type="xsd:byte"/>
+  </xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+
+</xsd:schema>

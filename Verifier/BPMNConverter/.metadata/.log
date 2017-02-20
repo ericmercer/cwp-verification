@@ -1,0 +1,178 @@
+!SESSION 2017-02-18 11:36:23.588 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_112
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2017-02-18 11:36:47.961
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\jvisker'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.egit.ui 4 0 2017-02-18 11:38:00.846
+!MESSAGE Invalid project description.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Invalid project description.
+	at org.eclipse.core.internal.resources.Project.checkDescription(Project.java:168)
+	at org.eclipse.core.internal.resources.Project.assertCreateRequirements(Project.java:52)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:268)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:252)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createExistingProject(ProjectUtils.java:180)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.access$0(ProjectUtils.java:141)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils$1.run(ProjectUtils.java:99)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2225)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:133)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:60)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.importProjects(GitImportWizard.java:254)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.access$2(GitImportWizard.java:236)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard$4.run(GitImportWizard.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+Contains: OK
+Contains: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter overlaps the workspace location: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2017-02-18 11:38:00.847
+!MESSAGE Invalid project description.
+!SUBENTRY 2 unknown 0 0 2017-02-18 11:38:00.847
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.core.resources 4 77 2017-02-18 11:38:00.848
+!MESSAGE C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter overlaps the workspace location: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter
+
+!ENTRY org.eclipse.bpmn2.modeler.core 4 0 2017-02-18 11:38:03.711
+!MESSAGE org.eclipse.core.internal.resources.ResourceException: Resource '/BPMN-Eclipse/structure.xsd' does not exist.
+!STACK 0
+org.eclipse.emf.ecore.resource.impl.ResourceSetImpl$1DiagnosticWrappedException: org.eclipse.core.internal.resources.ResourceException: Resource '/BPMN-Eclipse/structure.xsd' does not exist.
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.handleDemandLoadException(ResourceSetImpl.java:319)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:278)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceSetImpl.access$0(Bpmn2ModelerResourceSetImpl.java:1)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceSetImpl.doLoad(Bpmn2ModelerResourceSetImpl.java:392)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceSetImpl.demandLoadHelper(Bpmn2ModelerResourceSetImpl.java:353)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceSetImpl.getResource(Bpmn2ModelerResourceSetImpl.java:224)
+	at org.eclipse.bpmn2.modeler.core.utils.ImportUtil.loadImport(ImportUtil.java:364)
+	at org.eclipse.bpmn2.modeler.core.utils.ImportUtil.loadImport(ImportUtil.java:339)
+	at org.eclipse.bpmn2.modeler.core.utils.ImportUtil.loadImport(ImportUtil.java:110)
+	at org.eclipse.bpmn2.modeler.core.utils.ImportUtil.getObjectForId(ImportUtil.java:166)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceImpl$Bpmn2ModelerXmlHandler.setValueFromId(Bpmn2ModelerResourceImpl.java:824)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.setAttribValue(XMLHandler.java:2755)
+	at org.eclipse.emf.ecore.xmi.impl.SAXXMLHandler.handleObjectAttribs(SAXXMLHandler.java:77)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceImpl$Bpmn2ModelerXmlHandler.handleObjectAttribs(Bpmn2ModelerResourceImpl.java:691)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.createObjectFromFactory(XMLHandler.java:2229)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.createObjectFromFeatureType(XMLHandler.java:2195)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceImpl$Bpmn2ModelerXmlHandler.createObjectFromFeatureType(Bpmn2ModelerResourceImpl.java:635)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.createObject(XMLHandler.java:2071)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.handleFeature(XMLHandler.java:1850)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.processElement(XMLHandler.java:1030)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.startElement(XMLHandler.java:1008)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceImpl$Bpmn2ModelerXmlHandler.startElement(Bpmn2ModelerResourceImpl.java:888)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.startElement(XMLHandler.java:719)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.startElement(Unknown Source)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractXMLDocumentParser.emptyElement(Unknown Source)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanStartElement(Unknown Source)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(Unknown Source)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(Unknown Source)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(Unknown Source)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(Unknown Source)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(Unknown Source)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(Unknown Source)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(Unknown Source)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.parse(Unknown Source)
+	at org.eclipse.emf.ecore.xmi.impl.XMLLoadImpl.load(XMLLoadImpl.java:175)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceImpl$1.load(Bpmn2ModelerResourceImpl.java:321)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doLoad(XMLResourceImpl.java:261)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1518)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1297)
+	at org.eclipse.bpmn2.modeler.core.model.Bpmn2ModelerResourceImpl.load(Bpmn2ModelerResourceImpl.java:282)
+	at org.eclipse.bpmn2.modeler.core.validation.BPMN2ProjectValidator.validate(BPMN2ProjectValidator.java:97)
+	at org.eclipse.wst.validation.Validator$V2.validate(Validator.java:1158)
+	at org.eclipse.wst.validation.internal.ValManager.validate(ValManager.java:704)
+	at org.eclipse.wst.validation.internal.ValManager$1.visit(ValManager.java:665)
+	at org.eclipse.wst.validation.internal.ValManager.accept(ValManager.java:810)
+	at org.eclipse.wst.validation.internal.ValManager.validate(ValManager.java:669)
+	at org.eclipse.wst.validation.internal.ValBuilderJob$Visitor.visit(ValBuilderJob.java:299)
+	at org.eclipse.core.internal.resources.Resource$2.visit(Resource.java:119)
+	at org.eclipse.core.internal.resources.Resource$1.visitElement(Resource.java:83)
+	at org.eclipse.core.internal.watson.ElementTreeIterator.doIteration(ElementTreeIterator.java:82)
+	at org.eclipse.core.internal.watson.ElementTreeIterator.doIteration(ElementTreeIterator.java:87)
+	at org.eclipse.core.internal.watson.ElementTreeIterator.iterate(ElementTreeIterator.java:129)
+	at org.eclipse.core.internal.resources.Resource.accept(Resource.java:93)
+	at org.eclipse.core.internal.resources.Resource.accept(Resource.java:51)
+	at org.eclipse.core.internal.resources.Resource.accept(Resource.java:116)
+	at org.eclipse.core.internal.resources.Resource.accept(Resource.java:104)
+	at org.eclipse.wst.validation.internal.ValBuilderJob.fullBuild(ValBuilderJob.java:219)
+	at org.eclipse.wst.validation.internal.ValBuilderJob.run(ValBuilderJob.java:178)
+	at org.eclipse.wst.validation.internal.ValBuilderJob.runInWorkspace(ValBuilderJob.java:126)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: org.eclipse.core.internal.resources.ResourceException: Resource '/BPMN-Eclipse/structure.xsd' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:334)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:208)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:267)
+	at org.eclipse.core.internal.resources.File.getContents(File.java:260)
+	at org.eclipse.emf.ecore.resource.impl.PlatformResourceURIHandlerImpl$WorkbenchHelper.createPlatformResourceInputStream(PlatformResourceURIHandlerImpl.java:207)
+	at org.eclipse.emf.ecore.resource.impl.PlatformResourceURIHandlerImpl.createInputStream(PlatformResourceURIHandlerImpl.java:525)
+	at org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl.createInputStream(ExtensibleURIConverterImpl.java:360)
+	at org.eclipse.bpmn2.modeler.core.model.ProxyURIConverterImplExtension.createInputStream(ProxyURIConverterImplExtension.java:66)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1269)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoad(ResourceSetImpl.java:259)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:274)
+	... 60 more
+
+!ENTRY org.eclipse.egit.ui 4 0 2017-02-18 11:38:08.316
+!MESSAGE Invalid project description.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Invalid project description.
+	at org.eclipse.core.internal.resources.Project.checkDescription(Project.java:168)
+	at org.eclipse.core.internal.resources.Project.assertCreateRequirements(Project.java:52)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:268)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:252)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createExistingProject(ProjectUtils.java:180)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.access$0(ProjectUtils.java:141)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils$1.run(ProjectUtils.java:99)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2225)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:133)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:60)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.importProjects(GitImportWizard.java:254)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.access$2(GitImportWizard.java:236)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard$4.run(GitImportWizard.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+Contains: OK
+Contains: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter overlaps the workspace location: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2017-02-18 11:38:08.316
+!MESSAGE Invalid project description.
+!SUBENTRY 2 unknown 0 0 2017-02-18 11:38:08.316
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.core.resources 4 77 2017-02-18 11:38:08.316
+!MESSAGE C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter overlaps the workspace location: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter
+
+!ENTRY org.eclipse.egit.ui 4 0 2017-02-18 11:38:40.881
+!MESSAGE Invalid project description.
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Invalid project description.
+	at org.eclipse.core.internal.resources.Project.checkDescription(Project.java:168)
+	at org.eclipse.core.internal.resources.Project.assertCreateRequirements(Project.java:52)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:268)
+	at org.eclipse.core.internal.resources.Project.create(Project.java:252)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createExistingProject(ProjectUtils.java:180)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.access$0(ProjectUtils.java:141)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils$1.run(ProjectUtils.java:99)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2241)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2225)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:133)
+	at org.eclipse.egit.ui.internal.clone.ProjectUtils.createProjects(ProjectUtils.java:60)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.importProjects(GitImportWizard.java:254)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard.access$2(GitImportWizard.java:236)
+	at org.eclipse.egit.ui.internal.clone.GitImportWizard$4.run(GitImportWizard.java:206)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+Contains: OK
+Contains: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter overlaps the workspace location: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2017-02-18 11:38:40.881
+!MESSAGE Invalid project description.
+!SUBENTRY 2 unknown 0 0 2017-02-18 11:38:40.881
+!MESSAGE OK
+!SUBENTRY 2 org.eclipse.core.resources 4 77 2017-02-18 11:38:40.881
+!MESSAGE C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter overlaps the workspace location: C:\Users\jvisker\git\verif\cwp-verification\Verifier\BPMNConverter
