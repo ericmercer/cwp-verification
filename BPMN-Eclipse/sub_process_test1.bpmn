@@ -17,14 +17,19 @@
     <bpmn2:subProcess id="SubProcess_1" name="Sub Process 1">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
-      <bpmn2:dataObject id="DataObject_5" name="Data Object 4"/>
+      <bpmn2:dataObject id="DataObject_5" name="Data Object 4">
+        <bpmn2:dataState id="DataState_3" name="Data State 3"/>
+      </bpmn2:dataObject>
     </bpmn2:subProcess>
-    <bpmn2:dataObject id="DataObject_2" name="Data Object 1"/>
+    <bpmn2:dataObject id="DataObject_2" name="Data Object 1">
+      <bpmn2:dataState id="DataState_2" name="Data State 2"/>
+    </bpmn2:dataObject>
     <bpmn2:dataObjectReference id="DataObjectReference_4" name="Data Object 4" dataObjectRef="DataObject_5"/>
     <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="AdHocSubProcess_1" targetRef="SubProcess_1"/>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Exclusive Gateway 1" gatewayDirection="Converging">
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="SubProcess_1" targetRef="ExclusiveGateway_1"/>
@@ -32,11 +37,17 @@
       <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_6" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_2"/>
     <bpmn2:sequenceFlow id="SequenceFlow_7" sourceRef="ExclusiveGateway_2" targetRef="AdHocSubProcess_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_9" sourceRef="ExclusiveGateway_1" targetRef="EndEvent_1"/>
     <bpmn2:task id="Task_1" name="Task 1">
+      <bpmn2:documentation id="Documentation_27"><![CDATA[<promela>
+helloProm!
+<capacity size="6"/>
+<hello/>
+</promela>]]></bpmn2:documentation>
       <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
@@ -53,6 +64,22 @@
     </bpmn2:task>
     <bpmn2:sequenceFlow id="SequenceFlow_10" sourceRef="ExclusiveGateway_2" targetRef="Task_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_11" sourceRef="Task_1" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:dataObjectReference id="DataObjectReference_1" name="Data Object 4" dataObjectRef="DataObject_5"/>
+    <bpmn2:task id="Task_2" name="Task 2">
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_2">
+        <bpmn2:dataOutput id="DataOutput_2" name="output1"/>
+        <bpmn2:inputSet id="InputSet_2" name="Input Set 2"/>
+        <bpmn2:outputSet id="OutputSet_2" name="Output Set 2">
+          <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="ExclusiveGateway_2" targetRef="Task_2"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="Task_2" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:dataObject id="DataObject_4" name="Data Object 3"/>
+    <bpmn2:association id="Association_1" sourceRef="DataObject_4" targetRef="Task_2"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="sub_process_test1">
@@ -122,6 +149,24 @@
           <dc:Bounds height="14.0" width="36.0" x="472.0" y="103.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_DataObjectReference_3" bpmnElement="DataObjectReference_1">
+        <dc:Bounds height="50.0" width="36.0" x="970.0" y="320.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15">
+          <dc:Bounds height="14.0" width="74.0" x="951.0" y="370.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="305.0" y="25.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="14.0" width="36.0" x="342.0" y="43.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_DataObject_3" bpmnElement="DataObject_4">
+        <dc:Bounds height="50.0" width="36.0" x="151.0" y="25.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_24" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="14.0" width="74.0" x="132.0" y="75.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_AdHocSubProcess_1" targetElement="BPMNShape_SubProcess_1">
         <di:waypoint xsi:type="dc:Point" x="440.0" y="320.0"/>
         <di:waypoint xsi:type="dc:Point" x="500.0" y="320.0"/>
@@ -173,6 +218,25 @@
         <di:waypoint xsi:type="dc:Point" x="490.0" y="153.0"/>
         <di:waypoint xsi:type="dc:Point" x="490.0" y="172.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_20"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_Task_2">
+        <di:waypoint xsi:type="dc:Point" x="280.0" y="95.0"/>
+        <di:waypoint xsi:type="dc:Point" x="280.0" y="50.0"/>
+        <di:waypoint xsi:type="dc:Point" x="305.0" y="50.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_22"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_ExclusiveGateway_1">
+        <di:waypoint xsi:type="dc:Point" x="415.0" y="50.0"/>
+        <di:waypoint xsi:type="dc:Point" x="700.0" y="50.0"/>
+        <di:waypoint xsi:type="dc:Point" x="700.0" y="145.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_23"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_Association_1" bpmnElement="Association_1" sourceElement="BPMNShape_DataObject_3" targetElement="BPMNShape_Task_2">
+        <di:waypoint xsi:type="dc:Point" x="187.0" y="50.0"/>
+        <di:waypoint xsi:type="dc:Point" x="246.0" y="50.0"/>
+        <di:waypoint xsi:type="dc:Point" x="246.0" y="41.0"/>
+        <di:waypoint xsi:type="dc:Point" x="305.0" y="41.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_26"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
