@@ -50,8 +50,12 @@ inline xor_join(messageNumber, inseq,inseq2, outseq){
 	((inseq > 0) || (inseq2 > 0) ) ->
 	print(messageNumber)
 	if 
-	:: in_tokens(inseq) -> out_tokens(outseq)
-	:: in_tokens(inseq2) -> out_tokens(outseq)
+	:: (inseq > 0) -> 
+	    in_tokens(inseq)
+	    out_tokens(outseq)
+	:: (inseq2 > 0) -> 
+	    in_tokens(inseq2)
+		out_tokens(outseq)
 	fi
 }
 
