@@ -8,3 +8,7 @@ pan.*
 /nbproject/private/
 /build/
 /dist/
+*.class
+/Verifier/BPMNConverter/bin/
+/Verifier/.metadata/
+/Verifier/.settings/
