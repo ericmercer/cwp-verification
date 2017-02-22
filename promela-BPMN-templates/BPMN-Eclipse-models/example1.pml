@@ -136,13 +136,16 @@ proctype main(chan report; byte token_id) {
 
 #ifdef VERIFY
 init {
+
+    mtype msg
+	byte token_id = 0
+	
   atomic{
 	chan end0 = [1] of {mtype,byte}
 	chan end1 = [1] of {mtype,byte}
 	chan end2 = [1] of {mtype,byte}
 
-	mtype msg
-	byte token_id = 0
+
 
 	run main(end0,0)
 	run main(end1,1)

@@ -90,6 +90,8 @@ public class PromelaGenerator2 {
 		s += "\n";
 		s += ":: " + this.generate_subprocess_end("end subprocess", "subprocessEnd", "processToken", "parallelFork");
 */
+		
+		
 		s += "od\n";
 		s += this.generate_init("main", 3);
 		// init section
