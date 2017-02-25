@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="http://byu.edu/structure.xsd" xmlns:ns1.xsd="http://byu.edu/structure.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170221-1647-B60" targetNamespace="http://org.eclipse.bpmn2/default/process">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="http://byu.edu/structure.xsd" xmlns:ns1.xsd="http://byu.edu/structure.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.2.4.Final-v20160330-1625-B110" targetNamespace="http://org.eclipse.bpmn2/default/process">
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="structure.xsd" namespace="http://byu.edu/structure.xsd"/>
   <bpmn2:itemDefinition id="ItemDefinition_307" isCollection="false" structureRef="structure"/>
   <bpmn2:itemDefinition id="ItemDefinition_460" isCollection="false" structureRef="xs:boolean"/>
@@ -12,13 +12,14 @@
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:dataObject id="DataObject_2" name="var" itemSubjectRef="ItemDefinition_307" isCollection="true">
+    <bpmn2:dataObject id="DataObject_2" name="var" itemSubjectRef="ItemDefinition_53" isCollection="true">
       <bpmn2:dataState id="DataState_1"/>
     </bpmn2:dataObject>
     <bpmn2:scriptTask id="ScriptTask_1" name="Variable Initialization" scriptFormat="promela">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
+<<<<<<< HEAD
         <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_307" name="var"/>
         <bpmn2:outputSet id="OutputSet_1" name="Output Set Initialize">
           <bpmn2:dataOutputRefs>DataOutput_1</bpmn2:dataOutputRefs>
