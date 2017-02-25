@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="http://byu.edu/structure.xsd" xmlns:ns1.xsd="http://byu.edu/structure.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.2.4.Final-v20160330-1625-B110" targetNamespace="http://org.eclipse.bpmn2/default/process">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="http://byu.edu/structure.xsd" xmlns:ns1.xsd="http://byu.edu/structure.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170221-1647-B60" targetNamespace="http://org.eclipse.bpmn2/default/process">
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="structure.xsd" namespace="http://byu.edu/structure.xsd"/>
   <bpmn2:itemDefinition id="ItemDefinition_307" isCollection="false" structureRef="structure"/>
   <bpmn2:itemDefinition id="ItemDefinition_460" isCollection="false" structureRef="xs:boolean"/>
@@ -12,19 +12,22 @@
     <bpmn2:endEvent id="EndEvent_1" name="End Event 1">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:dataObject id="DataObject_2" name="var" itemSubjectRef="ItemDefinition_53" isCollection="true">
+    <bpmn2:dataObject id="DataObject_2" name="var" itemSubjectRef="ItemDefinition_307" isCollection="true">
       <bpmn2:dataState id="DataState_1"/>
     </bpmn2:dataObject>
     <bpmn2:scriptTask id="ScriptTask_1" name="Variable Initialization" scriptFormat="promela">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_1">
-        <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_307" name="output1"/>
-        <bpmn2:inputSet id="InputSet_1" name="Input Set 1"/>
-        <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
+        <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="ItemDefinition_307" name="var"/>
+        <bpmn2:outputSet id="OutputSet_1" name="Output Set Initialize">
           <bpmn2:dataOutputRefs>DataOutput_1</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
       </bpmn2:ioSpecification>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
+        <bpmn2:sourceRef>DataOutput_1</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataObject_2</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
       <bpmn2:script>var[token_id].count = 10;
 var[token_id].isReady = false;</bpmn2:script>
     </bpmn2:scriptTask>
@@ -42,6 +45,16 @@ var[token_id].isReady = false;</bpmn2:script>
     <bpmn2:scriptTask id="ScriptTask_2" name="Increment Count" scriptFormat="promela">
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_3">
+        <bpmn2:dataOutput id="DataOutput_3" name="var"/>
+        <bpmn2:outputSet id="OutputSet_3" name="Output Set Increment">
+          <bpmn2:dataOutputRefs>DataOutput_3</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_3">
+        <bpmn2:sourceRef>DataOutput_3</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataObjectReference_4</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
       <bpmn2:script>var.count++;</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:sequenceFlow id="SequenceFlow_7" name="Is Ready?" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_2">
@@ -64,6 +77,16 @@ var[token_id].isReady = false;</bpmn2:script>
       <bpmn2:scriptTask id="ScriptTask_4" name="Script Task 4" scriptFormat="promela">
         <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+        <bpmn2:ioSpecification id="InputOutputSpecification_2">
+          <bpmn2:dataOutput id="DataOutput_2" name="var"/>
+          <bpmn2:outputSet id="OutputSet_2" name="Output Set Plus Plus">
+            <bpmn2:dataOutputRefs>DataOutput_2</bpmn2:dataOutputRefs>
+          </bpmn2:outputSet>
+        </bpmn2:ioSpecification>
+        <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
+          <bpmn2:sourceRef>DataOutput_2</bpmn2:sourceRef>
+          <bpmn2:targetRef>DataObjectReference_1</bpmn2:targetRef>
+        </bpmn2:dataOutputAssociation>
         <bpmn2:script>var[token_id].count++;</bpmn2:script>
       </bpmn2:scriptTask>
       <bpmn2:dataObjectReference id="DataObjectReference_1" name="var" dataObjectRef="DataObject_2"/>
@@ -73,16 +96,13 @@ var[token_id].isReady = false;</bpmn2:script>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="ExclusiveGateway_2" targetRef="SubProcess_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="SubProcess_1" targetRef="EndEvent_1"/>
     <bpmn2:association id="Association_4" sourceRef="DataObjectReference_3" targetRef="ExclusiveGateway_1"/>
-    <bpmn2:association id="Association_5" sourceRef="DataObjectReference_4" targetRef="ScriptTask_2"/>
-    <bpmn2:association id="Association_2" sourceRef="DataObject_2" targetRef="ScriptTask_1"/>
-    <bpmn2:association id="Association_3" sourceRef="DataObjectReference_1" targetRef="ScriptTask_4"/>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="process_1">
       <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
         <dc:Bounds height="150.0" width="300.0" x="710.0" y="45.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="15.0" width="81.0" x="716.0" y="48.0"/>
+          <dc:Bounds height="14.0" width="81.0" x="716.0" y="48.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="StartEvent_1">
@@ -142,25 +162,25 @@ var[token_id].isReady = false;</bpmn2:script>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="752.0" y="69.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_19" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="15.0" width="68.0" x="736.0" y="105.0"/>
+          <dc:Bounds height="14.0" width="68.0" x="736.0" y="105.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="940.0" y="69.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_29" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="15.0" width="65.0" x="926.0" y="105.0"/>
+          <dc:Bounds height="14.0" width="65.0" x="926.0" y="105.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_4" bpmnElement="ScriptTask_4">
         <dc:Bounds height="50.0" width="110.0" x="814.0" y="62.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_30" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="15.0" width="71.0" x="833.0" y="79.0"/>
+          <dc:Bounds height="14.0" width="70.0" x="834.0" y="80.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_DataObjectReference_1" bpmnElement="DataObjectReference_1">
         <dc:Bounds height="50.0" width="36.0" x="850.0" y="130.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_31">
-          <dc:Bounds height="15.0" width="16.0" x="860.0" y="180.0"/>
+          <dc:Bounds height="14.0" width="16.0" x="860.0" y="180.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_ExclusiveGateway_1">
@@ -199,24 +219,12 @@ var[token_id].isReady = false;</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="501.0" y="93.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_24"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_Association_5" bpmnElement="Association_5" sourceElement="BPMNShape_DataObjectReference_3" targetElement="BPMNShape_ScriptTask_2">
-        <di:waypoint xsi:type="dc:Point" x="576.0" y="333.0"/>
-        <di:waypoint xsi:type="dc:Point" x="576.0" y="304.0"/>
-        <di:waypoint xsi:type="dc:Point" x="576.0" y="275.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_26"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_1" targetElement="BPMNShape_ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="216.0" y="111.0"/>
         <di:waypoint xsi:type="dc:Point" x="226.0" y="111.0"/>
         <di:waypoint xsi:type="dc:Point" x="226.0" y="109.0"/>
         <di:waypoint xsi:type="dc:Point" x="316.0" y="109.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_Association_2" bpmnElement="Association_2" sourceElement="BPMNShape_DataObject_1" targetElement="BPMNShape_ScriptTask_1">
-        <di:waypoint xsi:type="dc:Point" x="307.0" y="208.0"/>
-        <di:waypoint xsi:type="dc:Point" x="307.0" y="126.0"/>
-        <di:waypoint xsi:type="dc:Point" x="316.0" y="126.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_7"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_SubProcess_1">
         <di:waypoint xsi:type="dc:Point" x="682.0" y="118.0"/>
@@ -232,12 +240,6 @@ var[token_id].isReady = false;</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="1045.0" y="118.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_18"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_Association_3" bpmnElement="Association_3" sourceElement="BPMNShape_DataObjectReference_1" targetElement="BPMNShape_ScriptTask_4">
-        <di:waypoint xsi:type="dc:Point" x="868.0" y="130.0"/>
-        <di:waypoint xsi:type="dc:Point" x="868.0" y="121.0"/>
-        <di:waypoint xsi:type="dc:Point" x="869.0" y="112.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_32"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ScriptTask_4">
         <di:waypoint xsi:type="dc:Point" x="788.0" y="87.0"/>
         <di:waypoint xsi:type="dc:Point" x="801.0" y="87.0"/>
@@ -249,6 +251,24 @@ var[token_id].isReady = false;</bpmn2:script>
         <di:waypoint xsi:type="dc:Point" x="932.0" y="87.0"/>
         <di:waypoint xsi:type="dc:Point" x="940.0" y="87.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_34"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_DataOutputAssociation_1" bpmnElement="DataOutputAssociation_1" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_DataObject_1">
+        <di:waypoint xsi:type="dc:Point" x="316.0" y="126.0"/>
+        <di:waypoint xsi:type="dc:Point" x="307.0" y="126.0"/>
+        <di:waypoint xsi:type="dc:Point" x="307.0" y="208.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_4"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_DataOutputAssociation_2" bpmnElement="DataOutputAssociation_2" sourceElement="BPMNShape_ScriptTask_4" targetElement="BPMNShape_DataObjectReference_1">
+        <di:waypoint xsi:type="dc:Point" x="869.0" y="112.0"/>
+        <di:waypoint xsi:type="dc:Point" x="869.0" y="121.0"/>
+        <di:waypoint xsi:type="dc:Point" x="868.0" y="130.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_DataOutputAssociation_3" bpmnElement="DataOutputAssociation_3" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_DataObjectReference_3">
+        <di:waypoint xsi:type="dc:Point" x="576.0" y="275.0"/>
+        <di:waypoint xsi:type="dc:Point" x="576.0" y="304.0"/>
+        <di:waypoint xsi:type="dc:Point" x="576.0" y="333.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_20"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
     <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">

@@ -17,10 +17,9 @@
       <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_9">
-        <bpmn2:dataOutput id="DataOutput_10" name="output1"/>
-        <bpmn2:inputSet id="InputSet_9" name="Input Set 9"/>
-        <bpmn2:outputSet id="OutputSet_9" name="Output Set 9">
-          <bpmn2:dataOutputRefs>DataOutput_10</bpmn2:dataOutputRefs>
+        <bpmn2:dataOutput id="DataOutput_10" name="MedicalRecords"/>
+        <bpmn2:outputSet id="OutputSet_9" name="Output Set Provide Med Records">
+          <bpmn2:dataOutputRefs>DataOutput_9</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
       </bpmn2:ioSpecification>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_6">
@@ -58,7 +57,7 @@
       <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_8">
-        <bpmn2:dataOutput id="DataOutput_8" name="output1"/>
+        <bpmn2:dataOutput id="DataOutput_8" name="acceptForm"/>
         <bpmn2:inputSet id="InputSet_8" name="Input Set 8"/>
         <bpmn2:outputSet id="OutputSet_8" name="Output Set 8">
           <bpmn2:dataOutputRefs>DataOutput_8</bpmn2:dataOutputRefs>
@@ -75,8 +74,12 @@
     <bpmn2:sequenceFlow id="SequenceFlow_8" sourceRef="Task_4" targetRef="ExclusiveGateway_4"/>
     <bpmn2:sequenceFlow id="SequenceFlow_9" sourceRef="Task_5" targetRef="ExclusiveGateway_4"/>
     <bpmn2:sequenceFlow id="SequenceFlow_10" sourceRef="ExclusiveGateway_4" targetRef="EndEvent_3"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_11" name="condition == true" sourceRef="ExclusiveGateway_3" targetRef="Task_5"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_12" name="condition == false" sourceRef="ExclusiveGateway_3" targetRef="Task_4"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_11" name="accept" sourceRef="ExclusiveGateway_3" targetRef="Task_5">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">condition == true</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_12" name="reject" sourceRef="ExclusiveGateway_3" targetRef="Task_4">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2" language="http://www.java.com/java">condition == false</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_13" sourceRef="Task_3" targetRef="ExclusiveGateway_3"/>
     <bpmn2:dataObject id="DataObject_2" name="condition" itemSubjectRef="ItemDefinition_9">
       <bpmn2:dataState id="DataState_1" name="Data State 1"/>
@@ -180,7 +183,7 @@
         <di:waypoint xsi:type="dc:Point" x="503.0" y="305.0"/>
         <di:waypoint xsi:type="dc:Point" x="576.0" y="305.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_14">
-          <dc:Bounds height="28.0" width="65.0" x="476.0" y="306.0"/>
+          <dc:Bounds height="14.0" width="36.0" x="491.0" y="306.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_Task_5">
@@ -188,7 +191,7 @@
         <di:waypoint xsi:type="dc:Point" x="503.0" y="135.0"/>
         <di:waypoint xsi:type="dc:Point" x="576.0" y="135.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_15">
-          <dc:Bounds height="28.0" width="65.0" x="480.0" y="136.0"/>
+          <dc:Bounds height="14.0" width="30.0" x="498.0" y="136.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_Task_4" targetElement="BPMNShape_ExclusiveGateway_3">

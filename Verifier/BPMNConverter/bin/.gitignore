@@ -1,7 +1,9 @@
+/mathflow/
+/xml/
+/awk/
 /bpmnStructure/
 /promela/
 /state/
 /tests/
 /visitor/
 /xmlConversion/
-/awk/
