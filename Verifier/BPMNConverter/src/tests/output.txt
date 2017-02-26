@@ -1,7 +1,0 @@
-startEvent: StartEvent_1
-task: Task_1
-exclusiveGateway: ExclusiveGateway_1
-endEvent: EndEvent_1aqgj4v
-sourceRef: StartEvent_1 targetRef: Task_1
-sourceRef: Task_1 targetRef: ExclusiveGateway_1
-sourceRef: ExclusiveGateway_1 targetRef: EndEvent_1aqgj4v

@@ -172,7 +172,6 @@ public class ConvertToBpmn {
 		ArrayList<String> code = null;
 		if(list != null && list.getLength() != 0) {
 			Element doc = (Element) list.item(0);
-			System.out.println(doc.getTextContent());
 			Scanner scan = new Scanner(doc.getTextContent());
 			code = new ArrayList<>();
 			while(scan.hasNext()) {
@@ -181,6 +180,7 @@ public class ConvertToBpmn {
 			code.remove(code.size() - 1);
 			code.remove(0);
 			scan.close();
+			System.out.println(code.toString());
 		}
 		diagram.addTask( task.getAttribute("id"), code );
 	}
@@ -191,15 +191,13 @@ public class ConvertToBpmn {
 		ArrayList<String> code = null;
 		if(list != null && list.getLength() != 0) {
 			Element doc = (Element) list.item(0);
-			System.out.println(doc.getTextContent());
 			Scanner scan = new Scanner(doc.getTextContent());
 			code = new ArrayList<>();
 			while(scan.hasNext()) {
 				code.add(scan.nextLine());
 			}
-			code.remove(code.size() - 1);
-			code.remove(0);
 			scan.close();
+			System.out.println(code.toString());
 		}
 		diagram.addScriptTask( task.getAttribute("id"), code );
 	}
@@ -210,7 +208,6 @@ public class ConvertToBpmn {
 		ArrayList<String> code = null;
 		if(list != null && list.getLength() != 0) {
 			Element doc = (Element) list.item(0);
-			System.out.println(doc.getTextContent());
 			Scanner scan = new Scanner(doc.getTextContent());
 			code = new ArrayList<>();
 			while(scan.hasNext()) {
@@ -219,6 +216,7 @@ public class ConvertToBpmn {
 			code.remove(code.size() - 1);
 			code.remove(0);
 			scan.close();
+			System.out.println(code.toString());
 		}
 		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id"), code );
 	}
