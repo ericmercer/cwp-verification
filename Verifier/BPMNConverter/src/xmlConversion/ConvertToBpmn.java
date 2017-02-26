@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -117,16 +118,8 @@ public class ConvertToBpmn {
 				else if(tag.equals(namespace + "task")) {
 					initTask(child, diagram);
 				}
-				else if(tag.equals(namespace + "userTask")) {
-					initTask(child, diagram);
-				}
-				else if (tag.equals(namespace + "sendTask")) {
-					initTask(child, diagram);
-				}
-				else if (tag.equals(namespace + "receiveTask")) {
-					initTask(child, diagram);
-				}
-				else if (tag.equals(namespace + "manualTask")) {
+				else if(tag.equals(namespace + "userTask") || tag.equals(namespace + "manualTask") || 
+						tag.equals(namespace + "sendTask") || tag.equals(namespace + "receiveTask")) {
 					initTask(child, diagram);
 				}
 				else if(tag.equals(namespace + "scriptTask")) {
@@ -176,23 +169,58 @@ public class ConvertToBpmn {
 	private void initTask(Element task, BpmnDiagram diagram) {
 		writer.println( "task: " + task.getAttribute( "id" ) );
 		NodeList list = task.getElementsByTagName(namespace + "documentation");
-		if(list != null) {
+		ArrayList<String> code = null;
+		if(list != null && list.getLength() != 0) {
 			Element doc = (Element) list.item(0);
 			System.out.println(doc.getTextContent());
+			Scanner scan = new Scanner(doc.getTextContent());
+			code = new ArrayList<>();
+			while(scan.hasNext()) {
+				code.add(scan.nextLine());
+			}
+			code.remove(code.size() - 1);
+			code.remove(0);
+			scan.close();
 		}
-		diagram.addTask( task.getAttribute("id"), null );
+		diagram.addTask( task.getAttribute("id"), code );
 	}
 	
 	private void initScriptTask(Element task, BpmnDiagram diagram) {
 		writer.println( "scriptTask: " + task.getAttribute( "id" ) );
-		task.getElementsByTagName("script");
-		
-		diagram.addScriptTask( task.getAttribute("id"), null );
+		NodeList list = task.getElementsByTagName(namespace + "script");
+		ArrayList<String> code = null;
+		if(list != null && list.getLength() != 0) {
+			Element doc = (Element) list.item(0);
+			System.out.println(doc.getTextContent());
+			Scanner scan = new Scanner(doc.getTextContent());
+			code = new ArrayList<>();
+			while(scan.hasNext()) {
+				code.add(scan.nextLine());
+			}
+			code.remove(code.size() - 1);
+			code.remove(0);
+			scan.close();
+		}
+		diagram.addScriptTask( task.getAttribute("id"), code );
 	}
 	
 	private void initIntermediateEvent(Element intermediateEvent, BpmnDiagram diagram) {
 		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
-		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id"), null );
+		NodeList list = intermediateEvent.getElementsByTagName(namespace + "documentation");
+		ArrayList<String> code = null;
+		if(list != null && list.getLength() != 0) {
+			Element doc = (Element) list.item(0);
+			System.out.println(doc.getTextContent());
+			Scanner scan = new Scanner(doc.getTextContent());
+			code = new ArrayList<>();
+			while(scan.hasNext()) {
+				code.add(scan.nextLine());
+			}
+			code.remove(code.size() - 1);
+			code.remove(0);
+			scan.close();
+		}
+		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id"), code );
 	}
 	
 	private void initExclusiveGate(Element exclusiveGate, BpmnDiagram diagram) {
@@ -228,26 +256,6 @@ public class ConvertToBpmn {
 	
 	
 //	end of class
-	
-//	private void initUserTask(Element task, BpmnDiagram diagram) {
-//		writer.println( "userTask: " + task.getAttribute( "id" ) );
-//		diagram.addTask( task.getAttribute("id") );
-//	}
-//	
-//	private void initSendTask(Element task, BpmnDiagram diagram) {
-//		writer.println( "sendTask: " + task.getAttribute( "id" ) );
-//		diagram.addTask( task.getAttribute("id") );
-//	}
-//	
-//	private void initReceiveTask(Element task, BpmnDiagram diagram) {
-//		writer.println( "receiveTask: " + task.getAttribute( "id" ) );
-//		diagram.addTask( task.getAttribute("id") );
-//	}
-//	
-//	private void initManualTask(Element task, BpmnDiagram diagram) {
-//		writer.println( "manualTask: " + task.getAttribute( "id" ) );
-//		diagram.addTask( task.getAttribute("id") );
-//	}
 }
 
 
