@@ -71,11 +71,11 @@ public class BpmnDiagram extends FlowElement {
 
 	}
 
-	public void addTask(String id) {
+	public void addTask(String id, ArrayList<String> promelaCode) {
 		addFlowElement(id, new Task(id));
 	}
 	
-	public void addScriptTask(String id) {
+	public void addScriptTask(String id, ArrayList<String> promelaCode) {
 		addFlowElement(id, new ScriptTask(id));
 	}
 
@@ -91,8 +91,12 @@ public class BpmnDiagram extends FlowElement {
 		addFlowElement(id, new ParallelGateway(id));
 	}
 	
-	public void addIntermediateEvent(String id) {
+	public void addIntermediateEvent(String id, ArrayList<String> promelaCode) {
 		addFlowElement(id, new IntermediateEvent(id));
+	}
+	
+	public void addData(String id) {
+		
 	}
 
 	/**** End of XML interface methods **************/

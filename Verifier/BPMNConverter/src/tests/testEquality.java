@@ -13,8 +13,8 @@ public class testEquality {
 
 		b1.addStartEvent("start");
 		b1.addParallelGateway("Gateway1");
-		b1.addTask("Task1");
-		b1.addTask("Task2");
+		b1.addTask("Task1", null);
+		b1.addTask("Task2", null);
 		b1.addParallelGateway("Gateway2");
 		b1.addEndEvent("end");
 
@@ -37,8 +37,8 @@ public class testEquality {
 
 		b2.addStartEvent("start");
 		b2.addParallelGateway("Gateway1");
-		b2.addTask("Task1");
-		b2.addTask("Task2");
+		b2.addTask("Task1", null);
+		b2.addTask("Task2", null);
 		b2.addParallelGateway("Gateway2");
 		b2.addEndEvent("end");
 

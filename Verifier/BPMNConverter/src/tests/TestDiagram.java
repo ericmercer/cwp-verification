@@ -79,7 +79,7 @@ public class TestDiagram {
 		BpmnDiagram correct = new BpmnDiagram("Process_1");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1aqgj4v");
-		correct.addTask("Task_1");
+		correct.addTask("Task_1", null);
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		correct.addSequenceFlow("StartEvent_1", "Task_1");
 		correct.addSequenceFlow("Task_1", "ExclusiveGateway_1");
@@ -97,7 +97,7 @@ public class TestDiagram {
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
 		
-		correct.addTask("Task_1");
+		correct.addTask("Task_1", null);
 		
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		correct.addExclusiveGateway("ExclusiveGateway_2");
@@ -125,23 +125,23 @@ public class TestDiagram {
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_0259rfj");
 		
-		correct.addTask("Task_1vukq14");
-		correct.addTask("Task_1c3wjjf");
+		correct.addTask("Task_1vukq14", null);
+		correct.addTask("Task_1c3wjjf", null);
 		
 		correct.addExclusiveGateway("ExclusiveGateway_0hpt3dk");
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		
 		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_0zaafna");
 		sub.addExclusiveGateway("ExclusiveGateway_1jr1gc4");
-		sub.addTask("Task_0q22whk");
+		sub.addTask("Task_0q22whk", null);
 		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "Task_0q22whk");
-		sub.addTask("Task_12uwadk");
+		sub.addTask("Task_12uwadk", null);
 		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "Task_12uwadk");
 		sub.addExclusiveGateway("ExclusiveGateway_1anf5gt");
 		sub.addSequenceFlow("Task_0q22whk", "ExclusiveGateway_1anf5gt");
 		sub.addSequenceFlow("Task_12uwadk", "ExclusiveGateway_1anf5gt");
-		sub.addIntermediateEvent("IntermediateThrowEvent_060vul7");
-		sub.addIntermediateEvent("IntermediateThrowEvent_1bva7ei");
+		sub.addIntermediateEvent("IntermediateThrowEvent_060vul7", null);
+		sub.addIntermediateEvent("IntermediateThrowEvent_1bva7ei", null);
 		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "IntermediateThrowEvent_060vul7");
 		sub.addSequenceFlow("IntermediateThrowEvent_060vul7", "IntermediateThrowEvent_1bva7ei");
 		sub.addSequenceFlow("IntermediateThrowEvent_1bva7ei", "ExclusiveGateway_1anf5gt");
@@ -167,7 +167,7 @@ public class TestDiagram {
 		correct.addEndEvent("EndEvent_2");
 		correct.addEndEvent("EndEvent_3");
 		
-		correct.addTask("UserTask_1");
+		correct.addTask("UserTask_1", null);
 		
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		correct.addExclusiveGateway("ExclusiveGateway_2");
@@ -179,7 +179,7 @@ public class TestDiagram {
 		sub.addStartEvent("StartEvent_2");
 		sub.addEndEvent("EndEvent_4");
 		sub.addEndEvent("EndEvent_5");
-		sub.addTask("UserTask_2");
+		sub.addTask("UserTask_2", null);
 		sub.addExclusiveGateway("ExclusiveGateway_4");
 		sub.addSequenceFlow("ExclusiveGateway_4", "EndEvent_4");
 		sub.addSequenceFlow("ExclusiveGateway_4", "EndEvent_5");
@@ -210,8 +210,8 @@ public class TestDiagram {
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
 		
-		correct.addScriptTask("ScriptTask_1"); // should be a scriptTask but that doesn't exist yet
-		correct.addScriptTask("ScriptTask_2");
+		correct.addScriptTask("ScriptTask_1", null);
+		correct.addScriptTask("ScriptTask_2", null);
 		
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		correct.addExclusiveGateway("ExclusiveGateway_2");
@@ -225,7 +225,7 @@ public class TestDiagram {
 		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_1");
 		sub.addStartEvent("StartEvent_2");
 		sub.addEndEvent("EndEvent_2");
-		sub.addScriptTask("ScriptTask_4");
+		sub.addScriptTask("ScriptTask_4", null);
 		sub.addSequenceFlow("StartEvent_2", "ScriptTask_4");
 		sub.addSequenceFlow("ScriptTask_4", "EndEvent_2");
 		
@@ -245,16 +245,16 @@ public class TestDiagram {
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
 		
-		correct.addTask("Task_1");
+		correct.addTask("Task_1", null);
 		correct.addSequenceFlow("StartEvent_1", "Task_1");
 		
-		correct.addTask("UserTask_1");
+		correct.addTask("UserTask_1", null);
 		correct.addExclusiveGateway("ExclusiveGateway_1");
-		correct.addScriptTask("ScriptTask_1");
+		correct.addScriptTask("ScriptTask_1", null);
 		correct.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
 		correct.addSequenceFlow("UserTask_1", "ExclusiveGateway_1");
 		
-		correct.addTask("SendTask_2");
+		correct.addTask("SendTask_2", null);
 		correct.addSequenceFlow("ExclusiveGateway_1", "SendTask_2");
 		
 		correct.addExclusiveGateway("ExclusiveGateway_2");
@@ -262,8 +262,8 @@ public class TestDiagram {
 		correct.addSequenceFlow("ExclusiveGateway_2", "UserTask_1");
 		correct.addSequenceFlow("SendTask_2", "ExclusiveGateway_2");
 		
-		correct.addTask("Task_2");
-		correct.addTask("Task_3");
+		correct.addTask("Task_2", null);
+		correct.addTask("Task_3", null);
 		
 		correct.addSequenceFlow("Task_3", "EndEvent_1");
 		correct.addSequenceFlow("ScriptTask_1", "Task_2");
@@ -281,13 +281,13 @@ public class TestDiagram {
 		BpmnDiagram correct = new BpmnDiagram("MedicalRecords");
 		
 		correct.addStartEvent("StartEvent_3");
-		correct.addTask("Task_3");
+		correct.addTask("Task_3", null);
 		correct.addSequenceFlow("StartEvent_3", "Task_3");
 
 		correct.addExclusiveGateway("ExclusiveGateway_3");
 		correct.addExclusiveGateway("ExclusiveGateway_4");
-		correct.addTask("Task_4");
-		correct.addTask("Task_5");
+		correct.addTask("Task_4", null);
+		correct.addTask("Task_5", null);
 		correct.addEndEvent("EndEvent_3");
 		correct.addSequenceFlow("Task_4", "ExclusiveGateway_4");
 		correct.addSequenceFlow("Task_5", "ExclusiveGateway_4");
@@ -316,13 +316,13 @@ public class TestDiagram {
 		correct.addSequenceFlow("ExclusiveGateway_2", "EndEvent_1");
 		
 		BpmnDiagram sub1 = correct.addNormalSubProcess("SubProcess_1");
-		sub1.addTask("SendTask_1");
+		sub1.addTask("SendTask_1", null);
 		sub1.addStartEvent("StartEvent_2");
 		sub1.addSequenceFlow("StartEvent_2", "SendTask_1");
 		sub1.addEndEvent("EndEvent_4");
 		
 		BpmnDiagram sub2 = sub1.addNormalSubProcess("SubProcess_2");
-		sub2.addTask("Task_1");
+		sub2.addTask("Task_1", null);
 		sub2.addStartEvent("StartEvent_3");
 		sub2.addEndEvent("EndEvent_2");
 		sub2.addSequenceFlow("StartEvent_3", "Task_1");
@@ -332,10 +332,10 @@ public class TestDiagram {
 		sub1.addSequenceFlow("SubProcess_2", "EndEvent_4");
 		
 		BpmnDiagram sub3 = correct.addNormalSubProcess("AdHocSubProcess_1");
-		sub3.addTask("SendTask_2");
-		sub3.addTask("ReceiveTask_1");
+		sub3.addTask("SendTask_2", null);
+		sub3.addTask("ReceiveTask_1", null);
 		sub3.addSequenceFlow("SendTask_2", "ReceiveTask_1");
-		sub3.addTask("ManualTask_1");
+		sub3.addTask("ManualTask_1", null);
 		sub3.addSequenceFlow("ReceiveTask_1", "ManualTask_1");
 		
 		correct.addSequenceFlow("ExclusiveGateway_1", "SubProcess_1");

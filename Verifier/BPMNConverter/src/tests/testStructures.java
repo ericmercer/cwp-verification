@@ -13,8 +13,8 @@ public class testStructures {
 
 		b1.addStartEvent("start");
 		b1.addParallelGateway("Gateway1");
-		b1.addTask("Task1");
-		b1.addTask("Task2");
+		b1.addTask("Task1", null);
+		b1.addTask("Task2", null);
 		b1.addParallelGateway("Gateway2");
 		b1.addEndEvent("end");
 
