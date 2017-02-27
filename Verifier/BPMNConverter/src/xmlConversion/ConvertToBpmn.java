@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -27,6 +28,10 @@ public class ConvertToBpmn {
 	private PrintWriter writer;
 	
 	private String namespace;
+	private HashMap<String, String> definitions;
+	private HashMap<String, String> references;
+	private HashMap<String, String> dataObjects;
+	private HashMap<String, String> dataStores;
 	
 	public BpmnDiagram importXML( String fileName ) {
 		
@@ -82,7 +87,40 @@ public class ConvertToBpmn {
         
         String id = process.getAttribute( "id" );
 		BpmnDiagram diagram = new BpmnDiagram(id);
+		references = new HashMap<>();
+		definitions = new HashMap<>();
+		dataObjects = new HashMap<>();
+		dataStores = new HashMap<>();
 		
+		NodeList list = process.getElementsByTagName(namespace + "itemDefinition");
+		Element e = null;
+		for(int i = 0; i < list.getLength(); i++) {
+			e = (Element) list.item(i);
+			definitions.put(e.getAttribute("id"), e.getAttribute("structureRef"));
+		}
+		
+		list = process.getElementsByTagName(namespace + "dataObjectReference");
+		for(int i = 0; i < list.getLength(); i++) {
+			e = (Element) list.item(i);
+			references.put(e.getAttribute("id"), e.getAttribute("dataObjectRef"));
+		}
+		
+		list = process.getElementsByTagName(namespace + "dataStoreReference");
+		for(int i = 0; i < list.getLength(); i++) {
+			e = (Element) list.item(i);
+			references.put(e.getAttribute("id"), e.getAttribute("dataStoreRef"));
+		}
+		
+		list = process.getElementsByTagName(namespace + "dataObject");
+		for(int i = 0; i < list.getLength(); i++) {
+			e = (Element) list.item(i);
+			initDataObject(e, diagram);
+		}
+		list = process.getElementsByTagName(namespace + "dataStore");
+		for(int i = 0; i < list.getLength(); i++) {
+			e = (Element) list.item(i);
+			initDataStore(e, diagram);
+		}
 		initProcess(process, diagram);
 		
 		this.diagram = diagram;
@@ -91,6 +129,7 @@ public class ConvertToBpmn {
 	private void initProcess(Element process, BpmnDiagram diagram) {
 		NodeList children = process.getChildNodes();
 		ArrayList<Element> flowSequences = new ArrayList<>();
+		ArrayList<Element> associations = new ArrayList<>();
 		for(int i = 0; i < children.getLength(); i++) {
 			if(children.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element child = (Element) children.item(i);
@@ -137,10 +176,14 @@ public class ConvertToBpmn {
 				else if(tag.equals(namespace + "sequenceFlow")) {
 					flowSequences.add(child);
 				}
+				else if(tag.equals(namespace + "association")) {
+					associations.add(child);
+				}
 			}
 		}
 		
 		initSequenceFlows(flowSequences, diagram);
+		initAssociations(associations, diagram);
 		
 		return;
 	}
@@ -180,7 +223,7 @@ public class ConvertToBpmn {
 			code.remove(code.size() - 1);
 			code.remove(0);
 			scan.close();
-			System.out.println(code.toString());
+			writer.println(code.toString());
 		}
 		diagram.addTask( task.getAttribute("id"), code );
 	}
@@ -197,7 +240,7 @@ public class ConvertToBpmn {
 				code.add(scan.nextLine());
 			}
 			scan.close();
-			System.out.println(code.toString());
+			writer.println(code.toString());
 		}
 		diagram.addScriptTask( task.getAttribute("id"), code );
 	}
@@ -216,7 +259,7 @@ public class ConvertToBpmn {
 			code.remove(code.size() - 1);
 			code.remove(0);
 			scan.close();
-			System.out.println(code.toString());
+			writer.println(code.toString());
 		}
 		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id"), code );
 	}
@@ -230,6 +273,52 @@ public class ConvertToBpmn {
 //		writer.println( "inclusiveGateway: " + inclusiveGate.getAttribute( "id" ) );
 //		diagram.addInclusiveGateway( inclusiveGate.getAttribute("id") );
 //	}
+	
+	private void initDataObject(Element data, BpmnDiagram diagram) {
+		writer.println( "dataObject: " + data.getAttribute( "name" ) );
+		dataObjects.put(data.getAttribute("name"), data.getAttribute("id"));
+		ArrayList<String> dataAttr = new ArrayList<>();
+		dataAttr.add(data.getAttribute("name"));
+		dataAttr.add( definitions.get(data.getAttribute("itemSubjectRef")) );
+		NodeList assoc = data.getElementsByTagName(namespace + "dataInputAssociation");
+		for(int i = 0; i < assoc.getLength(); i++) {
+			Element e = (Element) assoc.item(i);
+			
+		}
+		data.getElementsByTagName(namespace + "dataOutputAssociation");
+		diagram.addDataObject( data.getAttribute("id"), dataAttr );
+	}
+	
+	private void initDataStore(Element data, BpmnDiagram diagram) {
+		writer.println( "dataStore: " + data.getAttribute( "name" ) );
+		dataStores.put(data.getAttribute("name"), data.getAttribute("id"));
+		ArrayList<String> dataAttr = new ArrayList<>();
+		dataAttr.add(data.getAttribute("name"));
+		dataAttr.add(data.getAttribute("capacity"));
+		dataAttr.add( definitions.get(data.getAttribute("itemSubjectRef")) );
+		diagram.addDataStore( data.getAttribute("id"), dataAttr );
+	}
+	
+	private void addOutputAssociation(ArrayList<Element> associations, BpmnDiagram diagram) {
+		
+	}
+	
+	private void initAssociations(ArrayList<Element> associations, BpmnDiagram diagram) {
+		if(associations.isEmpty()) {
+        	return;
+        }
+        
+        Element current = null;
+        Iterator<Element> iter = associations.iterator();
+        while(iter.hasNext()) {
+        	current = iter.next();
+        	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
+			writer.println( "sourceRef: " + source + " targetRef: " + target );
+			diagram.addSequenceFlow( source, target );
+        }
+        
+        return;
+	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnDiagram diagram) {
         if(sequenceFlows.isEmpty()) {

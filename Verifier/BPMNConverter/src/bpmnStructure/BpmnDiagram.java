@@ -95,7 +95,21 @@ public class BpmnDiagram extends FlowElement {
 		addFlowElement(id, new IntermediateEvent(id));
 	}
 	
-	public void addData(String id) {
+	/**
+	 * 
+	 * @param id
+	 * @param dataAtt this is a list of all of the attributes required: (name, type)
+	 */
+	public void addDataObject(String id, ArrayList<String> dataAtt) {
+		
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @param dataAttr dataAtt this is a list of all of the attributes required: (name, capacity, type)
+	 */
+	public void addDataStore(String id, ArrayList<String> dataAttr) {
 		
 	}
 
