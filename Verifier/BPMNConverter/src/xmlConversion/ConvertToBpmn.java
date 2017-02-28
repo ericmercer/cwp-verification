@@ -18,14 +18,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import bpmnStructure.BpmnDiagram;
+import bpmnStructure.BpmnProcess;
 
 public class ConvertToBpmn {
 	
-	private BpmnDiagram diagram;
+	private BpmnProcess diagram;
 	private PrintWriter writer;
 	
-	public BpmnDiagram importXML( String fileName ) {
+	public BpmnProcess importXML( String fileName ) {
 		
 		initExport();
 		
@@ -79,14 +79,14 @@ public class ConvertToBpmn {
         Element process = (Element) processList.item(0);
         
         String id = process.getAttribute( "id" );
-		BpmnDiagram diagram = new BpmnDiagram(id);
+		BpmnProcess diagram = new BpmnProcess(id);
 		
 		initProcess(process, diagram, namespace);
 		
 		this.diagram = diagram;
 	}
 	
-	private void initProcess(Element process, BpmnDiagram diagram, String namespace) {
+	private void initProcess(Element process, BpmnProcess diagram, String namespace) {
 		NodeList children = process.getChildNodes();
 		ArrayList<Element> flowSequences = new ArrayList<>();
 		for(int i = 0; i < children.getLength(); i++) {
@@ -162,53 +162,53 @@ public class ConvertToBpmn {
 		return;
 	}
 	
-	private void initStartEvent(Element startEvent, BpmnDiagram diagram) {
+	private void initStartEvent(Element startEvent, BpmnProcess diagram) {
 		writer.println( "startEvent: " + startEvent.getAttribute( "id" ) );
 		diagram.addStartEvent( startEvent.getAttribute("id") );
 	}
 	
-	private void initEndEvent(Element endEvent, BpmnDiagram diagram) {
+	private void initEndEvent(Element endEvent, BpmnProcess diagram) {
 		writer.println( "endEvent: " + endEvent.getAttribute( "id" ) );
 		diagram.addEndEvent( endEvent.getAttribute("id") );
 	}
 	
-	private void initTask(Element task, BpmnDiagram diagram) {
+	private void initTask(Element task, BpmnProcess diagram) {
 		writer.println( "task: " + task.getAttribute( "id" ) );
 		diagram.addTask( task.getAttribute("id") );
 	}
 	
-	private void initUserTask(Element task, BpmnDiagram diagram) {
+	private void initUserTask(Element task, BpmnProcess diagram) {
 		writer.println( "userTask: " + task.getAttribute( "id" ) );
 		diagram.addTask( task.getAttribute("id") );
 	}
 	
-	private void initSendTask(Element task, BpmnDiagram diagram) {
+	private void initSendTask(Element task, BpmnProcess diagram) {
 		writer.println( "sendTask: " + task.getAttribute( "id" ) );
 		diagram.addTask( task.getAttribute("id") );
 	}
 	
-	private void initReceiveTask(Element task, BpmnDiagram diagram) {
+	private void initReceiveTask(Element task, BpmnProcess diagram) {
 		writer.println( "receiveTask: " + task.getAttribute( "id" ) );
 		diagram.addTask( task.getAttribute("id") );
 	}
 	
-	private void initManualTask(Element task, BpmnDiagram diagram) {
+	private void initManualTask(Element task, BpmnProcess diagram) {
 		writer.println( "manualTask: " + task.getAttribute( "id" ) );
 		diagram.addTask( task.getAttribute("id") );
 	}
 	
-	private void initScriptTask(Element task, BpmnDiagram diagram) {
+	private void initScriptTask(Element task, BpmnProcess diagram) {
 		task.getElementsByTagName("script");
 		writer.println( "scriptTask: " + task.getAttribute( "id" ) );
 		diagram.addScriptTask( task.getAttribute("id") );
 	}
 	
-	private void initIntermediateEvent(Element intermediateEvent, BpmnDiagram diagram) {
+	private void initIntermediateEvent(Element intermediateEvent, BpmnProcess diagram) {
 		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
 		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id") );
 	}
 	
-	private void initExclusiveGate(Element exclusiveGate, BpmnDiagram diagram) {
+	private void initExclusiveGate(Element exclusiveGate, BpmnProcess diagram) {
 		writer.println( "exclusiveGateway: " + exclusiveGate.getAttribute( "id" ) );
 		diagram.addExclusiveGateway( exclusiveGate.getAttribute("id") );
 	}
@@ -218,7 +218,7 @@ public class ConvertToBpmn {
 //		diagram.addInclusiveGateway( inclusiveGate.getAttribute("id") );
 //	}
 	
-	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnDiagram diagram) {
+	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess diagram) {
         if(sequenceFlows.isEmpty()) {
         	return;
         }

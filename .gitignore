@@ -12,3 +12,7 @@ pan.*
 /Verifier/BPMNConverter/bin/
 /Verifier/.metadata/
 /Verifier/.settings/
+Verifier/.recommenders/index/http___download_eclipse_org_recommenders_models_neon_/segments.gen
+Verifier/.recommenders/index/http___download_eclipse_org_recommenders_models_neon_/segments_1
+Verifier/.recommenders/index/http___download_eclipse_org_recommenders_models_neon_/_0.fdx
+Verifier/.recommenders/index/http___download_eclipse_org_recommenders_models_neon_/_0.fdt

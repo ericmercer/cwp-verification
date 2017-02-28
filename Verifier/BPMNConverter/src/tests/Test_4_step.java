@@ -1,6 +1,6 @@
 package tests;
 
-import bpmnStructure.BpmnDiagram;
+import bpmnStructure.BpmnProcess;
 import xmlConversion.ConvertToBpmn;
 
 public class Test_4_step {
@@ -8,9 +8,9 @@ public class Test_4_step {
 	public static void main( String args[] ) {
 		
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/4_step.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/4_step.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("Process_1");
+		BpmnProcess correct = new BpmnProcess("Process_1");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1aqgj4v");
 		correct.addTask("Task_1");

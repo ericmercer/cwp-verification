@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import bpmnStructure.BpmnDiagram;
+import bpmnStructure.BpmnProcess;
 import bpmnStructure.FlowElement;
 
 public class xmlConverter {
@@ -30,14 +30,14 @@ public class xmlConverter {
 //	private static NodeList subProcess;
 	private static NodeList sequenceFlows;
 	
-	private static BpmnDiagram diagram;
+	private static BpmnProcess diagram;
 	
 	public static void main( String[] args ) {
-		BpmnDiagram diagram = importXML( args[0] );
+		BpmnProcess diagram = importXML( args[0] );
 		exportToText( diagram );
 	}
 	
-	public static BpmnDiagram importXML( String fileName ) {
+	public static BpmnProcess importXML( String fileName ) {
 		try {
 			File inputFile = new File( fileName );
 			
@@ -48,7 +48,7 @@ public class xmlConverter {
 //	        System.out.println("Root element: " + document.getDocumentElement().getNodeName());
 	        NodeList process = document.getElementsByTagName( "bpmn:process" );
 	        String id = ( (Element) process.item(0) ).getAttribute( "id" );
-			diagram = new BpmnDiagram(id);
+			diagram = new BpmnProcess(id);
 			
 	        startEvents = document.getElementsByTagName( "bpmn:startEvent" );
 	        initStartEvents();
@@ -146,7 +146,7 @@ public class xmlConverter {
 	}
 	
 	
-	public static void exportToText( BpmnDiagram diagram ) {
+	public static void exportToText( BpmnProcess diagram ) {
 //		File export = new File( "testDiagrams/test.txt" );
 //		try {
 //			PrintWriter writer = new PrintWriter( 

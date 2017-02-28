@@ -1,15 +1,15 @@
 package promela;
 
-import bpmnStructure.BpmnDiagram;
+import bpmnStructure.BpmnProcess;
 import bpmnStructure.FlowElement;
 import promela.templates.promelaTemplate1;
 import visitor.ProcessCodeVisitor;
 
 public class PromelaGenerator {
 
-	BpmnDiagram diagram;
+	BpmnProcess diagram;
 
-	public PromelaGenerator(BpmnDiagram diagram) {
+	public PromelaGenerator(BpmnProcess diagram) {
 		this.diagram = diagram;
 	}
 
