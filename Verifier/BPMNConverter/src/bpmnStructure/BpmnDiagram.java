@@ -12,5 +12,14 @@ public class BpmnDiagram {
 		return process;
 
 	}
+	
+	public void addDataStore(){
+		
+	}
+
+	public void addMessageFlow(String process1, String event1, String process2, String event2) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -15,40 +15,48 @@ public class PromelaGenerator2 {
 	public static void main(String args[]) {
 
 		diagram = new BpmnDiagram();
+		diagram.addMessageFlow("Customer", "SendOrder", "ShoppingSite", "ReceiveOrder");
+
+		diagram.addMessageFlow("ShoppingSite", "SendStatus", "Customer", "ReceiveStatus");
+
 		BpmnProcess customer = diagram.addProcess("Customer");
 
 		customer = new BpmnProcess("Customer");
 
 		customer.addStartEvent("StartOrder");
-		customer.addScriptTask("chooseItem");// TODO:Add parameter to pass in
-												// script itself
+		customer.addScriptTask("chooseItem",
+				"shoppingCart.msg = order select(shoppingCart.item : 0 .. MAX_ITEMS) select(shpppingCart.buyer : 0 .. MAX_BUYERS) select(shoppingCart.cost : 0 .. MAX_COST)");// TODO:Add
+																																												// parameter
+																																												// to
+																																												// pass
+																																												// in
+		// script itself
 		customer.addEndEvent("EndOrder");
 		customer.addMessageThrowEvent("SendOrder");
 		customer.addMessageCatchEvent("ReceiveStatus");
-		customer.addDataObject("shoppingCart");
-		
-		customer.addSequenceFlow("StartOrder","chooseItem");
-		customer.addSequenceFlow("chooseItem","SendOrder");
-		customer.addSequenceFlow("SendOrder","ReceiveStatus");
-		customer.addSequenceFlow("ReceiveStatus","EndOrder");
-		
-		
+		customer.addDataObject("shoppingCart", 5);
+
+		customer.addSequenceFlow("StartOrder", "chooseItem");
+		customer.addSequenceFlow("chooseItem", "SendOrder");
+		customer.addSequenceFlow("SendOrder", "ReceiveStatus");
+		customer.addSequenceFlow("ReceiveStatus", "EndOrder");
 
 		BpmnProcess ss = diagram.addProcess("ShoppingSite");
 
 		ss.addMessageStartEvent("ReceiveOrder");
 		ss.addExclusiveGateway("CheckInventoryDiverge");
 		ss.addExclusiveGateway("ChargeCreditCard");
-		ss.addScriptTask("OutOfStockMessage");
-		ss.addDataObject("orderStatus");
+		ss.addScriptTask("OutOfStockMessage", "orderStatus.msg = outOfStock");
+		ss.addDataObject("orderStatus", 5);
 		ss.addExclusiveGateway("join1");
 		ss.addExclusiveGateway("join2");
-		ss.addScriptTask("cardDeniedMessage");
-		ss.addScriptTask("prepareItemForShipping");
-		ss.addScriptTask("shipItem");
+		ss.addScriptTask("cardDeniedMessage", "orderStatus.msg = cardDenied");
+		ss.addScriptTask("prepareItemForShipping",
+				"cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
+		ss.addScriptTask("shipItem", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
 		ss.addMessageEndEvent("SendStatus");
-		ss.addDataStore("CWPArray");
-		
+		ss.addDataStore("CWPArray", 5);
+
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
 		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage");
 		ss.addSequenceFlow("CheckInventoryDiverge", "ChargeCreditCard");
@@ -58,11 +66,9 @@ public class PromelaGenerator2 {
 		ss.addSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
 		ss.addSequenceFlow("prepareItemForShipping", "shipItem");
 		ss.addSequenceFlow("shipItem", "join1");
-		ss.addSequenceFlow("ChargeCreditCard","cardDeniedMessage");
-		ss.addSequenceFlow("ChargeCreditCard","prepareItemForShipping");
-		
-		
-		
+		ss.addSequenceFlow("ChargeCreditCard", "cardDeniedMessage");
+		ss.addSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
+
 		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
 		System.out.println(pg.generatePromela());
 	}

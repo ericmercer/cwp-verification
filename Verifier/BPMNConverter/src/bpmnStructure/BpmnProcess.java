@@ -56,9 +56,17 @@ public class BpmnProcess extends FlowElement {
 	// TODO: Consider how to handler errors if one of the elements does not
 	// exist
 	public void addSequenceFlow(String idFrom, String idTo) {
+		this.addSequenceFlow(idFrom,idTo,"");
+	}
+	
+	public void addDefaultSequenceFlow(String idFrom, String idTo){
+		this.addSequenceFlow(idFrom,idTo,"true");
+	}
+	
+	public void addSequenceFlow (String idFrom, String idTo, String expression){
 		FlowElement f1 = elements.get(idFrom);
 		FlowElement f2 = elements.get(idTo);
-		f1.addSequenceFlow(f2);
+		f1.addSequenceFlow(f2,expression);
 	}
 
 	public BpmnProcess addNormalSubProcess(String id) {
@@ -76,11 +84,19 @@ public class BpmnProcess extends FlowElement {
 	}
 
 	public void addTask(String id) {
-		addFlowElement(id, new Task(id));
+		addFlowElement(id, new Task(id,""));
+	}
+	
+	public void addTask(String id,String promela) {
+		addFlowElement(id, new Task(id,promela));
 	}
 
 	public void addScriptTask(String id) {
-		addFlowElement(id, new ScriptTask(id));
+		addFlowElement(id, new ScriptTask(id,""));
+	}
+	
+	public void addScriptTask(String id,String promela) {
+		addFlowElement(id, new ScriptTask(id,promela));
 	}
 
 	public void addEndEvent(String id) {
@@ -108,7 +124,7 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, new MessageCatchEvent(id));
 	}
 
-	public void addDataObject(String id) {
+	public void addDataObject(String id,int capacity) {
 		// TODO Auto-generated method stub
 
 	}
@@ -121,7 +137,7 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, new MessageEndEvent(id));
 	}
 
-	public void addDataStore(String id) {
+	public void addDataStore(String id, int capacity) {
 		// TODO Auto-generated method stub
 
 	}
