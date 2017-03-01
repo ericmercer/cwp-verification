@@ -31,7 +31,7 @@ public class ParallelGateway extends Gateway {
 		}
 
 		if (convergingGateway != null && divergingGateway != null) {
-			convergingGateway.addSequenceFlow(divergingGateway);
+			convergingGateway.addDefaultSequenceFlow(divergingGateway);
 		}
 
 		ArrayList<FlowElement> newElements = new ArrayList<FlowElement>();

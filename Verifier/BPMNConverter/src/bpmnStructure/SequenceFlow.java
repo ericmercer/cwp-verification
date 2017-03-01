@@ -5,11 +5,21 @@ public class SequenceFlow {
 	private FlowElement start;
 	private FlowElement end;
 	private int idNumber;
+	private String expression;
 	
-	public SequenceFlow(FlowElement start, FlowElement end,int idNumber){
+	public String getExpression() {
+		return expression;
+	}
+
+	public void setExpression(String expression) {
+		this.expression = expression;
+	}
+
+	public SequenceFlow(FlowElement start, FlowElement end,int idNumber, String expression){
 		this.setStart(start);
 		this.setEnd(end);
 		this.setIdNumber(idNumber);
+		this.expression = expression;
 	}
 
 	public int getIdNumber() {

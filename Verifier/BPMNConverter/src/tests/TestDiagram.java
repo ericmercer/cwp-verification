@@ -2,7 +2,7 @@ package tests;
 
 import java.util.Scanner;
 
-import bpmnStructure.BpmnDiagram;
+import bpmnStructure.BpmnProcess;
 import xmlConversion.ConvertToBpmn;
 
 public class TestDiagram {
@@ -59,10 +59,10 @@ public class TestDiagram {
 	
 	public void test_2_step() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/2_step.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/2_step.bpmn");
 		
-		BpmnDiagram correct;
-		correct = new BpmnDiagram("Process_1");
+		BpmnProcess correct;
+		correct = new BpmnProcess("Process_1");
 //		correct = convert.importXML("tests/diagrams/2_step.bpmn");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1aqgj4v");
@@ -74,9 +74,9 @@ public class TestDiagram {
 	
 	public void test_4_step() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/4_step.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/4_step.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("Process_1");
+		BpmnProcess correct = new BpmnProcess("Process_1");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1aqgj4v");
 		correct.addTask("Task_1", null);
@@ -91,9 +91,9 @@ public class TestDiagram {
 	
 	public void test_sub_process_test1() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/sub_process_test1.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/sub_process_test1.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("sub_process_test1");
+		BpmnProcess correct = new BpmnProcess("sub_process_test1");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
 		
@@ -119,9 +119,9 @@ public class TestDiagram {
 	
 	public void test_MyName() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/MyName.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/MyName.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("Process_1");
+		BpmnProcess correct = new BpmnProcess("Process_1");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_0259rfj");
 		
@@ -131,7 +131,7 @@ public class TestDiagram {
 		correct.addExclusiveGateway("ExclusiveGateway_0hpt3dk");
 		correct.addExclusiveGateway("ExclusiveGateway_1");
 		
-		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_0zaafna");
+		BpmnProcess sub = correct.addNormalSubProcess("SubProcess_0zaafna");
 		sub.addExclusiveGateway("ExclusiveGateway_1jr1gc4");
 		sub.addTask("Task_0q22whk", null);
 		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "Task_0q22whk");
@@ -140,8 +140,8 @@ public class TestDiagram {
 		sub.addExclusiveGateway("ExclusiveGateway_1anf5gt");
 		sub.addSequenceFlow("Task_0q22whk", "ExclusiveGateway_1anf5gt");
 		sub.addSequenceFlow("Task_12uwadk", "ExclusiveGateway_1anf5gt");
-		sub.addIntermediateEvent("IntermediateThrowEvent_060vul7", null);
-		sub.addIntermediateEvent("IntermediateThrowEvent_1bva7ei", null);
+		sub.addIntermediateEvent("IntermediateThrowEvent_060vul7");
+		sub.addIntermediateEvent("IntermediateThrowEvent_1bva7ei");
 		sub.addSequenceFlow("ExclusiveGateway_1jr1gc4", "IntermediateThrowEvent_060vul7");
 		sub.addSequenceFlow("IntermediateThrowEvent_060vul7", "IntermediateThrowEvent_1bva7ei");
 		sub.addSequenceFlow("IntermediateThrowEvent_1bva7ei", "ExclusiveGateway_1anf5gt");
@@ -160,9 +160,9 @@ public class TestDiagram {
 	
 	public void test_Order_fulfillment() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/orderFulfillment.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/orderFulfillment.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("orderFulfillment");
+		BpmnProcess correct = new BpmnProcess("orderFulfillment");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_2");
 		correct.addEndEvent("EndEvent_3");
@@ -175,7 +175,7 @@ public class TestDiagram {
 		correct.addExclusiveGateway("ExclusiveGateway_5");
 		correct.addExclusiveGateway("ExclusiveGateway_6");
 		
-		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_2");
+		BpmnProcess sub = correct.addNormalSubProcess("SubProcess_2");
 		sub.addStartEvent("StartEvent_2");
 		sub.addEndEvent("EndEvent_4");
 		sub.addEndEvent("EndEvent_5");
@@ -204,9 +204,9 @@ public class TestDiagram {
 	
 	public void test_jamie() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/jamie.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/jamie.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("process_1");
+		BpmnProcess correct = new BpmnProcess("process_1");
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
 		
@@ -222,7 +222,7 @@ public class TestDiagram {
 		correct.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_2");
 		correct.addSequenceFlow("StartEvent_1", "ScriptTask_1");
 		
-		BpmnDiagram sub = correct.addNormalSubProcess("SubProcess_1");
+		BpmnProcess sub = correct.addNormalSubProcess("SubProcess_1");
 		sub.addStartEvent("StartEvent_2");
 		sub.addEndEvent("EndEvent_2");
 		sub.addScriptTask("ScriptTask_4", null);
@@ -238,9 +238,9 @@ public class TestDiagram {
 	
 	public void test_vendingMachine() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/vendingMachine.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/vendingMachine.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("vendingMachine");
+		BpmnProcess correct = new BpmnProcess("vendingMachine");
 		
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
@@ -276,9 +276,9 @@ public class TestDiagram {
 	public void test_MedicalRecords() {
 		
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/MedicalRecords.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/MedicalRecords.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("MedicalRecords");
+		BpmnProcess correct = new BpmnProcess("MedicalRecords");
 		
 		correct.addStartEvent("StartEvent_3");
 		correct.addTask("Task_3", null);
@@ -303,9 +303,9 @@ public class TestDiagram {
 	public void test_sub_processes() {
 		
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("tests/diagrams/sub_processes.bpmn");
+		BpmnProcess diagram = convert.importXML("tests/diagrams/sub_processes.bpmn");
 		
-		BpmnDiagram correct = new BpmnDiagram("sub_processes");
+		BpmnProcess correct = new BpmnProcess("sub_processes");
 		
 		correct.addStartEvent("StartEvent_1");
 		correct.addEndEvent("EndEvent_1");
@@ -315,14 +315,14 @@ public class TestDiagram {
 		correct.addExclusiveGateway("ExclusiveGateway_2");
 		correct.addSequenceFlow("ExclusiveGateway_2", "EndEvent_1");
 		
-		BpmnDiagram sub1 = correct.addNormalSubProcess("SubProcess_1");
-		sub1.addTask("SendTask_1", null);
+		BpmnProcess sub1 = correct.addNormalSubProcess("SubProcess_1");
+		sub1.addTask("SendTask_1");
 		sub1.addStartEvent("StartEvent_2");
 		sub1.addSequenceFlow("StartEvent_2", "SendTask_1");
 		sub1.addEndEvent("EndEvent_4");
 		
-		BpmnDiagram sub2 = sub1.addNormalSubProcess("SubProcess_2");
-		sub2.addTask("Task_1", null);
+		BpmnProcess sub2 = sub1.addNormalSubProcess("SubProcess_2");
+		sub2.addTask("Task_1");
 		sub2.addStartEvent("StartEvent_3");
 		sub2.addEndEvent("EndEvent_2");
 		sub2.addSequenceFlow("StartEvent_3", "Task_1");
@@ -331,9 +331,9 @@ public class TestDiagram {
 		sub1.addSequenceFlow("SendTask_1", "SubProcess_2");
 		sub1.addSequenceFlow("SubProcess_2", "EndEvent_4");
 		
-		BpmnDiagram sub3 = correct.addNormalSubProcess("AdHocSubProcess_1");
-		sub3.addTask("SendTask_2", null);
-		sub3.addTask("ReceiveTask_1", null);
+		BpmnProcess sub3 = correct.addNormalSubProcess("AdHocSubProcess_1");
+		sub3.addTask("SendTask_2");
+		sub3.addTask("ReceiveTask_1");
 		sub3.addSequenceFlow("SendTask_2", "ReceiveTask_1");
 		sub3.addTask("ManualTask_1", null);
 		sub3.addSequenceFlow("ReceiveTask_1", "ManualTask_1");

@@ -1,8 +1,8 @@
 package bpmnStructure.subProcesses;
 
-import bpmnStructure.BpmnDiagram;
+import bpmnStructure.BpmnProcess;
 
-public class SubProcess extends BpmnDiagram {
+public class SubProcess extends BpmnProcess {
 
 	public SubProcess(String id) {
 		super(id);

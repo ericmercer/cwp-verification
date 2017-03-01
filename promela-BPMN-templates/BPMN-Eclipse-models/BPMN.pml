@@ -51,14 +51,17 @@ inline xor_join(messageNumber, inseq,inseq2, outseq){
 	print(messageNumber)
 	if 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	:: in_tokens(inseq) -> out_tokens(outseq)
 	:: in_tokens(inseq2) -> out_tokens(outseq)
 =======
 	:: (inseq > 0) -> 
 	    in_tokens(inseq)
+=======
+	:: in_tokens(inseq) ->
+>>>>>>> master
 	    out_tokens(outseq)
-	:: (inseq2 > 0) -> 
-	    in_tokens(inseq2)
+	:: in_tokens(inseq2) ->
 		out_tokens(outseq)
 >>>>>>> master
 	fi

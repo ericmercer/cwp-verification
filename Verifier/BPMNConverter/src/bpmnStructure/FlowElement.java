@@ -7,8 +7,8 @@ public class FlowElement {
 
 	public static int flowElementCount = 0;
 	private String name;
-	//public int id;
-	//public boolean visited = false;
+	// public int id;
+	// public boolean visited = false;
 	static int sequenceFlowCount = 1;
 
 	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();
@@ -27,8 +27,13 @@ public class FlowElement {
 
 	}
 
-	public void addSequenceFlow(FlowElement f) {
-		SequenceFlow connector = new SequenceFlow(this, f, sequenceFlowCount++);
+	public void addDefaultSequenceFlow(FlowElement f) {
+		this.addSequenceFlow(f, "true");
+
+	}
+
+	public void addSequenceFlow(FlowElement f, String expression) {
+		SequenceFlow connector = new SequenceFlow(this, f, sequenceFlowCount++, expression);
 		sequenceFlowOut.add(connector);
 		f.sequenceFlowIn.add(connector);
 
@@ -73,7 +78,7 @@ public class FlowElement {
 	}
 
 	public FlowElement() {
-		//id = flowElementCount++;
+		// id = flowElementCount++;
 	}
 
 	public String getProcessTemplateName() {
@@ -85,7 +90,7 @@ public class FlowElement {
 		if (!otherElement.getName().equals(this.getName())) {
 			return false;
 		}
-		if(otherElement.getClass() != this.getClass()) {
+		if (otherElement.getClass() != this.getClass()) {
 			System.out.println("classes: " + this.getClass() + ", " + otherElement.getClass());
 			return false;
 		}
