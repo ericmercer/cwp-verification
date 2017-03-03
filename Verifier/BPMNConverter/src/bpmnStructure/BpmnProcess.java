@@ -124,7 +124,7 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, new MessageCatchEvent(id));
 	}
 
-	public void addDataObject(String id,int capacity) {
+	public void addDataObject(String id,String varName, int capacity) {
 		// TODO Auto-generated method stub
 
 	}
@@ -137,7 +137,7 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, new MessageEndEvent(id));
 	}
 
-	public void addDataStore(String id, int capacity) {
+	public void addDataStore(String id,String name, int capacity) {
 		// TODO Auto-generated method stub
 
 	}
