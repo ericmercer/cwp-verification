@@ -85,17 +85,21 @@ public class ConvertToBpmn {
         NodeList list = null;
         Element e = null;
         BpmnDiagram diagram = new BpmnDiagram();
-        
+        definitions = new HashMap<>();
         list = document.getElementsByTagName(namespace + "itemDefinition");
 		for(int i = 0; i < list.getLength(); i++) {
-			e = (Element) list.item(i);
-			definitions.put(e.getAttribute("id"), e.getAttribute("structureRef"));
+			if(list.item(i) != null) {
+				e = (Element) list.item(i);
+				definitions.put(e.getAttribute("id"), e.getAttribute("structureRef"));
+			}
 		}
         
 		list = document.getElementsByTagName(namespace + "dataStore");
 		for(int i = 0; i < list.getLength(); i++) {
-			e = (Element) list.item(i);
-			initDataStore(e, diagram);
+			if(list.item(i) != null) {
+				e = (Element) list.item(i);
+				initDataStore(e, diagram);
+			}
 		}
 		
 		Element process = null;
@@ -178,7 +182,7 @@ public class ConvertToBpmn {
 	
 	private void initExport() {
 		try {
-			writer = new PrintWriter( new BufferedWriter( new FileWriter("tests/output.txt") ) );
+			writer = new PrintWriter( new BufferedWriter( new FileWriter("../output.txt") ) );
 //			writer.print("worked?");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -282,7 +286,12 @@ public class ConvertToBpmn {
 			Element doc = (Element) list.item(0);
 			code = getCode("<CAPACITY>", "</CAPACITY>", doc);
 		}
-		process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), Integer.parseInt(code) );
+		if(code == null) {
+			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), 1 );
+		}else {
+			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), Integer.parseInt(code) );
+		}
+		
 	}
 	
 	private void initDataStore(Element data, BpmnDiagram diagram) {
@@ -305,9 +314,9 @@ public class ConvertToBpmn {
         	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
 			writer.println( "sourceRef: " + source + " targetRef: " + target );
 			temp = current.getElementsByTagName(namespace + "conditionExpression");
-			if(temp != null) {
+			if(temp != null && temp.item(0) != null) {
 				current = (Element) temp.item(0);
-				System.out.println("condition: " + current.getTextContent());
+//				System.out.println("condition: " + current.getTextContent());
 				diagram.addSequenceFlow( source, target, current.getTextContent() );
 			}else {
 				diagram.addSequenceFlow( source, target );

@@ -21,5 +21,18 @@ public class BpmnDiagram {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public boolean equals(Object o) {
+		if(o.getClass() != this.getClass()) {
+			return false;
+		}
+		BpmnDiagram temp = (BpmnDiagram) o;
+		for(int i = 0; i < this.processes.size(); i++) {
+			if( !this.processes.get(i).equals(temp.processes.get(i)) ) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }
