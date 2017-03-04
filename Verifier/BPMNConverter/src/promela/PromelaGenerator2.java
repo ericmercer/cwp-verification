@@ -1,7 +1,5 @@
 package promela;
 
-import java.util.ArrayList;
-
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import bpmnStructure.PrintMessages.PrintMessageManager;
@@ -36,10 +34,7 @@ public class PromelaGenerator2 {
 		customer.addEndEvent("EndOrder");
 		customer.addMessageThrowEvent("SendOrder");
 		customer.addMessageCatchEvent("ReceiveStatus");
-		ArrayList<String> temp = new ArrayList<>();
-		temp.add("name");
-		temp.add("5");
-		customer.addDataObject("shoppingCart", temp);
+		customer.addDataObject("shoppingCart","shoppingCart", 5);
 
 		customer.addSequenceFlow("StartOrder", "chooseItem");
 		customer.addSequenceFlow("chooseItem", "SendOrder");
@@ -52,7 +47,7 @@ public class PromelaGenerator2 {
 		ss.addExclusiveGateway("CheckInventoryDiverge");
 		ss.addExclusiveGateway("ChargeCreditCard");
 		ss.addScriptTask("OutOfStockMessage", "orderStatus.msg = outOfStock");
-		ss.addDataObject("orderStatus", temp);
+		ss.addDataObject("orderStatus","orderStatus", 5);
 		ss.addExclusiveGateway("join1");
 		ss.addExclusiveGateway("join2");
 		ss.addScriptTask("cardDeniedMessage", "orderStatus.msg = cardDenied");
@@ -60,7 +55,8 @@ public class PromelaGenerator2 {
 				"cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
 		ss.addScriptTask("shipItem", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
 		ss.addMessageEndEvent("SendStatus");
-		ss.addDataStore("CWPArray", temp);
+
+		ss.addDataStore("CWPArray","CWPArray", 5);
 
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
 		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage");
