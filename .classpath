@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="Verifier/BPMNConverter/src"/>
 	<classpathentry kind="lib" path="lib/CopyLibs/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="Verifier/BPMNConverter/bin"/>
 </classpath>
