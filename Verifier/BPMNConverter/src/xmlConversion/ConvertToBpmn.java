@@ -273,7 +273,7 @@ public class ConvertToBpmn {
 			
 		}
 		data.getElementsByTagName(namespace + "dataOutputAssociation");
-		diagram.addDataObject( data.getAttribute("id"), dataAttr );
+		diagram.addDataObject( data.getAttribute("id"), dataAttr.toString(), 0 );
 	}
 	
 	private void initDataStore(Element data, BpmnProcess diagram) {
@@ -283,7 +283,7 @@ public class ConvertToBpmn {
 		dataAttr.add(data.getAttribute("name"));
 		dataAttr.add(data.getAttribute("capacity"));
 		dataAttr.add( definitions.get(data.getAttribute("itemSubjectRef")) );
-		diagram.addDataStore( data.getAttribute("id"), dataAttr );
+		diagram.addDataStore( data.getAttribute("id"), dataAttr.toString(), 0 );
 	}
 	
 	private void addOutputAssociation(ArrayList<Element> associations, BpmnProcess diagram) {
