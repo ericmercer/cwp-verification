@@ -20,20 +20,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 
 public class ConvertToBpmn {
 	
-	private BpmnProcess diagram;
+	private BpmnDiagram diagram;
 	private PrintWriter writer;
 	
 	private String namespace;
 	private HashMap<String, String> definitions;
-	private HashMap<String, String> references;
-	private HashMap<String, String> dataObjects;
-	private HashMap<String, String> dataStores;
 	
-	public BpmnProcess importXML( String fileName ) {
+	public BpmnDiagram importXML( String fileName ) {
 		
 		initExport();
 		
@@ -51,12 +49,12 @@ public class ConvertToBpmn {
 				namespace = temp.substring(0, semicolon + 1);
 			}
 //	        System.out.println("NameSpace: " + namespace);
-	        NodeList process = document.getElementsByTagName( namespace + "process" );
-	        if(process.item(0) == null) {
+	        NodeList processList = document.getElementsByTagName( namespace + "process" );
+	        if(processList.item(0) == null) {
 	        	throw new Exception();
 	        }
 	        
-	        init(document, process);
+	        init(document, processList);
 	        
 		} catch (ParserConfigurationException e) {
 			System.err.println( "You have an error in the configuration of your xml file!" );
@@ -83,45 +81,29 @@ public class ConvertToBpmn {
         if(processList.item(0).getNodeType() != Node.ELEMENT_NODE) {
         	throw new WrongTypeException();
         }
-        Element process = (Element) processList.item(0);
+//        itemDefinition
+        NodeList list = null;
+        Element e = null;
+        BpmnDiagram diagram = new BpmnDiagram();
         
-        String id = process.getAttribute( "id" );
-        BpmnProcess diagram = new BpmnProcess(id);
-		references = new HashMap<>();
-		definitions = new HashMap<>();
-		dataObjects = new HashMap<>();
-		dataStores = new HashMap<>();
-		
-		NodeList list = process.getElementsByTagName(namespace + "itemDefinition");
-		Element e = null;
+        list = document.getElementsByTagName(namespace + "itemDefinition");
 		for(int i = 0; i < list.getLength(); i++) {
 			e = (Element) list.item(i);
 			definitions.put(e.getAttribute("id"), e.getAttribute("structureRef"));
 		}
-		
-		list = process.getElementsByTagName(namespace + "dataObjectReference");
-		for(int i = 0; i < list.getLength(); i++) {
-			e = (Element) list.item(i);
-			references.put(e.getAttribute("id"), e.getAttribute("dataObjectRef"));
-		}
-		
-		list = process.getElementsByTagName(namespace + "dataStoreReference");
-		for(int i = 0; i < list.getLength(); i++) {
-			e = (Element) list.item(i);
-			references.put(e.getAttribute("id"), e.getAttribute("dataStoreRef"));
-		}
-		
-		list = process.getElementsByTagName(namespace + "dataObject");
-		for(int i = 0; i < list.getLength(); i++) {
-			e = (Element) list.item(i);
-			initDataObject(e, diagram);
-		}
-		list = process.getElementsByTagName(namespace + "dataStore");
+        
+		list = document.getElementsByTagName(namespace + "dataStore");
 		for(int i = 0; i < list.getLength(); i++) {
 			e = (Element) list.item(i);
 			initDataStore(e, diagram);
 		}
-		initProcess(process, diagram);
+		
+		Element process = null;
+		for(int i = 0; i < processList.getLength(); i++) {
+			process = (Element) processList.item(i);
+			String id = process.getAttribute( "id" );
+			initProcess(process, diagram.addProcess(id));
+		}
 		
 		this.diagram = diagram;
 	}
@@ -129,7 +111,7 @@ public class ConvertToBpmn {
 	private void initProcess(Element process, BpmnProcess diagram) {
 		NodeList children = process.getChildNodes();
 		ArrayList<Element> flowSequences = new ArrayList<>();
-		ArrayList<Element> associations = new ArrayList<>();
+//		ArrayList<Element> associations = new ArrayList<>();
 		for(int i = 0; i < children.getLength(); i++) {
 			if(children.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element child = (Element) children.item(i);
@@ -171,19 +153,25 @@ public class ConvertToBpmn {
 //					initInclusiveGate(child, diagram);
 //				}
 				else if(tag.equals(namespace + "intermediateThrowEvent")) {
-					initIntermediateEvent(child, diagram);
+					initIntermediateThrowEvent(child, diagram);
+				}
+				else if(tag.equals(namespace + "intermediateCatchEvent")) {
+					initIntermediateCatchEvent(child, diagram);
 				}
 				else if(tag.equals(namespace + "sequenceFlow")) {
 					flowSequences.add(child);
 				}
-				else if(tag.equals(namespace + "association")) {
-					associations.add(child);
+				else if(tag.equals(namespace + "dataObject")) {
+					initDataObject(child, diagram);
 				}
+//				else if(tag.equals(namespace + "association")) {
+//					associations.add(child);
+//				}
 			}
 		}
 		
 		initSequenceFlows(flowSequences, diagram);
-		initAssociations(associations, diagram);
+//		initAssociations(associations, diagram);
 		
 		return;
 	}
@@ -199,36 +187,42 @@ public class ConvertToBpmn {
 		return;
 	}
 	
-	private void initStartEvent(Element startEvent, BpmnProcess diagram) {
+	private void initStartEvent(Element startEvent, BpmnProcess process) {
 		writer.println( "startEvent: " + startEvent.getAttribute( "id" ) );
-		diagram.addStartEvent( startEvent.getAttribute("id") );
+		NodeList list = startEvent.getElementsByTagName(namespace + "messageEventDefinition");
+		if(list != null && list.getLength() == 1) {
+			process.addMessageStartEvent(startEvent.getAttribute("id"));
+			return;
+		}
+		process.addStartEvent( startEvent.getAttribute("id") );
 	}
 	
-	private void initEndEvent(Element endEvent, BpmnProcess diagram) {
+	private void initEndEvent(Element endEvent, BpmnProcess process) {
 		writer.println( "endEvent: " + endEvent.getAttribute( "id" ) );
-		diagram.addEndEvent( endEvent.getAttribute("id") );
+		NodeList list = endEvent.getElementsByTagName(namespace + "messageEventDefinition");
+		if(list != null && list.getLength() == 1) {
+			process.addMessageEndEvent(endEvent.getAttribute("id"));
+			return;
+		}
+		process.addEndEvent( endEvent.getAttribute("id") );
 	}
 	
-	private void initTask(Element task, BpmnProcess diagram) {
+	private void initTask(Element task, BpmnProcess process) {
 		writer.println( "task: " + task.getAttribute( "id" ) );
 		NodeList list = task.getElementsByTagName(namespace + "documentation");
-		ArrayList<String> code = null;
+		String code = null;
 		if(list != null && list.getLength() != 0) {
 			Element doc = (Element) list.item(0);
-			Scanner scan = new Scanner(doc.getTextContent());
-			code = new ArrayList<>();
-			while(scan.hasNext()) {
-				code.add(scan.nextLine());
-			}
-			code.remove(code.size() - 1);
-			code.remove(0);
-			scan.close();
-			writer.println(code.toString());
+			code = getCode("<PROMELA>", "</PROMELA>", doc);
 		}
-		diagram.addTask( task.getAttribute("id"), code.toString() );
+		if(code == null) {
+			process.addTask( task.getAttribute("id") );
+		}else {
+			process.addTask( task.getAttribute("id"), code );
+		}
 	}
 	
-	private void initScriptTask(Element task, BpmnProcess diagram) {
+	private void initScriptTask(Element task, BpmnProcess process) {
 		task.getElementsByTagName("script");
 		writer.println( "scriptTask: " + task.getAttribute( "id" ) );
 		NodeList list = task.getElementsByTagName(namespace + "script");
@@ -243,17 +237,36 @@ public class ConvertToBpmn {
 			scan.close();
 			writer.println(code.toString());
 		}
-		diagram.addScriptTask( task.getAttribute("id"), code.toString() );
+		if(code == null || code.size() == 0) {
+			process.addScriptTask( task.getAttribute("id") );
+		}else {
+			process.addScriptTask( task.getAttribute("id"), code.toString() );
+		}
 	}
 	
-	private void initIntermediateEvent(Element intermediateEvent, BpmnProcess diagram) {
+	private void initIntermediateCatchEvent(Element intermediateEvent, BpmnProcess process) {
 		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
-		diagram.addIntermediateEvent( intermediateEvent.getAttribute("id") );
+		NodeList list = intermediateEvent.getElementsByTagName(namespace + "messageEventDefinition");
+		if(list != null && list.getLength() == 1) {
+			process.addMessageCatchEvent(intermediateEvent.getAttribute("id"));
+			return;
+		}
+		process.addIntermediateEvent( intermediateEvent.getAttribute("id") );
 	}
 	
-	private void initExclusiveGate(Element exclusiveGate, BpmnProcess diagram) {
+	private void initIntermediateThrowEvent(Element intermediateEvent, BpmnProcess process) {
+		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
+		NodeList list = intermediateEvent.getElementsByTagName(namespace + "messageEventDefinition");
+		if(list != null && list.getLength() == 1) {
+			process.addMessageThrowEvent(intermediateEvent.getAttribute("id"));
+			return;
+		}
+		process.addIntermediateEvent( intermediateEvent.getAttribute("id") );
+	}
+	
+	private void initExclusiveGate(Element exclusiveGate, BpmnProcess process) {
 		writer.println( "exclusiveGateway: " + exclusiveGate.getAttribute( "id" ) );
-		diagram.addExclusiveGateway( exclusiveGate.getAttribute("id") );
+		process.addExclusiveGateway( exclusiveGate.getAttribute("id") );
 	}
 	
 //	private void initInclusiveGate(Element inclusiveGate, BpmnDiagram diagram) {
@@ -261,50 +274,22 @@ public class ConvertToBpmn {
 //		diagram.addInclusiveGateway( inclusiveGate.getAttribute("id") );
 //	}
 	
-	private void initDataObject(Element data, BpmnProcess diagram) {
+	private void initDataObject(Element data, BpmnProcess process) {
 		writer.println( "dataObject: " + data.getAttribute( "name" ) );
-		dataObjects.put(data.getAttribute("name"), data.getAttribute("id"));
-		ArrayList<String> dataAttr = new ArrayList<>();
-		dataAttr.add(data.getAttribute("name"));
-		dataAttr.add( definitions.get(data.getAttribute("itemSubjectRef")) );
-		NodeList assoc = data.getElementsByTagName(namespace + "dataInputAssociation");
-		for(int i = 0; i < assoc.getLength(); i++) {
-			Element e = (Element) assoc.item(i);
-			
+		NodeList list = data.getElementsByTagName(namespace + "documentation");
+		String code = null;
+		if(list != null && list.getLength() != 0) {
+			Element doc = (Element) list.item(0);
+			code = getCode("<CAPACITY>", "</CAPACITY>", doc);
 		}
-		data.getElementsByTagName(namespace + "dataOutputAssociation");
-		diagram.addDataObject( data.getAttribute("id"), dataAttr.toString(), 0 );
+		process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), Integer.parseInt(code) );
 	}
 	
-	private void initDataStore(Element data, BpmnProcess diagram) {
+	private void initDataStore(Element data, BpmnDiagram diagram) {
 		writer.println( "dataStore: " + data.getAttribute( "name" ) );
-		dataStores.put(data.getAttribute("name"), data.getAttribute("id"));
-		ArrayList<String> dataAttr = new ArrayList<>();
-		dataAttr.add(data.getAttribute("name"));
-		dataAttr.add(data.getAttribute("capacity"));
-		dataAttr.add( definitions.get(data.getAttribute("itemSubjectRef")) );
-		diagram.addDataStore( data.getAttribute("id"), dataAttr.toString(), 0 );
-	}
-	
-	private void addOutputAssociation(ArrayList<Element> associations, BpmnProcess diagram) {
-		
-	}
-	
-	private void initAssociations(ArrayList<Element> associations, BpmnProcess diagram) {
-		if(associations.isEmpty()) {
-        	return;
-        }
-        
-        Element current = null;
-        Iterator<Element> iter = associations.iterator();
-        while(iter.hasNext()) {
-        	current = iter.next();
-        	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
-			writer.println( "sourceRef: " + source + " targetRef: " + target );
-			diagram.addSequenceFlow( source, target );
-        }
-        
-        return;
+		String cap = data.getAttribute("capacity");
+		int capacity = Integer.parseInt(cap);
+		diagram.addDataStore( data.getAttribute("id"), data.getAttribute("name"), capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess diagram) {
@@ -313,15 +298,59 @@ public class ConvertToBpmn {
         }
         
         Element current = null;
+        NodeList temp = null;
         Iterator<Element> iter = sequenceFlows.iterator();
         while(iter.hasNext()) {
         	current = iter.next();
         	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
 			writer.println( "sourceRef: " + source + " targetRef: " + target );
-			diagram.addSequenceFlow( source, target );
+			temp = current.getElementsByTagName(namespace + "conditionExpression");
+			if(temp != null) {
+				current = (Element) temp.item(0);
+				System.out.println("condition: " + current.getTextContent());
+				diagram.addSequenceFlow( source, target, current.getTextContent() );
+			}else {
+				diagram.addSequenceFlow( source, target );
+			}
         }
         
         return;
+	}
+	
+	/**
+	 * reads the documentation element given and finds the code desired by the identifiers (inditifier and stopper).
+	 * @param identifier the string that identifies where to start intaking the code
+	 * @param stopper the String indentifying where to stop intaking the code
+	 * @param doc the document you want to read from
+	 * @return the code taken from the document
+	 */
+	private String getCode(String startTag, String stopTag, Element doc) {
+		Scanner scan = new Scanner(doc.getTextContent());
+		ArrayList<String> code = new ArrayList<>();
+		boolean take = false;
+		String current = null;
+		while(scan.hasNextLine()) {
+			current = scan.nextLine();
+			if(current.equals(startTag)) {
+				take = true;
+			}else if (current.equals(stopTag)) {
+				take = false;
+			}
+			if(take) {
+				code.add(current);
+			}
+		}
+		scan.close();
+		writer.println(code.toString());
+		if(code.size() == 1 || !code.get(code.size() - 1).equals(stopTag)) {
+//			throw an error because we never read in the stop tag, just the start tag
+			return null;
+		}else if(code.size() == 0) {
+			return null; // there is no code we care about in the documentation
+		}
+		code.remove(0);
+		code.remove(code.size() - 1);
+		return code.toString();
 	}
 	
 	@SuppressWarnings("serial")
@@ -332,7 +361,26 @@ public class ConvertToBpmn {
 //	end of class
 }
 
-
+//private void addOutputAssociation(ArrayList<Element> associations, BpmnProcess diagram) {
+//	
+//}
+//
+//private void initAssociations(ArrayList<Element> associations, BpmnProcess diagram) {
+//	if(associations.isEmpty()) {
+//    	return;
+//    }
+//    
+//    Element current = null;
+//    Iterator<Element> iter = associations.iterator();
+//    while(iter.hasNext()) {
+//    	current = iter.next();
+//    	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
+//		writer.println( "sourceRef: " + source + " targetRef: " + target );
+//		diagram.addSequenceFlow( source, target );
+//    }
+//    
+//    return;
+//}
 
 
 

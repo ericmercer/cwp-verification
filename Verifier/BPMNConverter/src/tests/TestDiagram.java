@@ -59,7 +59,7 @@ public class TestDiagram {
 	
 	public void test_2_step() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnProcess diagram = convert.importXML("tests/diagrams/2_step.bpmn");
+		BpmnProcess diagram = convert.importXML("../diagrams/2_step.bpmn");
 		
 		BpmnProcess correct;
 		correct = new BpmnProcess("Process_1");

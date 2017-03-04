@@ -13,7 +13,7 @@ public class BpmnDiagram {
 
 	}
 	
-	public void addDataStore(){
+	public void addDataStore(String id, String name, int capacity){
 		
 	}
 

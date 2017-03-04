@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170221-1647-B60" targetNamespace="http://org.eclipse.bpmn2/default/process">
+  <bpmn2:itemDefinition id="ItemDefinition_95" isCollection="false" structureRef="xs:int"/>
+  <bpmn2:dataStore id="DataStore_2" name="Data Store 1"/>
   <bpmn2:process id="messages" name="Default Process" isExecutable="false">
     <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
       <bpmn2:lane id="Lane_1" name="Lane 1">
@@ -21,26 +23,36 @@
     <bpmn2:subProcess id="SubProcess_1" name="Sub Process 1">
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
+      <bpmn2:dataObject id="DataObject_2" name="Data Object 1" itemSubjectRef="ItemDefinition_95">
+        <bpmn2:documentation id="Documentation_14"><![CDATA[<CAPACITY>
+5
+</CAPACITY>]]></bpmn2:documentation>
+        <bpmn2:dataState id="DataState_2"/>
+      </bpmn2:dataObject>
     </bpmn2:subProcess>
-    <bpmn2:endEvent id="EndEvent_2" name="End Event 2">
+    <bpmn2:endEvent id="EndEvent_2" name="Lane1">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:messageEventDefinition id="MessageEventDefinition_1"/>
     </bpmn2:endEvent>
-    <bpmn2:startEvent id="StartEvent_2" name="Start Event 2">
+    <bpmn2:startEvent id="StartEvent_2" name="Lane2">
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
       <bpmn2:messageEventDefinition id="MessageEventDefinition_2"/>
     </bpmn2:startEvent>
-    <bpmn2:startEvent id="StartEvent_3" name="Start Event 3">
+    <bpmn2:startEvent id="StartEvent_3" name="In Lane 1">
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:signalEventDefinition id="SignalEventDefinition_1"/>
     </bpmn2:startEvent>
-    <bpmn2:endEvent id="EndEvent_3" name="End Event 3">
+    <bpmn2:endEvent id="EndEvent_3" name="Lane2">
       <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="StartEvent_3" targetRef="EndEvent_2"/>
     <bpmn2:sequenceFlow id="SequenceFlow_3" sourceRef="StartEvent_2" targetRef="EndEvent_3"/>
     <bpmn2:sequenceFlow id="SequenceFlow_4" sourceRef="StartEvent_1" targetRef="SubProcess_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_5" sourceRef="SubProcess_1" targetRef="EndEvent_1"/>
+    <bpmn2:dataStoreReference id="DataStoreReference_1" name="Data Store 1" dataStoreRef="DataStore_2"/>
+    <bpmn2:dataObject id="DataObject_4" name="Data Object 3">
+      <bpmn2:dataState id="DataState_1"/>
+    </bpmn2:dataObject>
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1" name="Default Process Diagram">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="messages">
@@ -77,25 +89,43 @@
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="932.0" y="312.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="65.0" x="918.0" y="348.0"/>
+          <dc:Bounds height="14.0" width="35.0" x="932.0" y="348.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="602.0" y="472.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_8" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="68.0" x="586.0" y="508.0"/>
+          <dc:Bounds height="14.0" width="35.0" x="602.0" y="508.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="582.0" y="302.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="68.0" x="566.0" y="338.0"/>
+          <dc:Bounds height="14.0" width="51.0" x="575.0" y="338.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_2" bpmnElement="EndEvent_3">
         <dc:Bounds height="36.0" width="36.0" x="932.0" y="492.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="65.0" x="918.0" y="528.0"/>
+          <dc:Bounds height="14.0" width="35.0" x="932.0" y="528.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_DataStoreReference_1" bpmnElement="DataStoreReference_1">
+        <dc:Bounds height="50.0" width="50.0" x="130.0" y="480.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="14.0" width="68.0" x="121.0" y="530.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_DataObject_1" bpmnElement="DataObject_2">
+        <dc:Bounds height="50.0" width="36.0" x="471.0" y="310.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_15" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="14.0" width="74.0" x="452.0" y="360.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_DataObject_2" bpmnElement="DataObject_4">
+        <dc:Bounds height="50.0" width="36.0" x="980.0" y="120.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_16" labelStyle="BPMNLabelStyle_1">
+          <dc:Bounds height="14.0" width="74.0" x="961.0" y="170.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_StartEvent_2" targetElement="BPMNShape_EndEvent_1">
