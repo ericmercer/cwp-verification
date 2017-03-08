@@ -155,7 +155,55 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testonline_purchase() {
-		fail("Not yet implemented");
+		ConvertToBpmn convert = new ConvertToBpmn();
+		BpmnDiagram diagram = convert.importXML("diagrams/MyName.bpmn");
+		BpmnDiagram expected = new BpmnDiagram();
+		BpmnProcess first = expected.addProcess("Process_1");
+		
+		first.addStartEvent("StartEvent_1");
+		first.addTask("UserTask_1", "shoppingCart.msg = order\n"
+				+ "select(shoppingCart.item : 0 .. MAX_ITEMS)\n"
+				+ "select(shpppingCart.buyer : 0 .. MAX_BUYERS)\n"
+				+ "select(shoppingCart.cost : 0 .. MAX_COST)");
+		
+		first.addSequenceFlow("StartEvent_1", "UserTask_1");
+		first.addIntermediateEvent("IntermediateThrowEvent_1");
+		first.addSequenceFlow("UserTask_1", "IntermediateThrowEvent_1");
+		first.addIntermediateEvent("IntermediateCatchEvent_2");
+		first.addSequenceFlow("IntermediateThrowEvent_1", "IntermediateCatchEvent_2");
+		first.addEndEvent("EndEvent_7");
+		first.addSequenceFlow("IntermediateCatchEvent_2", "EndEvent_7");
+		first.addDataObject("DataObject_2", "shoppingCart", 1);
+		
+		BpmnProcess sec = expected.addProcess("Process_2");
+		
+		sec.addExclusiveGateway("ExclusiveGateway_1");
+		sec.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
+		sec.addExclusiveGateway("ExclusiveGateway_2");
+		sec.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_2");
+		sec.addScriptTask("ScriptTask_1", "orderStatus.msg = outOfStock");
+		sec.addTask("UserTask_4", "cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
+		sec.addScriptTask("ScriptTask_3", "orderStatus.msg = cardDenied");
+		sec.addSequenceFlow("ExclusiveGateway_2", "ScriptTask_3");
+		sec.addSequenceFlow("UserTask_4", "UserTask_5");
+		sec.addTask("UserTask_5", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
+		sec.addMessageStartEvent("StartEvent_2");
+		
+		sec.addSequenceFlow("StartEvent_2", "ExclusiveGateway_1");
+		sec.addSequenceFlow("ExclusiveGateway_2", "UserTask_4");
+		sec.addDataObject("DataObject_6", "orderStatus", 1);
+		sec.addExclusiveGateway("ExclusiveGateway_5");
+		sec.addSequenceFlow("UserTask_5", "ExclusiveGateway_5");
+		sec.addSequenceFlow("ScriptTask_3", "ExclusiveGateway_5");
+		sec.addExclusiveGateway("ExclusiveGateway_6");
+		sec.addSequenceFlow("ScriptTask_1", "ExclusiveGateway_6");
+		sec.addSequenceFlow("ExclusiveGateway_5", "ExclusiveGateway_6");
+		sec.addMessageEndEvent("EndEvent_8");
+		sec.addSequenceFlow("ExclusiveGateway_6", "EndEvent_8");
+		
+		expected.addProcess("Process_3");
+		
+		assertTrue( expected.equals(diagram) );
 	}
 	
 	@Test
