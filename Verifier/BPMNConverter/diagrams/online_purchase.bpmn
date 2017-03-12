@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="http://vv.cs.byu.edu/purchaseCWP" xmlns:ns1.xsd="http://vv.cs.byu.edu/purchaseCWP" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.0.Final-v20160602-2145-B47" targetNamespace="http://org.eclipse.bpmn2/default/collaboration">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="http://vv.cs.byu.edu/purchaseCWP" xmlns:ns1.xsd="http://vv.cs.byu.edu/purchaseCWP" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170221-1647-B60" targetNamespace="http://org.eclipse.bpmn2/default/collaboration">
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="purchaseCWP.xsd" namespace="http://vv.cs.byu.edu/purchaseCWP"/>
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="ns1.xsd:cwpType"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="ns1.xsd:msgType"/>
-  <bpmn2:message id="Message_1" itemRef="ItemDefinition_2" name="order">
-    <bpmn2:extensionElements>
-      <ext:style/>
-    </bpmn2:extensionElements>
-  </bpmn2:message>
+  <bpmn2:message id="Message_1" itemRef="ItemDefinition_2" name="order"/>
   <bpmn2:dataStore id="DataStore_2" itemSubjectRef="ItemDefinition_1" capacity="5" isUnlimited="false" name="CWPArray"/>
   <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
     <bpmn2:participant id="Participant_1" name="Customer" processRef="Process_1"/>
@@ -18,8 +14,8 @@
         <ext:style/>
       </bpmn2:extensionElements>
     </bpmn2:participant>
-    <bpmn2:messageFlow id="MessageFlow_8" sourceRef="IntermediateThrowEvent_1" targetRef="StartEvent_2"/>
-    <bpmn2:messageFlow id="MessageFlow_9" sourceRef="EndEvent_8" targetRef="IntermediateCatchEvent_2"/>
+    <bpmn2:messageFlow id="MessageFlow_8" messageRef="Message_1" sourceRef="IntermediateThrowEvent_1" targetRef="StartEvent_2"/>
+    <bpmn2:messageFlow id="MessageFlow_9" messageRef="Message_1" sourceRef="EndEvent_8" targetRef="IntermediateCatchEvent_2"/>
   </bpmn2:collaboration>
   <bpmn2:process id="Process_1" name="Initiating Process" definitionalCollaborationRef="Collaboration_1" isExecutable="false">
     <bpmn2:startEvent id="StartEvent_1" name="StartOrder">
@@ -89,7 +85,7 @@ select(shoppingCart.cost : 0 .. MAX_COST)
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_4" name="outOfStock" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_1"/>
-    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="ChargeCreditCard" gatewayDirection="Diverging" default="SequenceFlow_21">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_2" name="ChargeCreditCard" gatewayDirection="Diverging">
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_21</bpmn2:outgoing>
@@ -221,103 +217,103 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="Participant_1" isHorizontal="true">
         <dc:Bounds height="210.0" width="1081.0" x="100.0" y="40.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_1" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="39.0" width="11.0" x="106.0" y="125.0"/>
+          <dc:Bounds height="55.0" width="14.0" x="106.0" y="117.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_2" bpmnElement="Participant_2" isHorizontal="true">
         <dc:Bounds height="361.0" width="1081.0" x="100.0" y="310.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_2" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="57.0" width="11.0" x="106.0" y="462.0"/>
+          <dc:Bounds height="77.0" width="14.0" x="106.0" y="452.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_DataStoreReference_1" bpmnElement="DataStoreReference_1">
         <dc:Bounds height="50.0" width="50.0" x="145.0" y="592.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_3" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="42.0" x="149.0" y="642.0"/>
+          <dc:Bounds height="14.0" width="54.0" x="143.0" y="642.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="150.0" y="145.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="43.0" x="147.0" y="181.0"/>
+          <dc:Bounds height="14.0" width="56.0" x="140.0" y="181.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_UserTask_1" bpmnElement="UserTask_1" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="290.0" y="138.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_5" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="52.0" x="319.0" y="157.0"/>
+          <dc:Bounds height="14.0" width="71.0" x="309.0" y="156.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateThrowEvent_1" bpmnElement="IntermediateThrowEvent_1">
         <dc:Bounds height="36.0" width="36.0" x="468.0" y="145.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_7" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="44.0" x="464.0" y="181.0"/>
+          <dc:Bounds height="14.0" width="60.0" x="456.0" y="181.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="263.0" y="395.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_10" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="65.0" x="256.0" y="445.0"/>
+          <dc:Bounds height="28.0" width="48.0" x="264.0" y="445.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_2" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
         <dc:Bounds height="50.0" width="50.0" x="369.0" y="539.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_13" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="72.0" x="358.0" y="589.0"/>
+          <dc:Bounds height="28.0" width="80.0" x="354.0" y="589.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1">
         <dc:Bounds height="50.0" width="110.0" x="371.0" y="395.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_16" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="93.0" x="379.0" y="414.0"/>
+          <dc:Bounds height="28.0" width="76.0" x="388.0" y="406.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_UserTask_4" bpmnElement="UserTask_4" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="524.0" y="539.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_17" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="105.0" x="526.0" y="558.0"/>
+          <dc:Bounds height="28.0" width="101.0" x="528.0" y="550.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ScriptTask_3" bpmnElement="ScriptTask_3" isExpanded="true">
         <dc:Bounds height="50.0" width="110.0" x="524.0" y="466.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_19" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="90.0" x="534.0" y="485.0"/>
+          <dc:Bounds height="28.0" width="79.0" x="539.0" y="477.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_UserTask_5" bpmnElement="UserTask_5">
         <dc:Bounds height="50.0" width="110.0" x="712.0" y="539.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_26" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="39.0" x="747.0" y="558.0"/>
+          <dc:Bounds height="14.0" width="52.0" x="741.0" y="557.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_IntermediateCatchEvent_2" bpmnElement="IntermediateCatchEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="572.0" y="145.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_31" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="60.0" x="560.0" y="181.0"/>
+          <dc:Bounds height="14.0" width="79.0" x="551.0" y="181.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_7" bpmnElement="EndEvent_7">
         <dc:Bounds height="36.0" width="36.0" x="691.0" y="145.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_33" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="39.0" x="690.0" y="181.0"/>
+          <dc:Bounds height="14.0" width="53.0" x="683.0" y="181.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_2" bpmnElement="StartEvent_2">
         <dc:Bounds height="36.0" width="36.0" x="152.0" y="402.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_38" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="56.0" x="142.0" y="438.0"/>
+          <dc:Bounds height="14.0" width="75.0" x="133.0" y="438.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_DataObject_1" bpmnElement="DataObject_2">
         <dc:Bounds height="50.0" width="36.0" x="468.0" y="61.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_43" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="54.0" x="459.0" y="111.0"/>
+          <dc:Bounds height="14.0" width="75.0" x="449.0" y="111.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_DataObject_3" bpmnElement="DataObject_6">
         <dc:Bounds height="50.0" width="36.0" x="555.0" y="321.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_48" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="48.0" x="549.0" y="371.0"/>
+          <dc:Bounds height="14.0" width="64.0" x="541.0" y="371.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_5" bpmnElement="ExclusiveGateway_5" isMarkerVisible="true">
@@ -331,7 +327,7 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
       <bpmndi:BPMNShape id="BPMNShape_EndEvent_8" bpmnElement="EndEvent_8">
         <dc:Bounds height="36.0" width="36.0" x="1098.0" y="409.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_57" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="11.0" width="48.0" x="1092.0" y="445.0"/>
+          <dc:Bounds height="14.0" width="64.0" x="1084.0" y="445.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_UserTask_1">
@@ -351,7 +347,7 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
         <di:waypoint xsi:type="dc:Point" x="342.0" y="420.0"/>
         <di:waypoint xsi:type="dc:Point" x="371.0" y="420.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_12">
-          <dc:Bounds height="11.0" width="47.0" x="319.0" y="421.0"/>
+          <dc:Bounds height="14.0" width="59.0" x="313.0" y="421.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ExclusiveGateway_2">
@@ -365,7 +361,7 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
         <di:waypoint xsi:type="dc:Point" x="394.0" y="491.0"/>
         <di:waypoint xsi:type="dc:Point" x="524.0" y="491.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_20">
-          <dc:Bounds height="11.0" width="46.0" x="413.0" y="492.0"/>
+          <dc:Bounds height="14.0" width="64.0" x="404.0" y="492.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_UserTask_4" targetElement="BPMNShape_UserTask_5">

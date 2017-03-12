@@ -178,15 +178,15 @@ public class ConvertToBpmnTest {
 		BpmnProcess sec = expected.addProcess("Process_2");
 		
 		sec.addExclusiveGateway("ExclusiveGateway_1");
+		sec.addScriptTask("ScriptTask_1", "orderStatus.msg = outOfStock");
 		sec.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
 		sec.addExclusiveGateway("ExclusiveGateway_2");
 		sec.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_2");
-		sec.addScriptTask("ScriptTask_1", "orderStatus.msg = outOfStock");
 		sec.addTask("UserTask_4", "cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
 		sec.addScriptTask("ScriptTask_3", "orderStatus.msg = cardDenied");
 		sec.addSequenceFlow("ExclusiveGateway_2", "ScriptTask_3");
-		sec.addSequenceFlow("UserTask_4", "UserTask_5");
 		sec.addTask("UserTask_5", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
+		sec.addSequenceFlow("UserTask_4", "UserTask_5");
 		sec.addMessageStartEvent("StartEvent_2");
 		
 		sec.addSequenceFlow("StartEvent_2", "ExclusiveGateway_1");
