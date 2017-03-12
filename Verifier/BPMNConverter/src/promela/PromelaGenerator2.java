@@ -3,6 +3,7 @@ package promela;
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import bpmnStructure.PrintMessages.PrintMessageManager;
+import bpmnStructure.dataTypes.*;
 
 public class PromelaGenerator2 {
 
@@ -15,9 +16,20 @@ public class PromelaGenerator2 {
 	public static void main(String args[]) {
 
 		diagram = new BpmnDiagram();
-		diagram.addMessageFlow("Customer", "SendOrder", "ShoppingSite", "ReceiveOrder");
 
-		diagram.addMessageFlow("ShoppingSite", "SendStatus", "Customer", "ReceiveStatus");
+		PromelaTypeDef cwtype = diagram.addTypeDef("cwpType");
+		cwtype.addPromelaVariable(new ByteType("seller"));
+		cwtype.addPromelaVariable(new ByteType("buyer"));
+		cwtype.addPromelaVariable(new ByteType("item"));
+		cwtype.addPromelaVariable(new ByteType("amount"));
+		cwtype.addPromelaVariable(new ByteType("itemOwner"));
+		cwtype.addPromelaVariable(new ByteType("paymentOwner"));
+
+		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
+		msgType.addPromelaVariable(new MtypeType("msg", new String[] { "order", "outOfStock", "shipped" }));
+		msgType.addPromelaVariable(new ByteType("item"));
+		msgType.addPromelaVariable(new ByteType("cost"));
+		msgType.addPromelaVariable(new ByteType("buyer"));
 
 		BpmnProcess customer = diagram.addProcess("Customer");
 
@@ -27,14 +39,13 @@ public class PromelaGenerator2 {
 		customer.addScriptTask("chooseItem",
 				"shoppingCart.msg = order select(shoppingCart.item : 0 .. MAX_ITEMS) select(shpppingCart.buyer : 0 .. MAX_BUYERS) select(shoppingCart.cost : 0 .. MAX_COST)");// TODO:Add
 																																												// parameter
-																																												// to
-																																												// pass
+																																									// pass
 																																												// in
 		// script itself
 		customer.addEndEvent("EndOrder");
 		customer.addMessageThrowEvent("SendOrder");
 		customer.addMessageCatchEvent("ReceiveStatus");
-		customer.addDataObject("shoppingCart","shoppingCart", 5);
+		customer.addDataObject("shoppingCart", "shoppingCart", 5);
 
 		customer.addSequenceFlow("StartOrder", "chooseItem");
 		customer.addSequenceFlow("chooseItem", "SendOrder");
@@ -47,7 +58,7 @@ public class PromelaGenerator2 {
 		ss.addExclusiveGateway("CheckInventoryDiverge");
 		ss.addExclusiveGateway("ChargeCreditCard");
 		ss.addScriptTask("OutOfStockMessage", "orderStatus.msg = outOfStock");
-		ss.addDataObject("orderStatus","orderStatus", 5);
+		ss.addDataObject("orderStatus", "orderStatus", 5);
 		ss.addExclusiveGateway("join1");
 		ss.addExclusiveGateway("join2");
 		ss.addScriptTask("cardDeniedMessage", "orderStatus.msg = cardDenied");
@@ -56,19 +67,26 @@ public class PromelaGenerator2 {
 		ss.addScriptTask("shipItem", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
 		ss.addMessageEndEvent("SendStatus");
 
-		ss.addDataStore("CWPArray","CWPArray", 5);
+		ss.addDataStore("CWPArray", "CWPArray", 5);
 
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
-		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage");
-		ss.addSequenceFlow("CheckInventoryDiverge", "ChargeCreditCard");
+		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "false /*outOfStock*/");
+		ss.addDefaultSequenceFlow("CheckInventoryDiverge", "ChargeCreditCard");
+
 		ss.addSequenceFlow("OutOfStockMessage", "join1");
 		ss.addSequenceFlow("join1", "SendStatus");
-		ss.addSequenceFlow("ChargeCreditCard", "cardDeniedMessage");
-		ss.addSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
+		ss.addSequenceFlow("ChargeCreditCard", "cardDeniedMessage", "false /*cardDenied*/");
+		ss.addDefaultSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
 		ss.addSequenceFlow("prepareItemForShipping", "shipItem");
 		ss.addSequenceFlow("shipItem", "join1");
 		ss.addSequenceFlow("ChargeCreditCard", "cardDeniedMessage");
 		ss.addSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
+
+		// Add Message Flows last
+
+		diagram.addMessageFlow("MessageFlow1", customer, "SendOrder", ss, "ReceiveOrder", msgType);
+
+		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
 
 		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
 		System.out.println(pg.generatePromela());
@@ -199,6 +217,7 @@ public class PromelaGenerator2 {
 		return s;
 	}
 
+	/* all start events live in the init */
 	public String generate_init(String main_process, int number_of_tokens) {
 		String s = "init {\n";
 		s += "mytpe msg\n";
