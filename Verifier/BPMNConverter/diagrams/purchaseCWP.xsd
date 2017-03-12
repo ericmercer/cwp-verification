@@ -1,36 +1,99 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns="http://vv.cs.byu.edu/purchaseCWP" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://vv.cs.byu.edu/purchaseCWP">
+<xsd:schema xmlns="http://vv.cs.byu.edu/purchaseCWP" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" >
 
-<xsd:element name="cwpType">
-  <xsd:complexType>
-    <xsd:sequence>
-      <xsd:element name="seller" type="xsd:byte"/>
-      <xsd:element name="buyer" type="xsd:byte"/>
-      <xsd:element name="item" type="xsd:byte"/>
-      <xsd:element name="amount" type="xsd:byte"/>
-      <xsd:element name="itemOwner" type="xsd:byte"/>
-      <xsd:element name="paymentOwner" type="xsd:byte"/>
-    </xsd:sequence>
- </xsd:complexType>   
-</xsd:element>
+	<xsd:element name="cwpType">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="testArray"  maxOccurs="10">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="seller" default = "0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="buyer" default = "0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="item" default = "0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="amount" default = "0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="itemOwner" default = "0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="paymentOwner" default = "0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>   
+	</xsd:element>
 
-<xsd:element name="msgType">
-<xsd:complexType>
-  <xsd:sequence>
-    <xsd:element name="msg">
-      <xsd:simpleType>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="order"/>
-          <xsd:enumeration value="outOfStock"/>
-          <xsd:enumeration value="shipped"/>
-        </xsd:restriction>
-      </xsd:simpleType>
-    </xsd:element>  
-    <xsd:element name="item" type="xsd:byte"/>
-    <xsd:element name="cost" type="xsd:byte"/>
-    <xsd:element name="buyer" type="xsd:byte"/>
-  </xsd:sequence>
-</xsd:complexType>
-</xsd:element>
+	<xsd:element name="msgType">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="msg">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="order"/>
+							<xsd:enumeration value="outOfStock"/>
+							<xsd:enumeration value="shipped"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>  
+				<xsd:element name="item" default = "0">
+				    <xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="cost" default = "0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="buyer">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:integer">
+							<xsd:maxInclusive value="120" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+
 
 </xsd:schema>
