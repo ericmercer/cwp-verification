@@ -82,12 +82,19 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, getStart());
 
 	}
+	
+	public void addStartEvent(String id, String promela) {
+
+		setStart(new BasicStartEvent(id));
+		addFlowElement(id, getStart());
+
+	}
 
 	public void addTask(String id) {
 		addFlowElement(id, new Task(id,""));
 	}
 	
-	public void addTask(String id,String promela) {
+	public void addTask(String id, String promela) {
 		addFlowElement(id, new Task(id,promela));
 	}
 
@@ -98,11 +105,15 @@ public class BpmnProcess extends FlowElement {
 	public void addScriptTask(String id, String promela) {
 		addFlowElement(id, new ScriptTask(id, promela));
 	}
-
+	
 	public void addEndEvent(String id) {
 		addFlowElement(id, new BasicEndEvent(id));
 	}
 
+	public void addEndEvent(String id, String promela) {
+		addFlowElement(id, new BasicEndEvent(id));
+	}
+	
 	public void addExclusiveGateway(String id) {
 		addFlowElement(id, new ExclusiveGateway(id));
 	}
@@ -114,13 +125,26 @@ public class BpmnProcess extends FlowElement {
 	public void addIntermediateEvent(String id) {
 		addFlowElement(id, new IntermediateEvent(id));
 	}
+	
+	public void addIntermediateEvent(String id, String promela) {
+		addFlowElement(id, new IntermediateEvent(id));
+	}
 
 	public void addMessageThrowEvent(String id) {
 		addFlowElement(id, new MessageThrowEvent(id));
 
 	}
+	
+	public void addMessageThrowEvent(String id, String promela) {
+		addFlowElement(id, new MessageThrowEvent(id));
+
+	}
 
 	public void addMessageCatchEvent(String id) {
+		addFlowElement(id, new MessageCatchEvent(id));
+	}
+	
+	public void addMessageCatchEvent(String id, String promela) {
 		addFlowElement(id, new MessageCatchEvent(id));
 	}
 
@@ -132,8 +156,16 @@ public class BpmnProcess extends FlowElement {
 	public void addMessageStartEvent(String id) {
 		addFlowElement(id, new MessageStartEvent(id));
 	}
+	
+	public void addMessageStartEvent(String id, String promela) {
+		addFlowElement(id, new MessageStartEvent(id));
+	}
 
 	public void addMessageEndEvent(String id) {
+		addFlowElement(id, new MessageEndEvent(id));
+	}
+	
+	public void addMessageEndEvent(String id, String promela) {
 		addFlowElement(id, new MessageEndEvent(id));
 	}
 

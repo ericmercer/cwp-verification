@@ -193,22 +193,50 @@ public class ConvertToBpmn {
 	
 	private void initStartEvent(Element startEvent, BpmnProcess process) {
 		writer.println( "startEvent: " + startEvent.getAttribute( "id" ) );
-		NodeList list = startEvent.getElementsByTagName(namespace + "messageEventDefinition");
-		if(list != null && list.getLength() == 1) {
-			process.addMessageStartEvent(startEvent.getAttribute("id"));
+		NodeList message = startEvent.getElementsByTagName(namespace + "messageEventDefinition");
+		NodeList list = startEvent.getElementsByTagName(namespace + "documentation");
+		String code = null;
+		if(list != null && list.getLength() != 0) {
+			Element doc = (Element) list.item(0);
+			code = getCode("<PROMELA>", "</PROMELA>", doc);
+		}
+		if(message != null && message.getLength() == 1) {
+			if(code == null || code.length() == 0) {
+				process.addMessageStartEvent(startEvent.getAttribute("id"));
+			}else {
+				process.addMessageStartEvent(startEvent.getAttribute("id"), code);
+			}
 			return;
 		}
-		process.addStartEvent( startEvent.getAttribute("id") );
+		if(code == null || code.length() == 0) {
+			process.addStartEvent(startEvent.getAttribute("id"));
+		}else {
+			process.addStartEvent(startEvent.getAttribute("id"), code);
+		}
 	}
 	
 	private void initEndEvent(Element endEvent, BpmnProcess process) {
 		writer.println( "endEvent: " + endEvent.getAttribute( "id" ) );
-		NodeList list = endEvent.getElementsByTagName(namespace + "messageEventDefinition");
-		if(list != null && list.getLength() == 1) {
-			process.addMessageEndEvent(endEvent.getAttribute("id"));
+		NodeList message = endEvent.getElementsByTagName(namespace + "messageEventDefinition");
+		NodeList list = endEvent.getElementsByTagName(namespace + "documentation");
+		String code = null;
+		if(list != null && list.getLength() != 0) {
+			Element doc = (Element) list.item(0);
+			code = getCode("<PROMELA>", "</PROMELA>", doc);
+		}
+		if(message != null && message.getLength() == 1) {
+			if(code == null || code.length() == 0) {
+				process.addMessageEndEvent(endEvent.getAttribute("id"));
+			}else {
+				process.addMessageEndEvent(endEvent.getAttribute("id"), code);
+			}
 			return;
 		}
-		process.addEndEvent( endEvent.getAttribute("id") );
+		if(code == null || code.length() == 0) {
+			process.addEndEvent(endEvent.getAttribute("id"));
+		}else {
+			process.addEndEvent(endEvent.getAttribute("id"), code);
+		}
 	}
 	
 	private void initTask(Element task, BpmnProcess process) {
@@ -324,6 +352,22 @@ public class ConvertToBpmn {
         }
         
         return;
+	}
+	
+	private void initMessageFlow(ArrayList<Element> messageFlows, BpmnDiagram diagram) {
+		if(messageFlows.isEmpty()) {
+			return;
+		}
+		Element current = null;
+		NodeList temp = null;
+		Iterator<Element> iter = messageFlows.iterator();
+		while(iter.hasNext()) {
+			current = iter.next();
+			String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
+			writer.println( "sourceRef: " + source + " targetRef: " + target );
+			String ref = definitions.get(current.getAttribute("messageRef"));
+			diagram.addMessageFlow(current.getAttribute("id"), null, source, null, target, diagram.addTypeDef(ref));
+		}
 	}
 	
 	/**
