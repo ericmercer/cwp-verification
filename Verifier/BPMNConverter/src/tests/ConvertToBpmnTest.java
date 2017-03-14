@@ -53,6 +53,35 @@ public class ConvertToBpmnTest {
 	}
 	
 	@Test
+	public void test2_processes() {
+		ConvertToBpmn converter = new ConvertToBpmn();
+		BpmnDiagram result = converter.importXML("diagrams/2_processes.bpmn");
+		assertTrue(result != null);
+		BpmnDiagram expected = new BpmnDiagram();
+		expected.addProcess("processes_2");
+		BpmnProcess proc1 = expected.addProcess("Process_1");
+		
+		proc1.addMessageStartEvent("StartEvent_2");
+		proc1.addMessageEndEvent("EndEvent_2");
+		proc1.addSequenceFlow("StartEvent_2", "EndEvent_2");
+		
+		BpmnProcess proc2 = expected.addProcess("Process_2");
+		proc2.addEndEvent("EndEvent_1");
+		proc2.addMessageCatchEvent("IntermediateCatchEvent_1");
+		proc2.addMessageThrowEvent("IntermediateThrowEvent_1");
+		proc2.addStartEvent("StartEvent_1");
+		proc2.addSequenceFlow("StartEvent_1", "IntermediateThrowEvent_1");
+		proc2.addSequenceFlow("IntermediateCatchEvent_1", "EndEvent_1");
+		
+		expected.addMessageFlow("MessageFlow_1", proc2, "IntermediateThrowEvent_1", 
+				proc1, "StartEvent_2", expected.addTypeDef("xs:boolean"));
+		expected.addMessageFlow("MessageFlow_2", proc1, "EndEvent_2", 
+				proc2, "IntermediateCatchEvent_1", expected.addTypeDef("xs:boolean"));
+		
+		assertTrue(expected.equals(result));
+	}
+	
+	@Test
 	public void testjamie() {
 		ConvertToBpmn convert = new ConvertToBpmn();
 		BpmnDiagram diagram = convert.importXML("diagrams/jamie.bpmn");
@@ -158,6 +187,8 @@ public class ConvertToBpmnTest {
 		ConvertToBpmn convert = new ConvertToBpmn();
 		BpmnDiagram diagram = convert.importXML("diagrams/MyName.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
+		expected.addDataStore("DataStore_2", "CWPArray", 5);
+		
 		BpmnProcess first = expected.addProcess("Process_1");
 		
 		first.addStartEvent("StartEvent_1");
@@ -167,20 +198,36 @@ public class ConvertToBpmnTest {
 				+ "select(shoppingCart.cost : 0 .. MAX_COST)");
 		
 		first.addSequenceFlow("StartEvent_1", "UserTask_1");
-		first.addIntermediateEvent("IntermediateThrowEvent_1");
+		first.addMessageThrowEvent("IntermediateThrowEvent_1");
 		first.addSequenceFlow("UserTask_1", "IntermediateThrowEvent_1");
-		first.addIntermediateEvent("IntermediateCatchEvent_2");
+		first.addMessageCatchEvent("IntermediateCatchEvent_2");
 		first.addSequenceFlow("IntermediateThrowEvent_1", "IntermediateCatchEvent_2");
 		first.addEndEvent("EndEvent_7");
-		first.addSequenceFlow("IntermediateCatchEvent_2", "EndEvent_7");
 		first.addDataObject("DataObject_2", "shoppingCart", 1);
+		
+		BpmnProcess sub = first.addNormalSubProcess("SubProcess_1");
+		sub.addStartEvent("StartEvent_3");
+		sub.addParallelGateway("ParallelGateway_1");
+		sub.addParallelGateway("ParallelGateway_2");
+		sub.addEndEvent("EndEvent_1");
+		sub.addTask("Task_1");
+		sub.addTask("Task_2");
+		sub.addSequenceFlow("ParallelGateway_1", "Task_1");
+		sub.addSequenceFlow("ParallelGateway_1", "Task_2");
+		sub.addSequenceFlow("Task_1", "ParallelGateway_2");
+		sub.addSequenceFlow("Task_2", "ParallelGateway_2");
+		sub.addSequenceFlow("StartEvent_3", "ParallelGateway_1");
+		sub.addSequenceFlow("ParallelGateway_2", "EndEvent_1");
+		
+		first.addSequenceFlow("IntermediateCatchEvent_2", "SubProcess_1");
+		first.addSequenceFlow("SubProcess_1", "EndEvent_7");
 		
 		BpmnProcess sec = expected.addProcess("Process_2");
 		
 		sec.addExclusiveGateway("ExclusiveGateway_1");
+		sec.addExclusiveGateway("ExclusiveGateway_2");
 		sec.addScriptTask("ScriptTask_1", "orderStatus.msg = outOfStock");
 		sec.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
-		sec.addExclusiveGateway("ExclusiveGateway_2");
 		sec.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_2");
 		sec.addTask("UserTask_4", "cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
 		sec.addScriptTask("ScriptTask_3", "orderStatus.msg = cardDenied");
@@ -202,6 +249,11 @@ public class ConvertToBpmnTest {
 		sec.addSequenceFlow("ExclusiveGateway_6", "EndEvent_8");
 		
 		expected.addProcess("Process_3");
+		
+		expected.addMessageFlow("MessageFlow_8", first, "IntermediateThrowEvent_1", 
+				sec, "StartEvent_2", expected.addTypeDef("ns1.xsd:msgType"));
+		expected.addMessageFlow("MessageFlow_8", sec, "EndEvent_8", 
+				first, "IntermediateCatchEvent_2", expected.addTypeDef("ns1.xsd:msgType"));
 		
 		assertTrue( expected.equals(diagram) );
 	}

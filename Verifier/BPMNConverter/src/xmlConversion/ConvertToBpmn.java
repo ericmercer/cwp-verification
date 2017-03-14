@@ -379,9 +379,9 @@ public class ConvertToBpmn {
 	
 	private void initDataStore(Element data, BpmnDiagram diagram) {
 		writer.println( "dataStore: " + data.getAttribute( "name" ) );
-		String cap = data.getAttribute("capacity");
+		String id = data.getAttribute("id"), name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
-		diagram.addDataStore( data.getAttribute("id"), data.getAttribute("name"), capacity );
+		diagram.addDataStore( id, name, capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess process) {
