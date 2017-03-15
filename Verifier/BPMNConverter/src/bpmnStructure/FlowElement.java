@@ -88,6 +88,7 @@ public class FlowElement {
 	public boolean equals(Object o) {
 		FlowElement otherElement = (FlowElement) o;
 		if (!otherElement.getName().equals(this.getName())) {
+			System.out.println("this.name: " + this.getName() + " other.name: " + otherElement.getName());
 			return false;
 		}
 		if (otherElement.getClass() != this.getClass()) {
@@ -135,4 +136,13 @@ public class FlowElement {
 		this.name = name;
 	}
 
+	public String toString() {
+		StringBuilder output = new StringBuilder();
+		output.append("\tname: " + this.name);
+		output.append("\n\t\tclass: " + this.getClass());
+		output.append("\n\t\tinFLows: " + this.sequenceFlowIn.size());
+		output.append("\n\t\toutFlows: " + this.sequenceFlowOut.size());
+		return output.toString();
+	}
+	
 }

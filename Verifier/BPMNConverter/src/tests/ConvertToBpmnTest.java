@@ -185,7 +185,7 @@ public class ConvertToBpmnTest {
 	@Test
 	public void testonline_purchase() {
 		ConvertToBpmn convert = new ConvertToBpmn();
-		BpmnDiagram diagram = convert.importXML("diagrams/MyName.bpmn");
+		BpmnDiagram diagram = convert.importXML("diagrams/online_purchase.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		expected.addDataStore("DataStore_2", "CWPArray", 5);
 		

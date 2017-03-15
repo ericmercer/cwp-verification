@@ -79,8 +79,8 @@ public class ConvertToBpmn {
 	
 	
 	private void init(Document document, NodeList processList) throws WrongTypeException {
-//        writer.println(namespace + " version: ");
-        if(processList.item(0).getNodeType() != Node.ELEMENT_NODE) {
+		writer.println( "Diagram:\n" );
+		if(processList.item(0).getNodeType() != Node.ELEMENT_NODE) {
         	throw new WrongTypeException();
         }
 //        itemDefinition
@@ -119,9 +119,11 @@ public class ConvertToBpmn {
 		
 		messageEvents = new HashMap<>();
 		Element process = null;
+		writer.println( "ProcessList.size:\t" + processList.getLength() );
 		for(int i = 0; i < processList.getLength(); i++) {
 			process = (Element) processList.item(i);
 			String id = process.getAttribute( "id" );
+			writer.println( "Process:\t" + id + "\n" );
 			initProcess(process, diagram.addProcess(id));
 		}
 		
@@ -180,7 +182,7 @@ public class ConvertToBpmn {
 				else if(tag.equals(namespace + "exclusiveGateway")) {
 					initExclusiveGate(child, diagram);
 				}
-				else if(tag.equals(namespace + "parellelGateway")) {
+				else if(tag.equals(namespace + "parallelGateway")) {
 					initParallelGate(child, diagram);
 				}
 				else if(tag.equals(namespace + "sequenceFlow")) {
@@ -198,7 +200,7 @@ public class ConvertToBpmn {
 	
 	private void initExport() {
 		try {
-			writer = new PrintWriter( new BufferedWriter( new FileWriter("../output.txt") ) );
+			writer = new PrintWriter( new BufferedWriter( new FileWriter("./output.txt") ) );
 //			writer.print("worked?");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -209,7 +211,7 @@ public class ConvertToBpmn {
 	
 	private void initStartEvent(Element startEvent, BpmnProcess process) {
 		String id = startEvent.getAttribute("id");
-		writer.println( "startEvent: " + startEvent.getAttribute( "id" ) );
+		writer.println( "startEvent:\t" + startEvent.getAttribute( "id" ) );
 		NodeList message = startEvent.getElementsByTagName(namespace + "messageEventDefinition");
 		NodeList list = startEvent.getElementsByTagName(namespace + "documentation");
 		String code = null;
@@ -238,7 +240,7 @@ public class ConvertToBpmn {
 	
 	private void initEndEvent(Element endEvent, BpmnProcess process) {
 		String id = endEvent.getAttribute("id");
-		writer.println( "endEvent: " + endEvent.getAttribute( "id" ) );
+		writer.println( "endEvent:\t" + endEvent.getAttribute( "id" ) );
 		NodeList message = endEvent.getElementsByTagName(namespace + "messageEventDefinition");
 		NodeList list = endEvent.getElementsByTagName(namespace + "documentation");
 		String code = null;
@@ -264,7 +266,7 @@ public class ConvertToBpmn {
 	
 	private void initIntermediateCatchEvent(Element intermediateEvent, BpmnProcess process) {
 		String id = intermediateEvent.getAttribute("id");
-		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
+		writer.println( "intermediateEvents:\t" + intermediateEvent.getAttribute( "id" ) );
 		NodeList message = intermediateEvent.getElementsByTagName(namespace + "messageEventDefinition");
 		NodeList list = intermediateEvent.getElementsByTagName(namespace + "documentation");
 		String code = null;
@@ -290,7 +292,7 @@ public class ConvertToBpmn {
 	
 	private void initIntermediateThrowEvent(Element intermediateEvent, BpmnProcess process) {
 		String id = intermediateEvent.getAttribute("id");
-		writer.println( "intermediateEvents: " + intermediateEvent.getAttribute( "id" ) );
+		writer.println( "intermediateEvents:\t" + intermediateEvent.getAttribute( "id" ) );
 		NodeList message = intermediateEvent.getElementsByTagName(namespace + "messageEventDefinition");
 		NodeList list = intermediateEvent.getElementsByTagName(namespace + "documentation");
 		String code = null;
@@ -315,7 +317,7 @@ public class ConvertToBpmn {
 	}
 	
 	private void initTask(Element task, BpmnProcess process) {
-		writer.println( "task: " + task.getAttribute( "id" ) );
+		writer.println( "task:\t" + task.getAttribute( "id" ) );
 		NodeList list = task.getElementsByTagName(namespace + "documentation");
 		String code = null;
 		if(list != null && list.getLength() != 0) {
@@ -331,7 +333,7 @@ public class ConvertToBpmn {
 	
 	private void initScriptTask(Element task, BpmnProcess process) {
 		task.getElementsByTagName("script");
-		writer.println( "scriptTask: " + task.getAttribute( "id" ) );
+		writer.println( "scriptTask:\t" + task.getAttribute( "id" ) );
 		NodeList list = task.getElementsByTagName(namespace + "script");
 		ArrayList<String> code = null;
 		if(list != null && list.getLength() != 0) {
@@ -352,17 +354,17 @@ public class ConvertToBpmn {
 	}
 	
 	private void initExclusiveGate(Element exclusiveGate, BpmnProcess process) {
-		writer.println( "exclusiveGateway: " + exclusiveGate.getAttribute( "id" ) );
+		writer.println( "exclusiveGateway:\t" + exclusiveGate.getAttribute( "id" ) );
 		process.addExclusiveGateway( exclusiveGate.getAttribute("id") );
 	}
 	
 	private void initParallelGate(Element parellelGate, BpmnProcess process) {
-		writer.println( "parellelGateway: " + parellelGate.getAttribute( "id" ) );
+		writer.println( "parellelGateway:\t" + parellelGate.getAttribute( "id" ) );
 		process.addParallelGateway( parellelGate.getAttribute("id") );
 	}
 	
 	private void initDataObject(Element data, BpmnProcess process) {
-		writer.println( "dataObject: " + data.getAttribute( "name" ) );
+		writer.println( "dataObject:\t" + data.getAttribute( "name" ) );
 		NodeList list = data.getElementsByTagName(namespace + "documentation");
 		String code = null;
 		if(list != null && list.getLength() != 0) {
@@ -378,7 +380,7 @@ public class ConvertToBpmn {
 	}
 	
 	private void initDataStore(Element data, BpmnDiagram diagram) {
-		writer.println( "dataStore: " + data.getAttribute( "name" ) );
+		writer.println( "dataStore:\t" + data.getAttribute( "name" ) );
 		String id = data.getAttribute("id"), name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
 		diagram.addDataStore( id, name, capacity );
@@ -395,14 +397,19 @@ public class ConvertToBpmn {
         while(iter.hasNext()) {
         	current = iter.next();
         	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
-			writer.println( "sourceRef: " + source + " targetRef: " + target );
+			writer.println( "sourceRef:\t" + source + "\ttargetRef:\t" + target );
 			condition = current.getElementsByTagName(namespace + "conditionExpression");
 			if(condition != null && condition.item(0) != null) {
 				current = (Element) condition.item(0);
 //				System.out.println("condition: " + current.getTextContent());
 				process.addSequenceFlow( source, target, current.getTextContent() );
 			}else {
-				process.addSequenceFlow( source, target );
+				try {
+					process.addSequenceFlow( source, target );
+				} catch (NullPointerException e) {
+					System.out.println("Source: " + source + " Target: " + target);
+				}
+				
 			}
         }
         
@@ -415,7 +422,7 @@ public class ConvertToBpmn {
 		}
 		String id = current.getAttribute("id"), source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef"),
 				ref = definitions.get(current.getAttribute("messageRef"));
-		writer.println( "messageFlow: " + "sourceRef: " + source + " targetRef: " + target );
+		writer.println( "messageFlow:\t" + "sourceRef:\t" + source + "\ttargetRef:\t" + target );
 		diagram.addMessageFlow(id, messageEvents.get(source), source, messageEvents.get(target), target, diagram.addTypeDef(ref));
 //		messageEvents holds the process to which the source and target events belong, which means that just by 
 //		using the the id of the source or target reference as a key, we can get the process to which it belongs
@@ -437,23 +444,28 @@ public class ConvertToBpmn {
 			current = scan.nextLine();
 			if(current.equals(startTag)) {
 				take = true;
-			}else if (current.equals(stopTag)) {
-				take = false;
 			}
 			if(take) {
 				code.add(current);
 			}
+			if (current.equals(stopTag)) {
+				take = false;
+			}
 		}
 		scan.close();
-		writer.println(code.toString());
+//		System.out.println(code.toString());
 		if(code.size() == 1 || !code.get(code.size() - 1).equals(stopTag)) {
 //			throw an error because we never read in the stop tag, just the start tag
+			System.err.println("No Stop tag!");
 			return null;
 		}else if(code.size() == 0) {
+			System.err.println("No documentation!");
 			return null; // there is no code we care about in the documentation
 		}
 		code.remove(0);
 		code.remove(code.size() - 1);
+//		System.out.println(code.toString());
+		writer.println(code.toString());
 		return code.toString();
 	}
 	

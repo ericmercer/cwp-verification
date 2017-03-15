@@ -192,6 +192,7 @@ public class BpmnProcess extends FlowElement {
 			FlowElement currentObject = entry.getValue();
 			FlowElement otherObject = otherElement.elements.get(entry.getKey());
 			if (otherObject == null || !currentObject.equals(otherObject)) {
+				System.out.println("this.object: " + currentObject + "\nother.object: " + otherObject);
 				return false;
 			}
 		}
