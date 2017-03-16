@@ -7,13 +7,13 @@ import org.junit.Test;
 
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
-import xmlConversion.ConvertToBpmn;
+import xmlConversion.XMLConverter;
 
-public class ConvertToBpmnTest {
+public class XMLConverterTest {
 
 	@Test
 	public void test2_Step() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/2_step.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("Process_1");
@@ -27,7 +27,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void test4_Step() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/4_step.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("Process_1");
@@ -54,7 +54,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void test2_processes() {
-		ConvertToBpmn converter = new ConvertToBpmn();
+		XMLConverter converter = new XMLConverter();
 		BpmnDiagram result = converter.importXML("diagrams/2_processes.bpmn");
 		assertTrue(result != null);
 		BpmnDiagram expected = new BpmnDiagram();
@@ -83,7 +83,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testjamie() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/jamie.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("process_1");
@@ -117,7 +117,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testMedicalRecords() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/MedicalRecords.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("MedicalRecords");
@@ -143,7 +143,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testMyName() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/MyName.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("Process_1");
@@ -184,7 +184,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testonline_purchase() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/online_purchase.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		expected.addDataStore("DataStore_2", "CWPArray", 5);
@@ -260,7 +260,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testorderFullfillment() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/orderFulfillment.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("orderFulfillment");
@@ -309,7 +309,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testsub_processes() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/sub_processes.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("sub_processes");
@@ -355,7 +355,7 @@ public class ConvertToBpmnTest {
 	
 	@Test
 	public void testvendingMachine() {
-		ConvertToBpmn convert = new ConvertToBpmn();
+		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/vendingMachine.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("vendingMachine");

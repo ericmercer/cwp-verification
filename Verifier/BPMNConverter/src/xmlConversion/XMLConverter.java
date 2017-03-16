@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 
-public class ConvertToBpmn {
+public class XMLConverter {
 	
 	private BpmnDiagram diagram;
 	private PrintWriter writer;
