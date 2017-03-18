@@ -89,7 +89,13 @@ public class PromelaGenerator2 {
 		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
 
 		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
+	
+		
 		System.out.println(pg.generatePromela());
+		PrintMessageManager.getInstance().generateAwkScript();
+		
+		
+		
 	}
 
 	public String generate_xor_fork(String inseq, String message, String expr1, String outseq1, String message2,
