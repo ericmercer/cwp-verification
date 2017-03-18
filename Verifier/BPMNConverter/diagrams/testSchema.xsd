@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://vv.cs.byu.edu/testSchema">
+
+    <xsd:element name="typeOne">
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="myString">
+    				<xsd:simpleType>
+    					<xsd:restriction base="xsd:string">
+    						<xsd:enumeration value="working"></xsd:enumeration>
+    						<xsd:enumeration value="failing"></xsd:enumeration>
+    					</xsd:restriction>
+    				</xsd:simpleType>
+    			</xsd:element>
+    			<xsd:element name="myBool" type="xsd:boolean"></xsd:element>
+    			<xsd:element name="myInteger">
+    				<xsd:simpleType>
+    					<xsd:restriction base="xsd:int">
+    						<xsd:maxInclusive value="120"></xsd:maxInclusive>
+    					</xsd:restriction>
+    				</xsd:simpleType>
+    			</xsd:element>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+    <xsd:element name="tyoeTwo">
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="myBool">
+    				<xsd:simpleType>
+    					<xsd:restriction base="xsd:boolean">
+    					</xsd:restriction>
+    				</xsd:simpleType>
+    			</xsd:element>
+    			<xsd:element name="otherBool" type="xsd:boolean"></xsd:element>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="typeThree">
+    	<xsd:complexType></xsd:complexType>
+    </xsd:element>
+</xsd:schema>
