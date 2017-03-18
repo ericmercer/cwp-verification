@@ -1,6 +1,6 @@
 package bpmnStructure.dataTypes;
 
-public class MtypeType extends PromelaVariable {
+public class MtypeType extends PromelaType {
 
 	public MtypeType(String name, String[] mtypeValues) {
 		super(name);

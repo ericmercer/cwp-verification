@@ -2,17 +2,21 @@ package bpmnStructure.dataTypes;
 
 import java.util.ArrayList;
 
-public class PromelaTypeDef extends PromelaVariable{
+public class PromelaTypeDef extends PromelaType {
 
 	public PromelaTypeDef(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
 
-	ArrayList<PromelaVariable> vars = new ArrayList<PromelaVariable>();
+	ArrayList<PromelaType> vars = new ArrayList<PromelaType>();
 
-	public void addPromelaVariable(PromelaVariable p) {
+	public void addPromelaType(PromelaType p) {
 		vars.add(p);
+	}
+
+	public void addPromelaTypeArray(String arrayName, PromelaType type, int size) {
+		vars.add(new PromelaArray(arrayName, type, size));
 	}
 
 }

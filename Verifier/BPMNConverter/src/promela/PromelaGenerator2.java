@@ -17,19 +17,7 @@ public class PromelaGenerator2 {
 
 		diagram = new BpmnDiagram();
 
-		PromelaTypeDef cwtype = diagram.addTypeDef("cwpType");
-		cwtype.addPromelaVariable(new ByteType("seller"));
-		cwtype.addPromelaVariable(new ByteType("buyer"));
-		cwtype.addPromelaVariable(new ByteType("item"));
-		cwtype.addPromelaVariable(new ByteType("amount"));
-		cwtype.addPromelaVariable(new ByteType("itemOwner"));
-		cwtype.addPromelaVariable(new ByteType("paymentOwner"));
-
-		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
-		msgType.addPromelaVariable(new MtypeType("msg", new String[] { "order", "outOfStock", "shipped" }));
-		msgType.addPromelaVariable(new ByteType("item"));
-		msgType.addPromelaVariable(new ByteType("cost"));
-		msgType.addPromelaVariable(new ByteType("buyer"));
+		
 
 		BpmnProcess customer = diagram.addProcess("Customer");
 
@@ -84,10 +72,7 @@ public class PromelaGenerator2 {
 
 		// Add Message Flows last
 
-		diagram.addMessageFlow("MessageFlow1", customer, "SendOrder", ss, "ReceiveOrder", msgType);
-
-		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
-
+		
 		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
 	
 		
