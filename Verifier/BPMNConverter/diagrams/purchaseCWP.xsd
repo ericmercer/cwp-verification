@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://vv.cs.byu.edu/purchaseCWP" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" >
-
 	<xsd:element name="cwpType">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -56,7 +55,6 @@
 			</xsd:sequence>
 		</xsd:complexType>   
 	</xsd:element>
-
 	<xsd:element name="msgType">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -93,7 +91,4 @@
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
-
-
-
 </xsd:schema>

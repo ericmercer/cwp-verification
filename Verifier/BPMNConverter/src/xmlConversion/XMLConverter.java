@@ -55,7 +55,7 @@ public class XMLConverter {
 	        if(processList.item(0) == null) {
 	        	throw new Exception();
 	        }
-	        
+	        System.out.println(processList.item(0).getNodeType());
 	        init(document, processList);
 	        
 		} catch (ParserConfigurationException e) {
