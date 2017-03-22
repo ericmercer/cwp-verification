@@ -2,8 +2,8 @@ package tests;
 
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
-import bpmnStructure.dataTypes.ByteType;
 import bpmnStructure.dataTypes.MtypeType;
+import bpmnStructure.dataTypes.PositiveIntType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
 
 public class GeneratePurchaseCWP {
@@ -21,21 +21,21 @@ public class GeneratePurchaseCWP {
 		int MAX_ITEMOWNER = 255;
 		int MAX_PAYMENTOWNER = 255;
 		
-		cwtype.addPromelaVariable(new ByteType("seller",MAX_SELLERS));
-		cwtype.addPromelaVariable(new ByteType("buyer",MAX_BUYERS));
-		cwtype.addPromelaVariable(new ByteType("item",MAX_ITEM));
-		cwtype.addPromelaVariable(new ByteType("amount",MAX_AMOUNT));
-		cwtype.addPromelaVariable(new ByteType("itemOwner",MAX_ITEMOWNER));
-		cwtype.addPromelaVariable(new ByteType("paymentOwner",MAX_PAYMENTOWNER));
+		cwtype.addPromelaType(new PositiveIntType("seller",MAX_SELLERS));
+		cwtype.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS));
+		cwtype.addPromelaType(new PositiveIntType("item",MAX_ITEM));
+		cwtype.addPromelaType(new PositiveIntType("amount",MAX_AMOUNT));
+		cwtype.addPromelaType(new PositiveIntType("itemOwner",MAX_ITEMOWNER));
+		cwtype.addPromelaType(new PositiveIntType("paymentOwner",MAX_PAYMENTOWNER));
 
 		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
-		msgType.addPromelaVariable(new MtypeType("msg", new String[] { "order", "outOfStock", "shipped" }));
+		msgType.addPromelaType(new MtypeType("msg", new String[] { "order", "outOfStock", "shipped" }));
 		int MAX_ITEM2 = 255;
 		int MAX_COST = 255;
 		int MAX_BUYERS2 = 255;
-		msgType.addPromelaVariable(new ByteType("item",MAX_ITEM2));
-		msgType.addPromelaVariable(new ByteType("cost",MAX_COST));
-		msgType.addPromelaVariable(new ByteType("buyer",MAX_BUYERS2));
+		msgType.addPromelaType(new PositiveIntType("item",MAX_ITEM2));
+		msgType.addPromelaType(new PositiveIntType("cost",MAX_COST));
+		msgType.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS2));
 
 		/*******Define Processes***************/
 		BpmnProcess customer = diagram.addProcess("Customer");

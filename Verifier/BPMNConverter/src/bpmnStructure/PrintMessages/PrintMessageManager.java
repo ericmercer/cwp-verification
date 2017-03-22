@@ -1,6 +1,10 @@
 package bpmnStructure.PrintMessages;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
+
+import awk.AWKconverter;
 
 /*Keeps track of Message Numbers and their translation to messages*/
 
@@ -31,6 +35,18 @@ public class PrintMessageManager {
 
 	public TreeMap<Integer, String> getMapping() {
 		return messageMapping;
+	}
+
+	public void generateAwkScript() {
+		AWKconverter converter = new AWKconverter();
+		for (Entry<Integer, String> entry : messageMapping.entrySet()) {
+			Integer key = entry.getKey();
+			String value = entry.getValue();
+
+			converter.addKeyPair(String.valueOf(key), value);
+		}
+
+		converter.toText("C:\\Users\\jvisker\\Desktop\\awk.txt");
 	}
 
 }

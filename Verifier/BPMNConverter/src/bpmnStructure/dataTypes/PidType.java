@@ -1,6 +1,6 @@
 package bpmnStructure.dataTypes;
 
-public class PidType extends PromelaVariable {
+public class PidType extends PromelaType {
 
 	public PidType(String name) {
 		super(name);

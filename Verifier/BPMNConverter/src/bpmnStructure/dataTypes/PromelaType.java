@@ -1,9 +1,9 @@
 package bpmnStructure.dataTypes;
 
-public class PromelaVariable {
+public class PromelaType {
 	private String name;
 
-	public PromelaVariable(String name) {
+	public PromelaType(String name) {
 		this.name = name;
 	}
 

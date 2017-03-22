@@ -17,13 +17,22 @@ public class AWKconverter {
 	
 	public static void main(String args[]) {
 		AWKconverter convert = new AWKconverter("awks/dictionary.txt");
-		convert.toText();
+		convert.toText("awks/awkScript.txt");
 		return;
+	}
+	
+	public void addKeyPair(String key, String value){
+		dictionary.put(key, value);
 	}
 	
 	public AWKconverter(String fileName) {
 		dictionary = new TreeMap<>();
 		importDictionary(fileName);
+	}
+	
+	public AWKconverter() {
+		dictionary = new TreeMap<>();
+	
 	}
 	
 	private void importDictionary(String fileName) {
@@ -44,9 +53,9 @@ public class AWKconverter {
 		
 	}
 	
-	public void toText() {
+	public void toText(String path) {
 		try {
-			PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter("awks/awkScript.txt") ) );
+			PrintWriter writer = new PrintWriter( new BufferedWriter( new FileWriter(path) ) );
 			
 			writer.println("#!/bin/awk -f");
 			writer.println();
