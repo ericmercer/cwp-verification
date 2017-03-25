@@ -14,7 +14,7 @@ public class PositiveIntType extends PromelaType {
 		this(256, 0);
 	}
 
-	public PositiveIntType(String name, int maxSize) throws PromelaTypeSizeException {
+	public PositiveIntType( int maxSize) throws PromelaTypeSizeException {
 		this(maxSize, 0);
 	}
 
