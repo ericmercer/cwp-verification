@@ -176,8 +176,8 @@ public class BpmnProcess extends FlowElement {
 	public void addMessageEndEvent(String id, String promela) {
 		addFlowElement(id, new MessageEndEvent(id));
 	}
-
-	public void addDataStore(String id, String name, int capacity) {
+	
+	public void addDataStore(String name, PromelaType pt, int capacity) {
 		// TODO Auto-generated method stub
 
 	}
