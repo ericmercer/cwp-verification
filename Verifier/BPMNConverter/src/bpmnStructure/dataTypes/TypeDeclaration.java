@@ -39,7 +39,7 @@ public class TypeDeclaration {
 			typeDeclaration += "[" + capacity + "]";
 		}
 		/* this assumes that complex types always have a zero default */
-		if (this.type.getDefaultValue() != 0) {
+		if (!this.type.getDefaultValue().equals("0")) {
 			typeDeclaration += " = " + this.type.getDefaultValue();
 		}
 		return typeDeclaration;

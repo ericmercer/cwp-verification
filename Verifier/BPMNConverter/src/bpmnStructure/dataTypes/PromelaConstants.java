@@ -9,10 +9,11 @@ public class PromelaConstants {
 	private static TreeMap<String, Integer> constants = new TreeMap<String, Integer>();
 
 	public static void addConstant(String constantName, int value) {
-	
+
 		if (constants.containsKey(constantName) && !constants.get(constantName).equals(value)) {
 			// TODO:Throw error
-			System.err.println("new constant not added; conflicting values for constant " + constantName + ", " + value + " != " + constants.get(constantName));
+			System.err.println("new constant not added; conflicting values for constant " + constantName + ", " + value
+					+ " != " + constants.get(constantName));
 		} else {
 
 			constants.put(constantName, value);
@@ -20,15 +21,20 @@ public class PromelaConstants {
 
 	}
 
+	public static int getConstant(String constantName) {
+		return constants.get(constantName);
+
+	}
+
 	public static String generateConstantString() {
 		String output = "";
-	
+
 		for (Map.Entry<String, Integer> entry : constants.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
-		
-			output = output  + "#define " + key + " " + value + ";\n";
-		
+
+			output = output + "#define " + key + " " + value + ";\n";
+
 		}
 		return output;
 

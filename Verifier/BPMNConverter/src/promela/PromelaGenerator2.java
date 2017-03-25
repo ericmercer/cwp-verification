@@ -46,7 +46,7 @@ public class PromelaGenerator2 {
 		cwtype.addPromelaType("boolVal", new BoolType(true));
 
 		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
-		msgType.addPromelaType("msg",new MtypeType( new String[] { "order", "outOfStock", "shipped" }));
+		msgType.addPromelaType("msg",new MtypeType( new String[] { "order", "outOfStock", "shipped" },"shipped"));
 		int MAX_ITEM2 = 255;
 		int MAX_COST = 255;
 		int MAX_BUYERS2 = 255;

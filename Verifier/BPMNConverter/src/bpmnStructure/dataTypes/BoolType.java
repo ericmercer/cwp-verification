@@ -43,8 +43,8 @@ public class BoolType extends PromelaType {
 		return null;
 	}
 	@Override
-	public int getDefaultValue() {
-		return this.defaultValue ? 1 : 0;
+	public String getDefaultValue() {
+		return this.defaultValue ? "true" : "false";
 	}
 
 }

@@ -78,8 +78,8 @@ public class PositiveIntType extends PromelaType {
 
 	}
 
-	public int getDefaultValue() {
-		return this.defaultValue;
+	public String getDefaultValue() {
+		return Integer.toString(this.defaultValue);
 	}
 
 	public int getMaxSize() {

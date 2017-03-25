@@ -18,8 +18,8 @@ public abstract class PromelaType {
 	
 	public abstract String generateTypeString();
 
-	public int getDefaultValue() {
-		return 0;
+	public String getDefaultValue() {
+		return "0";
 	}
 	
 	/*if max size is not zero then it will create a constant as well*/
