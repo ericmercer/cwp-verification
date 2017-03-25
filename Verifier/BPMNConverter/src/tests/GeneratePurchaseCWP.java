@@ -2,13 +2,15 @@ package tests;
 
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
+import bpmnStructure.dataTypes.BoolType;
 import bpmnStructure.dataTypes.MtypeType;
 import bpmnStructure.dataTypes.PositiveIntType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
+import bpmnStructure.exceptions.PromelaTypeSizeException;
 
 public class GeneratePurchaseCWP {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws PromelaTypeSizeException {
 
 		BpmnDiagram diagram = new BpmnDiagram();
 
@@ -21,21 +23,24 @@ public class GeneratePurchaseCWP {
 		int MAX_ITEMOWNER = 255;
 		int MAX_PAYMENTOWNER = 255;
 		
-		cwtype.addPromelaType(new PositiveIntType("seller",MAX_SELLERS));
-		cwtype.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS));
-		cwtype.addPromelaType(new PositiveIntType("item",MAX_ITEM));
-		cwtype.addPromelaType(new PositiveIntType("amount",MAX_AMOUNT));
-		cwtype.addPromelaType(new PositiveIntType("itemOwner",MAX_ITEMOWNER));
-		cwtype.addPromelaType(new PositiveIntType("paymentOwner",MAX_PAYMENTOWNER));
+		cwtype.addPromelaType(new PositiveIntType("seller",MAX_SELLERS,0));
+		cwtype.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS,0));
+		cwtype.addPromelaType(new PositiveIntType("item",MAX_ITEM,0));
+		cwtype.addPromelaType(new PositiveIntType("amount",MAX_AMOUNT,0));
+		cwtype.addPromelaType(new PositiveIntType("itemOwner",MAX_ITEMOWNER,0));
+		cwtype.addPromelaType(new PositiveIntType("paymentOwner",MAX_PAYMENTOWNER,0));
+		
+		/*how to add an array*/
+		cwtype.addPromelaType( new BoolType("boolVal",2));
 
 		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
 		msgType.addPromelaType(new MtypeType("msg", new String[] { "order", "outOfStock", "shipped" }));
 		int MAX_ITEM2 = 255;
 		int MAX_COST = 255;
 		int MAX_BUYERS2 = 255;
-		msgType.addPromelaType(new PositiveIntType("item",MAX_ITEM2));
-		msgType.addPromelaType(new PositiveIntType("cost",MAX_COST));
-		msgType.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS2));
+		msgType.addPromelaType(new PositiveIntType("item",MAX_ITEM2,0));
+		msgType.addPromelaType(new PositiveIntType("cost",MAX_COST,0));
+		msgType.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS2,0));
 
 		/*******Define Processes***************/
 		BpmnProcess customer = diagram.addProcess("Customer");

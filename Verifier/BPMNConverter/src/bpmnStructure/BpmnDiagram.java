@@ -2,15 +2,19 @@ package bpmnStructure;
 
 import java.util.ArrayList;
 
+import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
 import bpmnStructure.dataTypes.TypeDefManager;
+import bpmnStructure.dataTypes.TypeDeclaration;
+import bpmnStructure.exceptions.PromelaTypeSizeException;
 
 public class BpmnDiagram {
 
 	ArrayList<BpmnProcess> processes = new ArrayList<BpmnProcess>();
 	ArrayList<MessageFlow> messageFlows = new ArrayList<MessageFlow>();
+	ArrayList<TypeDeclaration> globalVariables = new ArrayList<TypeDeclaration>();
 
-	private TypeDefManager typeManager = new TypeDefManager();
+	public TypeDefManager typeManager = new TypeDefManager();
 
 	public PromelaTypeDef addTypeDef(String name) {
 		return typeManager.addTypeDef(name);
@@ -23,8 +27,8 @@ public class BpmnDiagram {
 
 	}
 
-	public void addDataStore(String id, String name, int capacity) {
-
+	public void addDataStore(String name, PromelaType td, int capacity) throws PromelaTypeSizeException {
+		globalVariables.add(new TypeDeclaration(name, td, capacity));
 	}
 
 	public void addMessageFlow(String messageFlowId, BpmnProcess process1, String event1, BpmnProcess process2,
@@ -44,6 +48,22 @@ public class BpmnDiagram {
 			}
 		}
 		return true;
+	}
+
+	public String getGlobalVariables() {
+		String out = "";
+		for (TypeDeclaration var : globalVariables) {
+			out += var.generateDeclaration() + ";\n";
+		}
+		return out;
+	}
+
+	public String getProcTypes() {
+		String out = "";
+		for (BpmnProcess process : processes) {
+			out += process.generateProctype();
+		}
+		return out;
 	}
 
 }

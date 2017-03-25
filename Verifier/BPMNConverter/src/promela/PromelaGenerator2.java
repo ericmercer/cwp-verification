@@ -4,6 +4,7 @@ import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import bpmnStructure.PrintMessages.PrintMessageManager;
 import bpmnStructure.dataTypes.*;
+import bpmnStructure.exceptions.PromelaTypeSizeException;
 
 public class PromelaGenerator2 {
 
@@ -13,32 +14,78 @@ public class PromelaGenerator2 {
 		PromelaGenerator2.diagram = diagram;
 	}
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws PromelaTypeSizeException {
 
 		diagram = new BpmnDiagram();
 
+		/******* Define Types ***************/
+		//TODO: Figure out how to add these in any order and still 
+		//put them in promela in the right order for dependencies to work
+		PromelaTypeDef innertype = diagram.addTypeDef("innerType1");
+		innertype.addPromelaType("seller",new PositiveIntType( 24, 0));
+		PromelaTypeDef cwtype = diagram.addTypeDef("cwpType");
 		
+		int MAX_SELLERS = 280;
+		int MAX_BUYERS = 255;
+		int MAX_ITEM = 255;
+		int MAX_AMOUNT = 255;
+		int MAX_ITEMOWNER = 255;
+		int MAX_PAYMENTOWNER = 255;
 
+		cwtype.addPromelaType("seller",new PositiveIntType( MAX_SELLERS, 0));
+		cwtype.addPromelaType("buyer",new PositiveIntType( MAX_BUYERS, 0));
+		cwtype.addPromelaType("item",new PositiveIntType( MAX_ITEM, 0));
+		cwtype.addPromelaType("amount", new PositiveIntType(MAX_AMOUNT, 0));
+		cwtype.addPromelaType("itemOwner",new PositiveIntType( MAX_ITEMOWNER, 0));
+		cwtype.addPromelaType("paymentOwner",new PositiveIntType( MAX_PAYMENTOWNER, 0));
+
+	
+		cwtype.addPromelaType("v7",innertype,4);
+
+		/* how to add an array */
+		cwtype.addPromelaType("boolVal", new BoolType(true));
+
+		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
+		msgType.addPromelaType("msg",new MtypeType( new String[] { "order", "outOfStock", "shipped" }));
+		int MAX_ITEM2 = 255;
+		int MAX_COST = 255;
+		int MAX_BUYERS2 = 255;
+		msgType.addPromelaType("item",new PositiveIntType( MAX_ITEM2, 2),3);
+		msgType.addPromelaType("cost",new PositiveIntType( MAX_COST, 0));
+		msgType.addPromelaType("buyer",new PositiveIntType( MAX_BUYERS2, 0));
+
+		/******* Define Processes ***************/
 		BpmnProcess customer = diagram.addProcess("Customer");
 
-		customer = new BpmnProcess("Customer");
+	
 
 		customer.addStartEvent("StartOrder");
 		customer.addScriptTask("chooseItem",
 				"shoppingCart.msg = order select(shoppingCart.item : 0 .. MAX_ITEMS) select(shpppingCart.buyer : 0 .. MAX_BUYERS) select(shoppingCart.cost : 0 .. MAX_COST)");// TODO:Add
 																																												// parameter
-																																									// pass
-																																												// in
+		// pass
+		// in
 		// script itself
 		customer.addEndEvent("EndOrder");
 		customer.addMessageThrowEvent("SendOrder");
 		customer.addMessageCatchEvent("ReceiveStatus");
-		customer.addDataObject("shoppingCart", "shoppingCart", 5);
-
+		//customer.addDataObject("shoppingCart", "shoppingCart", 5);
+		customer.addDataObject("shoppingCart", cwtype, 5);
+		
 		customer.addSequenceFlow("StartOrder", "chooseItem");
 		customer.addSequenceFlow("chooseItem", "SendOrder");
 		customer.addSequenceFlow("SendOrder", "ReceiveStatus");
-		customer.addSequenceFlow("ReceiveStatus", "EndOrder");
+
+		BpmnProcess notificationsSubProcess = customer.addNormalSubProcess("NotificationSubProcess");
+		notificationsSubProcess.addStartEvent("StartNofications");
+		notificationsSubProcess.addParallelGateway("parallelGatewayNotifDiverging");
+		notificationsSubProcess.addTask("EmailUser");
+		notificationsSubProcess.addTask("EmailStore");
+		notificationsSubProcess.addParallelGateway("parallelGatewayNotifConverging");
+		notificationsSubProcess.addEndEvent("EndNotifications");
+
+		customer.addSequenceFlow("ReceiveStatus", "NotificationSubProcess");
+		customer.addSequenceFlow("NotificationSubProcess", "EndOrder");
 
 		BpmnProcess ss = diagram.addProcess("ShoppingSite");
 
@@ -46,7 +93,7 @@ public class PromelaGenerator2 {
 		ss.addExclusiveGateway("CheckInventoryDiverge");
 		ss.addExclusiveGateway("ChargeCreditCard");
 		ss.addScriptTask("OutOfStockMessage", "orderStatus.msg = outOfStock");
-		ss.addDataObject("orderStatus", "orderStatus", 5);
+		ss.addDataObject("orderStatus", msgType, 5);
 		ss.addExclusiveGateway("join1");
 		ss.addExclusiveGateway("join2");
 		ss.addScriptTask("cardDeniedMessage", "orderStatus.msg = cardDenied");
@@ -55,7 +102,7 @@ public class PromelaGenerator2 {
 		ss.addScriptTask("shipItem", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
 		ss.addMessageEndEvent("SendStatus");
 
-		ss.addDataStore("CWPArray", "CWPArray", 5);
+		diagram.addDataStore("val", cwtype, 4);
 
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
 		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "false /*outOfStock*/");
@@ -67,20 +114,19 @@ public class PromelaGenerator2 {
 		ss.addDefaultSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
 		ss.addSequenceFlow("prepareItemForShipping", "shipItem");
 		ss.addSequenceFlow("shipItem", "join1");
-		ss.addSequenceFlow("ChargeCreditCard", "cardDeniedMessage");
-		ss.addSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
+
 
 		// Add Message Flows last
 
-		
+		diagram.addMessageFlow("MessageFlow1", customer, "SendOrder", ss, "ReceiveOrder", msgType);
+
+		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
+
 		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
-	
-		
+
 		System.out.println(pg.generatePromela());
 		PrintMessageManager.getInstance().generateAwkScript();
-		
-		
-		
+
 	}
 
 	public String generate_xor_fork(String inseq, String message, String expr1, String outseq1, String message2,
@@ -139,9 +185,18 @@ public class PromelaGenerator2 {
 	public String generatePromela() {
 		PrintMessageManager pm = PrintMessageManager.getInstance();
 
-		String s = "";
-		s += "#include \"BPMN.pml\"\n";
 
+		String typeDefs = diagram.typeManager.generateTypeDefString() + "\n";
+		String constantDefinitions =  PromelaConstants.generateConstantString() + "\n";
+		
+		String s = "";
+		s += "#include \"BPMN.pml\"\n\n";
+		s += "/*definitions*/\n";
+	
+		s += constantDefinitions;
+		s += typeDefs;
+		
+		s += diagram.getProcTypes();
 		// typdefs
 
 		// global variables (Data Stores) - needs bound
@@ -211,9 +266,9 @@ public class PromelaGenerator2 {
 	/* all start events live in the init */
 	public String generate_init(String main_process, int number_of_tokens) {
 		String s = "init {\n";
-		s += "mytpe msg\n";
-		s += "byte token_id = 0\n";
-		s += "\n";
+	
+		s += this.getGlobalVariables();
+		
 		s += "atomic {\n";
 
 		for (int i = 0; i < number_of_tokens; i++) {
@@ -221,7 +276,7 @@ public class PromelaGenerator2 {
 		}
 		s += "\n";
 		for (int i = 0; i < number_of_tokens; i++) {
-			s += "run main(end" + i + "," + i + ")\n";
+			s += "run main(end" + i + "," + i + ");\n";
 		}
 		s += "\n";
 		s += "do\n";
@@ -236,6 +291,11 @@ public class PromelaGenerator2 {
 		s += "}\n";
 		return s;
 
+	}
+
+	private String getGlobalVariables() {
+		
+		return diagram.getGlobalVariables();
 	}
 
 }
