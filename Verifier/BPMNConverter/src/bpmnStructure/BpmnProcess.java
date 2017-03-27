@@ -6,12 +6,17 @@ import java.util.TreeMap;
 
 import bpmnStructure.activities.ScriptTask;
 import bpmnStructure.activities.Task;
+import bpmnStructure.dataTypes.PromelaType;
+import bpmnStructure.dataTypes.PromelaTypeDef;
+
+import bpmnStructure.dataTypes.TypeDeclaration;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
 import bpmnStructure.events.IntermediateEvent;
 import bpmnStructure.events.MessageEndEvent;
 import bpmnStructure.events.MessageStartEvent;
 import bpmnStructure.events.StartEvent;
+import bpmnStructure.exceptions.PromelaTypeSizeException;
 import bpmnStructure.gateways.ExclusiveGateway;
 import bpmnStructure.gateways.ParallelGateway;
 import bpmnStructure.messages.MessageCatchEvent;
@@ -28,8 +33,11 @@ public class BpmnProcess extends FlowElement {
 	// TODO: Add method to export structure to BPMN xml format
 
 	private TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
+	private ArrayList<TypeDeclaration> processVariables = new ArrayList<TypeDeclaration>();
+
 	// TODO: Somehow guarantee the uniqueness of the initial element
-	// InitialElement firstElement = new InitialElement("InitialElement");
+	// InitialElement firstElement = new
+	// TypeSizePairInitialElement("InitialElement");
 	private StartEvent start = null;
 
 	public BpmnProcess(String id) {
@@ -56,17 +64,17 @@ public class BpmnProcess extends FlowElement {
 	// TODO: Consider how to handler errors if one of the elements does not
 	// exist
 	public void addSequenceFlow(String idFrom, String idTo) {
-		this.addSequenceFlow(idFrom,idTo,"");
+		this.addSequenceFlow(idFrom, idTo, "");
 	}
-	
-	public void addDefaultSequenceFlow(String idFrom, String idTo){
-		this.addSequenceFlow(idFrom,idTo,"true");
+
+	public void addDefaultSequenceFlow(String idFrom, String idTo) {
+		this.addSequenceFlow(idFrom, idTo, "true");
 	}
-	
-	public void addSequenceFlow (String idFrom, String idTo, String expression){
+
+	public void addSequenceFlow(String idFrom, String idTo, String expression) {
 		FlowElement f1 = elements.get(idFrom);
 		FlowElement f2 = elements.get(idTo);
-		f1.addSequenceFlow(f2,expression);
+		f1.addSequenceFlow(f2, expression);
 	}
 
 	public BpmnProcess addNormalSubProcess(String id) {
@@ -82,7 +90,7 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, getStart());
 
 	}
-	
+
 	public void addStartEvent(String id, String promela) {
 
 		setStart(new BasicStartEvent(id));
@@ -91,21 +99,21 @@ public class BpmnProcess extends FlowElement {
 	}
 
 	public void addTask(String id) {
-		addFlowElement(id, new Task(id,""));
+		addFlowElement(id, new Task(id, ""));
 	}
-	
+
 	public void addTask(String id, String promela) {
-		addFlowElement(id, new Task(id,promela));
+		addFlowElement(id, new Task(id, promela));
 	}
 
 	public void addScriptTask(String id) {
-		addFlowElement(id, new ScriptTask(id,""));
+		addFlowElement(id, new ScriptTask(id, ""));
 	}
-	
+
 	public void addScriptTask(String id, String promela) {
 		addFlowElement(id, new ScriptTask(id, promela));
 	}
-	
+
 	public void addEndEvent(String id) {
 		addFlowElement(id, new BasicEndEvent(id));
 	}
@@ -113,7 +121,7 @@ public class BpmnProcess extends FlowElement {
 	public void addEndEvent(String id, String promela) {
 		addFlowElement(id, new BasicEndEvent(id));
 	}
-	
+
 	public void addExclusiveGateway(String id) {
 		addFlowElement(id, new ExclusiveGateway(id));
 	}
@@ -125,7 +133,7 @@ public class BpmnProcess extends FlowElement {
 	public void addIntermediateEvent(String id) {
 		addFlowElement(id, new IntermediateEvent(id));
 	}
-	
+
 	public void addIntermediateEvent(String id, String promela) {
 		addFlowElement(id, new IntermediateEvent(id));
 	}
@@ -134,7 +142,7 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, new MessageThrowEvent(id));
 
 	}
-	
+
 	public void addMessageThrowEvent(String id, String promela) {
 		addFlowElement(id, new MessageThrowEvent(id));
 
@@ -143,20 +151,20 @@ public class BpmnProcess extends FlowElement {
 	public void addMessageCatchEvent(String id) {
 		addFlowElement(id, new MessageCatchEvent(id));
 	}
-	
+
 	public void addMessageCatchEvent(String id, String promela) {
 		addFlowElement(id, new MessageCatchEvent(id));
 	}
 
-	public void addDataObject(String id,String varName, int capacity) {
+	public void addDataObject(String name, PromelaType pt, int capacity) throws PromelaTypeSizeException {
 		// TODO Auto-generated method stub
-
+		this.processVariables.add(new TypeDeclaration(name, pt, capacity));
 	}
 
 	public void addMessageStartEvent(String id) {
 		addFlowElement(id, new MessageStartEvent(id));
 	}
-	
+
 	public void addMessageStartEvent(String id, String promela) {
 		addFlowElement(id, new MessageStartEvent(id));
 	}
@@ -164,12 +172,12 @@ public class BpmnProcess extends FlowElement {
 	public void addMessageEndEvent(String id) {
 		addFlowElement(id, new MessageEndEvent(id));
 	}
-	
+
 	public void addMessageEndEvent(String id, String promela) {
 		addFlowElement(id, new MessageEndEvent(id));
 	}
-
-	public void addDataStore(String id,String name, int capacity) {
+	
+	public void addDataStore(String name, PromelaType pt, int capacity) {
 		// TODO Auto-generated method stub
 
 	}
@@ -252,6 +260,61 @@ public class BpmnProcess extends FlowElement {
 
 	public void setStart(StartEvent start) {
 		this.start = start;
+	}
+
+	public String generateProctype() {
+		String proctypeString = "proctype " + "process_" + this.getName() + "(" + "" + ")" + "{\n";
+
+		proctypeString += "byte ";
+		int step = 0;
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			step++;
+			proctypeString += "token_" + f.getName();
+			if (step < elements.entrySet().size()) {
+				proctypeString += ", ";
+			} else {
+				proctypeString += ";\n";
+			}
+
+		}
+
+		proctypeString += "/*process transition do loop*/\n";
+		// TODO: Possibly make sure there are more than zero transitions
+		proctypeString += "do\n";
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			proctypeString += "::" + "in_tokens(" + "token_" + f.getName() + ") -> " + "\n";
+			//TODO: RUN SCRIPT HERE
+			proctypeString += "   skip;"+"\n";
+			
+			for (SequenceFlow outFlow : f.sequenceFlowOut) {
+				FlowElement out = outFlow.getEnd();
+				proctypeString += "      out_tokens("+"token_" + out.getName()+")\n";
+						
+			}
+
+		}
+		proctypeString += "od\n";
+		proctypeString += "}\n";
+		return proctypeString;
+		// do
+		// :: in_tokens(start) -> /* Task */
+		// printf("Task\n")
+		// out_tokens(end)
+		// :: in_tokens(end) -> /* End Event */
+		// printf("End\n")
+		// break
+		// od
+		//
+		// /* Check completion: all tokens must be consumed */
+		// if
+		// :: (start == 0 && end == 0) ->
+		// report!normal
+		// :: else ->
+		// report!abnormal
+		// fi
+		// od
 	}
 
 }
