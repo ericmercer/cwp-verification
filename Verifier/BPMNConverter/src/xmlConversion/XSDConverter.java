@@ -14,10 +14,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import bpmnStructure.dataTypes.BoolType;
-import bpmnStructure.dataTypes.IntType;
 import bpmnStructure.dataTypes.MtypeType;
+import bpmnStructure.dataTypes.PositiveIntType;
+import bpmnStructure.dataTypes.PromelaArray;
+import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
-import bpmnStructure.dataTypes.PromelaVariable;
 
 public class XSDConverter {
 	
@@ -82,21 +83,21 @@ public class XSDConverter {
 		NodeList variables = type.getElementsByTagName(namespace + "element");
 		Element e = null;
 		String name = null;
-		PromelaVariable var = null;
+		PromelaType var = null;
 		for(int i = 0; i < variables.getLength(); i++) {
 			if(variables.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				e = (Element) variables.item(i);
 				name = e.getAttribute("name");
 				var = chooseVar(e, name);
 				if(var != null) {
-					tDef.addPromelaVariable(var);
+					tDef.addPromelaType(var);
 				}
 			}
 		}
 		return tDef;
 	}
 	
-	private PromelaVariable chooseVar(Element e, String name) {
+	private PromelaType chooseVar(Element e, String name) {
 		NodeList restricts = e.getElementsByTagName(namespace + "restriction");
 		Element restriction = null;
 		String base = null;
@@ -106,13 +107,21 @@ public class XSDConverter {
 			restriction = (Element) restricts.item(0);
 			base = restriction.getAttribute("base");
 		}
-		PromelaVariable var = null;
+		PromelaType var = null;
 		System.out.println("Starting to add var;\t" + base);
 		
 		String value = null;
 		NodeList temp = null;
 		switch(base) {
 		case "xsd:integer":
+			if(e.getAttribute(namespace + "maxOccurs") != null) {
+				System.out.print("array: " + name);
+				value = e.getAttribute(namespace + "maxOccurs");
+				System.out.print(", " + value);
+				System.out.println();
+				var = new PromelaArray(name, new PositiveIntType(name, Integer.parseInt(value)), Integer.parseInt(value));
+				break;
+			}
 			System.out.print("int: " + name);
 			if(restriction != null) {
 				temp = restriction.getElementsByTagName(namespace + "maxInclusive");
@@ -122,7 +131,7 @@ public class XSDConverter {
 				System.out.print(", " + value);
 			}
 			System.out.println();
-			var = new IntType(name, Integer.parseInt(value));
+			var = new PositiveIntType(name, Integer.parseInt(value));
 			break;
 		case "xsd:string":
 			temp = restriction.getElementsByTagName(namespace + "enumeration");
