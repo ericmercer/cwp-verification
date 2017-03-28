@@ -72,36 +72,43 @@ public class XSDConverter {
 			return null;
 		}
 		String tag = e.getTagName();
+		String name = e.getAttribute("name");
+		String type = e.getAttribute("type");
 		if (tag.equals(namespace + "element")) {
-			String name = e.getAttribute("name");
-			String type = e.getAttribute("type");
 			String maxOccurs = e.getAttribute("maxOccurs");
-			if (type != null) {
-				System.out.print(type + ": " + name);
-				if (maxOccurs != null) {
+			if (type != null && !type.isEmpty()) {
+				System.out.print(name + ": " + type);
+				if (maxOccurs != null && !maxOccurs.isEmpty()) {
 					System.out.print(", " + maxOccurs);
 				}
 				System.out.println();
 				return null;
 			}else {
-				NodeList nodes = e.getChildNodes();
-				for (int i = 0; i < nodes.getLength(); i++) {
-					if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						e = (Element) nodes.item(i);
-						recurseTypeMaker(diagram, e);
-					}
-				}
+				System.out.print(name + ": ");
 			}
-			
+			if(!maxOccurs.isEmpty()) {
+				System.out.print(maxOccurs + ", ");
+			}
 		}
 		else if (tag.equals("xsd:restriction")) {
-			String type = e.getAttribute("base");
+			type = e.getAttribute("base");
+			System.out.print(type);
 			NodeList nodes = null;
 			Element info = null;
+			String value = null;
 			switch(type) {
 			case "xsd:integer":
 				nodes = e.getChildNodes();
-				String value = null;
+				for (int i = 0; i < nodes.getLength(); i++) {
+					if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+						info = (Element) nodes.item(i);
+						value = info.getAttribute("value");
+					}
+				}
+				System.out.print(", " + value);
+				break;
+			case "xsd:int":
+				nodes = e.getChildNodes();
 				for (int i = 0; i < nodes.getLength(); i++) {
 					if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 						info = (Element) nodes.item(i);
@@ -117,9 +124,10 @@ public class XSDConverter {
 					if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 						info = (Element) nodes.item(i);
 						enums[i] = info.getAttribute("value");
+						System.out.print(", " + info.getAttribute("value"));
 					}
 				}
-				System.out.print(", " + enums);
+//				System.out.print(", " + enums);
 				break;
 			case "xsd:boolean":
 				nodes = e.getChildNodes();
@@ -131,11 +139,12 @@ public class XSDConverter {
 				}
 				break;
 			}
+			System.out.println();
 		}
-		else if (tag.equals(namespace + "complexType") && e.getAttribute("name") != null) {
+		else if (tag.equals(namespace + "complexType") && name != null && !name.isEmpty()) {
 			System.out.print(e.getAttribute("name") + ": ");
 		}
-		else if (tag.equals(namespace + "simpleType") && e.getAttribute("name") != null) {
+		else if (tag.equals(namespace + "simpleType") && name != null && !name.isEmpty()) {
 			System.out.print(e.getAttribute("name") + ": ");
 		}
 		
@@ -152,7 +161,7 @@ public class XSDConverter {
 	
 	public static void main(String[] args) {
 		XSDConverter converter = new XSDConverter();
-		converter.importXSD("diagrams/testSchema.xsd", null);
+		converter.importXSD("diagrams/purchaseCWP.xsd", null);
 	}
 
 }// ************************ THE END ************************

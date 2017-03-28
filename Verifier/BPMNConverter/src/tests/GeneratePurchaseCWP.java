@@ -2,10 +2,7 @@ package tests;
 
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
-<<<<<<< HEAD
-=======
 import bpmnStructure.dataTypes.BoolType;
->>>>>>> master
 import bpmnStructure.dataTypes.MtypeType;
 import bpmnStructure.dataTypes.PositiveIntType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
@@ -26,23 +23,6 @@ public class GeneratePurchaseCWP {
 		int MAX_ITEMOWNER = 255;
 		int MAX_PAYMENTOWNER = 255;
 		
-<<<<<<< HEAD
-		cwtype.addPromelaType(new PositiveIntType("seller",MAX_SELLERS));
-		cwtype.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS));
-		cwtype.addPromelaType(new PositiveIntType("item",MAX_ITEM));
-		cwtype.addPromelaType(new PositiveIntType("amount",MAX_AMOUNT));
-		cwtype.addPromelaType(new PositiveIntType("itemOwner",MAX_ITEMOWNER));
-		cwtype.addPromelaType(new PositiveIntType("paymentOwner",MAX_PAYMENTOWNER));
-
-		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
-		msgType.addPromelaType(new MtypeType("msg", new String[] { "order", "outOfStock", "shipped" }));
-		int MAX_ITEM2 = 255;
-		int MAX_COST = 255;
-		int MAX_BUYERS2 = 255;
-		msgType.addPromelaType(new PositiveIntType("item",MAX_ITEM2));
-		msgType.addPromelaType(new PositiveIntType("cost",MAX_COST));
-		msgType.addPromelaType(new PositiveIntType("buyer",MAX_BUYERS2));
-=======
 		cwtype.addPromelaType("seller",new PositiveIntType(MAX_SELLERS,0));
 		cwtype.addPromelaType("buyer",new PositiveIntType(MAX_BUYERS,0));
 		cwtype.addPromelaType("item",new PositiveIntType(MAX_ITEM,0));
@@ -61,7 +41,6 @@ public class GeneratePurchaseCWP {
 		msgType.addPromelaType("item",new PositiveIntType(MAX_ITEM2,0));
 		msgType.addPromelaType("cost",new PositiveIntType(MAX_COST,0));
 		msgType.addPromelaType("buyer",new PositiveIntType(MAX_BUYERS2,0));
->>>>>>> master
 
 		/*******Define Processes***************/
 		BpmnProcess customer = diagram.addProcess("Customer");
@@ -112,7 +91,7 @@ public class GeneratePurchaseCWP {
 		ss.addScriptTask("shipItem", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
 		ss.addMessageEndEvent("SendStatus");
 
-		ss.addDataStore("CWPArray", "CWPArray", 5);
+//		ss.addDataStore("CWPArray", "CWPArray", 5);
 
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
 		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "false /*outOfStock*/");

@@ -187,7 +187,7 @@ public class XMLConverterTest {
 		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/online_purchase.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
-		expected.addDataStore("DataStore_2", "CWPArray", 5);
+//		expected.addDataStore("DataStore_2", "CWPArray", 5);
 		
 		BpmnProcess first = expected.addProcess("Process_1");
 		
@@ -203,7 +203,7 @@ public class XMLConverterTest {
 		first.addMessageCatchEvent("IntermediateCatchEvent_2");
 		first.addSequenceFlow("IntermediateThrowEvent_1", "IntermediateCatchEvent_2");
 		first.addEndEvent("EndEvent_7");
-		first.addDataObject("DataObject_2", "shoppingCart", 1);
+//		first.addDataObject("DataObject_2", "shoppingCart", 1);
 		
 		BpmnProcess sub = first.addNormalSubProcess("SubProcess_1");
 		sub.addStartEvent("StartEvent_3");
@@ -238,7 +238,7 @@ public class XMLConverterTest {
 		
 		sec.addSequenceFlow("StartEvent_2", "ExclusiveGateway_1");
 		sec.addSequenceFlow("ExclusiveGateway_2", "UserTask_4");
-		sec.addDataObject("DataObject_6", "orderStatus", 1);
+//		sec.addDataObject("DataObject_6", "orderStatus", 1);
 		sec.addExclusiveGateway("ExclusiveGateway_5");
 		sec.addSequenceFlow("UserTask_5", "ExclusiveGateway_5");
 		sec.addSequenceFlow("ScriptTask_3", "ExclusiveGateway_5");

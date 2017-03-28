@@ -65,8 +65,4 @@ public class PromelaTypeDef extends PromelaType {
 		return output;
 	}
 
-	public void addPromelaTypeArray(String arrayName, PromelaType type, int size) {
-		vars.add(new PromelaArray(arrayName, type, size));
-	}
-
 }

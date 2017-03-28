@@ -372,9 +372,9 @@ public class XMLConverter {
 			code = getCode("<CAPACITY>", "</CAPACITY>", doc);
 		}
 		if(code == null) {
-			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), 1 );
+//			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), 1 );
 		}else {
-			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), Integer.parseInt(code) );
+//			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), Integer.parseInt(code) );
 		}
 		
 	}
@@ -383,7 +383,7 @@ public class XMLConverter {
 		writer.println( "dataStore:\t" + data.getAttribute( "name" ) );
 		String id = data.getAttribute("id"), name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
-		diagram.addDataStore( id, name, capacity );
+//		diagram.addDataStore( id, name, capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess process) {
