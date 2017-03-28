@@ -23,7 +23,6 @@ public class PositiveIntType extends PromelaType {
 	}
 
 	public PositiveIntType(int maxSize, int defaultValue, int capacity) throws PromelaTypeSizeException {
-		// super(name);
 		this.maxSize = maxSize;
 		this.defaultValue = defaultValue;
 		// add one to the number because it needs to include the number

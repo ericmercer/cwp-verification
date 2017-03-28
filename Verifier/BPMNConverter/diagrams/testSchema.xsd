@@ -20,6 +20,7 @@
     					</xsd:restriction>
     				</xsd:simpleType>
     			</xsd:element>
+    			<xsd:element name="otherInt" type="xsd:int"></xsd:element>
     		</xsd:sequence>
     	</xsd:complexType>
     </xsd:element>
@@ -38,6 +39,73 @@
     </xsd:element>
 
     <xsd:element name="typeThree">
-    	<xsd:complexType></xsd:complexType>
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="basic" type="xsd:int"></xsd:element>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="Recurse">
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="Name" type="xsd:string"></xsd:element>
+    			<xsd:element name="Layer1">
+    				<xsd:complexType></xsd:complexType>
+    			</xsd:element>
+    			<xsd:element name="One" type="MyComplex"></xsd:element>
+    			<xsd:element name="Two" type="MyComplex"></xsd:element>
+    			<xsd:element name="WorldElement" type="WorldType"></xsd:element>
+    		</xsd:sequence>
+    	</xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="MyComplex">
+    	<xsd:sequence>
+    		<xsd:element name="Name" type="xsd:string"></xsd:element>
+    		<xsd:element name="Number">
+    			<xsd:simpleType>
+    				<xsd:restriction base="xsd:int">
+    					<xsd:maxInclusive value="9"></xsd:maxInclusive>
+    				</xsd:restriction>
+    			</xsd:simpleType>
+    		</xsd:element>
+    		<xsd:element name="Info" type="xsd:string"></xsd:element>
+    		<xsd:element name="Complex" type="ComplexType"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="MySimple">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="Bob"></xsd:enumeration>
+    		<xsd:enumeration value="Billy"></xsd:enumeration>
+    		<xsd:enumeration value="Bracken"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:complexType name="ComplexType">
+    	<xsd:sequence>
+    		<xsd:element name="Hello">
+    			<xsd:complexType></xsd:complexType>
+    		</xsd:element>
+    		<xsd:element name="World" type="WorldType"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="WorldType">
+    	<xsd:sequence>
+    		<xsd:element name="Nice" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="OtherType" type="MyComplex"></xsd:element>
+
+    <xsd:element name="Another">
+    	<xsd:complexType>
+    		<xsd:sequence>
+    			<xsd:element name="Another" type="xsd:string"></xsd:element>
+    		</xsd:sequence>
+    	</xsd:complexType>
     </xsd:element>
 </xsd:schema>
