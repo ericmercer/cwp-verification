@@ -22,6 +22,8 @@ import org.xml.sax.SAXException;
 
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
+import bpmnStructure.dataTypes.PromelaType;
+import bpmnStructure.exceptions.PromelaTypeSizeException;
 
 public class XMLConverter {
 	
@@ -32,6 +34,7 @@ public class XMLConverter {
 	private HashMap<String, String> definitions;
 	private HashMap<String, String> messageDefs;
 	private HashMap<String, BpmnProcess> messageEvents;
+	private HashMap<String, PromelaType> types;
 	
 	public BpmnDiagram importXML( String fileName ) {
 		
@@ -88,6 +91,17 @@ public class XMLConverter {
         Element e = null;
         BpmnDiagram diagram = new BpmnDiagram();
         definitions = new HashMap<>();
+        
+        list = document.getElementsByTagName(namespace + "import");
+		for(int i = 0; i < list.getLength(); i++) {
+			if(list.item(i) != null && list.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				e = (Element) list.item(i);
+				String location = "diagrams/" +  e.getAttribute("location");
+				XSDConverter xsd = new XSDConverter();
+				types = xsd.importXSD(location, diagram);
+			}
+		}
+        
         list = document.getElementsByTagName(namespace + "itemDefinition");
 		for(int i = 0; i < list.getLength(); i++) {
 			if(list.item(i) != null) {
@@ -113,7 +127,12 @@ public class XMLConverter {
 		for(int i = 0; i < list.getLength(); i++) {
 			if(list.item(i) != null) {
 				e = (Element) list.item(i);
-				initDataStore(e, diagram);
+				try {
+					initDataStore(e, diagram);
+				} catch (PromelaTypeSizeException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 		
@@ -189,7 +208,12 @@ public class XMLConverter {
 					flowSequences.add(child);
 				}
 				else if(tag.equals(namespace + "dataObject")) {
-					initDataObject(child, diagram);
+					try {
+						initDataObject(child, diagram);
+					} catch (NumberFormatException | PromelaTypeSizeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -363,7 +387,7 @@ public class XMLConverter {
 		process.addParallelGateway( parellelGate.getAttribute("id") );
 	}
 	
-	private void initDataObject(Element data, BpmnProcess process) {
+	private void initDataObject(Element data, BpmnProcess process) throws NumberFormatException, PromelaTypeSizeException {
 		writer.println( "dataObject:\t" + data.getAttribute( "name" ) );
 		NodeList list = data.getElementsByTagName(namespace + "documentation");
 		String code = null;
@@ -371,19 +395,20 @@ public class XMLConverter {
 			Element doc = (Element) list.item(0);
 			code = getCode("<CAPACITY>", "</CAPACITY>", doc);
 		}
+		String name = data.getAttribute("name");
 		if(code == null) {
-//			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), 1 );
+			process.addDataObject( data.getAttribute("id"), types.get(name), 1 );
 		}else {
-//			process.addDataObject( data.getAttribute("id"), data.getAttribute("name"), Integer.parseInt(code) );
+			process.addDataObject( data.getAttribute("id"), types.get(name), Integer.parseInt(code) );
 		}
 		
 	}
 	
-	private void initDataStore(Element data, BpmnDiagram diagram) {
+	private void initDataStore(Element data, BpmnDiagram diagram) throws PromelaTypeSizeException {
 		writer.println( "dataStore:\t" + data.getAttribute( "name" ) );
 		String id = data.getAttribute("id"), name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
-//		diagram.addDataStore( id, name, capacity );
+		diagram.addDataStore( id, types.get(name), capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess process) {

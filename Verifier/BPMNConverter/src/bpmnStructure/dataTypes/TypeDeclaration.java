@@ -50,4 +50,10 @@ public class TypeDeclaration {
 		return this.type.generateDefinitionString(false);
 	}
 
+	public String toString() {
+		StringBuilder output = new StringBuilder();
+		output.append(varName + ", " + type);
+		return output.toString();
+	}
+	
 }

@@ -32,7 +32,13 @@ public class PromelaTypeDef extends PromelaType {
 	}
 
 	public String toString() {
-		return null;
+		StringBuilder output = new StringBuilder();
+		output.append(typeName + "\n{");
+		for (int i = 0; i < vars.size(); i++) {
+			output.append("\t" + vars.get(i) + "\n");
+		}
+		output.append("}");
+		return output.toString();
 	}
 
 	public String generateTypeString() {

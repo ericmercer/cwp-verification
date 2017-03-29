@@ -2,7 +2,7 @@ package xmlConversion;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,8 +25,9 @@ import bpmnStructure.exceptions.PromelaTypeSizeException;
 public class XSDConverter {
 	
 	private String namespace;
+	private HashMap<String, PromelaType> types;
 	
-	public void importXSD(String fileName, BpmnDiagram diagram) {
+	public HashMap<String, PromelaType> importXSD(String fileName, BpmnDiagram diagram) {
 		
 		File inputFile = new File( fileName );
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -45,7 +46,7 @@ public class XSDConverter {
 			
 			NodeList baseNodes = document.getChildNodes();
 			Element e = null;
-			
+			types = new HashMap<>();
 			if (baseNodes.item(0).getNodeType() == Node.ELEMENT_NODE) {
 				e = (Element) baseNodes.item(0);
 //				baseNodes = e.getChildNodes();
@@ -68,19 +69,22 @@ public class XSDConverter {
 			e.printStackTrace();
 		}
 
-		return;
+		return types;
 	}
 	
 	private PromelaType schema(Element e, BpmnDiagram diagram) throws NumberFormatException, PromelaTypeSizeException {
-		if (!e.getTagName().equals("xsd:schema")) {
+		if (!e.getTagName().equals(namespace + "schema")) {
 			return null;
 		}
 		NodeList nodes = e.getChildNodes();
 		for (int i = 0; i < nodes.getLength(); i++) {
 			if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				e = (Element) nodes.item(i);
-				System.out.println(e.getTagName() + ", " + e.getAttribute("name"));
-				element(e, diagram.addTypeDef(e.getAttribute("name")));
+//				System.out.println(e.getTagName() + ", " + e.getAttribute("name"));
+				String name = e.getAttribute("name");
+				PromelaTypeDef temp = diagram.addTypeDef(name);
+				temp = (PromelaTypeDef) element(e, temp);
+				types.put(name, temp);
 			}
 		}
 		
@@ -104,7 +108,7 @@ public class XSDConverter {
 					def = simpleType(temp);
 					if (def != null) {
 						typeDef.addPromelaType(e.getAttribute("name"), def);
-						System.out.println();
+						System.out.println("\t" + def);
 					}
 					complexType(temp, typeDef);
 				}
@@ -233,7 +237,9 @@ public class XSDConverter {
 	public static void main(String[] args) {
 		XSDConverter converter = new XSDConverter();
 		BpmnDiagram diagram = new BpmnDiagram();
-		converter.importXSD("diagrams/testSchema.xsd", diagram);
+		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP.xsd", diagram);
+		System.out.println("**********************************");
+		System.out.println( map );
 	}
 
 }// ************************ THE END ************************
