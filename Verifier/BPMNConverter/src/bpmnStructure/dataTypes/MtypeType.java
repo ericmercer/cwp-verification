@@ -35,5 +35,9 @@ public class MtypeType extends PromelaType {
 	public String getDefaultValue(){
 		return !defaultValue.equals("")?defaultValue:"0";
 	}
+	
+	public String toString() {
+		return "MtypeType: " + Mtypes.mtypesToString();
+	}
 
 }

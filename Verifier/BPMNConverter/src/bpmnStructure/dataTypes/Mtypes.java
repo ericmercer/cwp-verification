@@ -18,5 +18,13 @@ public class Mtypes {
 			mtypes.add(m);
 		}
 	}
+	
+	public static String mtypesToString() {
+		StringBuilder output = new StringBuilder();
+		for (String m : mtypes) {
+			output.append("\n\t\t" + m);
+		}
+		return output.toString();
+	}
 
 }

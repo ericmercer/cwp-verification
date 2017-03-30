@@ -50,9 +50,6 @@
     	<xsd:complexType>
     		<xsd:sequence>
     			<xsd:element name="Name" type="xsd:string"></xsd:element>
-    			<xsd:element name="Layer1">
-    				<xsd:complexType></xsd:complexType>
-    			</xsd:element>
     			<xsd:element name="One" type="MyComplex"></xsd:element>
     			<xsd:element name="Two" type="MyComplex"></xsd:element>
     			<xsd:element name="WorldElement" type="WorldType"></xsd:element>

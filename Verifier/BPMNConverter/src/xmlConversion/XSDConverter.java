@@ -80,11 +80,26 @@ public class XSDConverter {
 		for (int i = 0; i < nodes.getLength(); i++) {
 			if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				e = (Element) nodes.item(i);
-//				System.out.println(e.getTagName() + ", " + e.getAttribute("name"));
-				String name = e.getAttribute("name");
-				PromelaTypeDef temp = diagram.addTypeDef(name);
-				temp = (PromelaTypeDef) element(e, temp);
-				types.put(name, temp);
+				if (e.getTagName().equals("xsd:element")) {
+					String name = e.getAttribute("name");
+					PromelaTypeDef temp = diagram.addTypeDef(name);
+					temp = (PromelaTypeDef) element(e, temp);
+					types.put(name, temp);
+				}else if (e.getTagName().equals("xsd:complexType")) {
+					String name = e.getAttribute("name");
+					System.out.println(name + ": ");
+					PromelaTypeDef temp = diagram.addTypeDef(name);
+					temp = (PromelaTypeDef) complexType(e, temp);
+					types.put(name, temp);
+				}else if (e.getTagName().equals("xsd:simpleType")) {
+					String name = e.getAttribute("name");
+					System.out.println(name + ": ");
+					PromelaTypeDef temp = diagram.addTypeDef(name);
+					PromelaType type = simpleType(e);
+					System.out.println();
+					temp.addPromelaType(type);
+					types.put(name, temp);
+				}
 			}
 		}
 		
@@ -108,7 +123,8 @@ public class XSDConverter {
 					def = simpleType(temp);
 					if (def != null) {
 						typeDef.addPromelaType(e.getAttribute("name"), def);
-						System.out.println("\t" + def);
+						System.out.println();
+//						System.out.println("\t" + def);
 					}
 					complexType(temp, typeDef);
 				}
@@ -237,7 +253,7 @@ public class XSDConverter {
 	public static void main(String[] args) {
 		XSDConverter converter = new XSDConverter();
 		BpmnDiagram diagram = new BpmnDiagram();
-		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP.xsd", diagram);
+		HashMap<String, PromelaType> map = converter.importXSD("diagrams/testSchema.xsd", diagram);
 		System.out.println("**********************************");
 		System.out.println( map );
 	}
