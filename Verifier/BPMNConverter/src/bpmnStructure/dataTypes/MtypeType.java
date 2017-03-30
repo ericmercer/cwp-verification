@@ -37,7 +37,7 @@ public class MtypeType extends PromelaType {
 	}
 	
 	public String toString() {
-		return "MtypeType: " + Mtypes.mtypesToString();
+		return "MtypeType: " + Mtypes.mtypesToString() + "\n";
 	}
 
 }

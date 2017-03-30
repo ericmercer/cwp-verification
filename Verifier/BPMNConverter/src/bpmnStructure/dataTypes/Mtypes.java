@@ -22,7 +22,7 @@ public class Mtypes {
 	public static String mtypesToString() {
 		StringBuilder output = new StringBuilder();
 		for (String m : mtypes) {
-			output.append("\n\t\t" + m);
+			output.append("\t" + m);
 		}
 		return output.toString();
 	}
