@@ -2,7 +2,6 @@ package xmlConversion;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,15 +27,13 @@ public class XSDConverter {
 	private String namespace;
 	private HashMap<String, PromelaType> types;
 	private HashMap<String, Boolean> declared;
-	private ArrayList<String> globalVars;
-	private ArrayList<String> globalVarTypes;
+	private HashMap<String, String> variables;
 	private BpmnDiagram diagram;
 	
 	public XSDConverter() {
 		types = new HashMap<>();
 		declared = new HashMap<>();
-		globalVars = new ArrayList<>();
-		globalVarTypes = new ArrayList<>();
+		variables = new HashMap<>();
 	}
 	
 	public HashMap<String, PromelaType> importXSD(String fileName, BpmnDiagram diagram) {
@@ -65,8 +62,8 @@ public class XSDConverter {
 				addTypes(e);
 			}
 			
-			for (int i = 0; i < globalVarTypes.size(); i++) {
-				if (!types.containsKey(globalVarTypes.get(i))) {
+			for (String key : variables.keySet()) {
+				if ( !types.containsKey(variables.get(key)) ) {
 					System.out.println("The gobal variable type did not exist!!!");
 					throw new Exception();
 				}
@@ -105,13 +102,12 @@ public class XSDConverter {
 				name = tag.getAttribute("name");
 				
 				if (tag.getTagName().equals("xsd:element")) {
-					globalVars.add(name);
 					String typeName = tag.getAttribute("type");
 					if (typeName.contains(":")) {
 						typeName = typeName.substring(typeName.indexOf(":") + 1);
 //						System.out.println("globalVarType: " + typeName);
 					}
-					globalVarTypes.add(typeName);
+					variables.put(name, typeName);
 					
 				}else if (!types.containsKey(name)) {
 					def = diagram.addTypeDef(name);
@@ -299,16 +295,20 @@ public class XSDConverter {
 		return e.getAttribute("value");
 	}
 	
+	public HashMap<String, String> getVariables() {
+		return variables;
+	}
+	
 	public static void main(String[] args) {
 		XSDConverter converter = new XSDConverter();
 		BpmnDiagram diagram = new BpmnDiagram();
 		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP3.xsd", diagram);
 		System.out.println("**********************************");
-		System.out.println("Map:\n{");
+		System.out.println("Map:");
 		for (String key : map.keySet()) {
-			System.out.println( "\t" + map.get(key) );
+			System.out.println( map.get(key).generateDefinitionString(true) );
 		}
-		System.out.println("}");
+		System.out.println();
 	}
 
 }// ************************ THE END ************************

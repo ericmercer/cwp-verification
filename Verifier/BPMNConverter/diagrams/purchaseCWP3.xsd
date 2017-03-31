@@ -114,4 +114,7 @@
     		<xsd:element name="simple" type="Q1:mySimple"></xsd:element>
     	</xsd:sequence>
     </xsd:complexType>
+
+
+    <xsd:element name="CWPArray" type="Q1:cwpType"></xsd:element>
 </xsd:schema>

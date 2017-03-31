@@ -63,7 +63,7 @@ public class PromelaTypeDef extends PromelaType {
 				output += pt.generateDeclaration() + ";\n";
 
 			}
-			output += "}";
+			output += "};";
 		} else {
 			output = this.generateTypeString();
 		}

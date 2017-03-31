@@ -105,4 +105,6 @@
     		<xsd:enumeration value="goodbye"></xsd:enumeration>
     	</xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:element name="CWPArray" type="Q1:cwpType"></xsd:element>
 </xsd:schema>

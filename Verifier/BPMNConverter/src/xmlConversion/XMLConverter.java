@@ -35,6 +35,10 @@ public class XMLConverter {
 	private HashMap<String, String> messageDefs;
 	private HashMap<String, BpmnProcess> messageEvents;
 	private HashMap<String, PromelaType> types;
+	private HashMap<String, String> dataObjects;
+	
+	public XMLConverter() {
+	}
 	
 	public BpmnDiagram importXML( String fileName ) {
 		
@@ -96,9 +100,10 @@ public class XMLConverter {
 		for(int i = 0; i < list.getLength(); i++) {
 			if(list.item(i) != null && list.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				e = (Element) list.item(i);
-				String location = "diagrams/" +  e.getAttribute("location");
+//				String location = "diagrams/" +  e.getAttribute("location");
 				XSDConverter xsd = new XSDConverter();
-				types = xsd.importXSD(location, diagram);
+				dataObjects = xsd.getVariables();
+				types = xsd.importXSD("diagrams/purchaseCWP2.xsd", diagram);
 			}
 		}
         
@@ -132,6 +137,9 @@ public class XMLConverter {
 				} catch (PromelaTypeSizeException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (InvalidDataTypeException e2) {
+					System.err.println("The data store found in the bpmn diagram did not match any data elements in the corresponding xsd");
+					e2.printStackTrace();
 				}
 			}
 		}
@@ -212,6 +220,9 @@ public class XMLConverter {
 						initDataObject(child, diagram);
 					} catch (NumberFormatException | PromelaTypeSizeException e) {
 						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvalidDataTypeException e) {
+						System.err.println("The data object found in the bpmn diagram did not match any data elements in the corresponding xsd");
 						e.printStackTrace();
 					}
 				}
@@ -387,7 +398,7 @@ public class XMLConverter {
 		process.addParallelGateway( parellelGate.getAttribute("id") );
 	}
 	
-	private void initDataObject(Element data, BpmnProcess process) throws NumberFormatException, PromelaTypeSizeException {
+	private void initDataObject(Element data, BpmnProcess process) throws NumberFormatException, PromelaTypeSizeException, InvalidDataTypeException {
 		writer.println( "dataObject:\t" + data.getAttribute( "name" ) );
 		NodeList list = data.getElementsByTagName(namespace + "documentation");
 		String code = null;
@@ -396,6 +407,9 @@ public class XMLConverter {
 			code = getCode("<CAPACITY>", "</CAPACITY>", doc);
 		}
 		String name = data.getAttribute("name");
+		if (!dataObjects.containsKey(name)) {
+			throw new InvalidDataTypeException();
+		}
 		if(code == null) {
 			process.addDataObject( data.getAttribute("id"), types.get(name), 1 );
 		}else {
@@ -404,11 +418,19 @@ public class XMLConverter {
 		
 	}
 	
-	private void initDataStore(Element data, BpmnDiagram diagram) throws PromelaTypeSizeException {
-		writer.println( "dataStore:\t" + data.getAttribute( "name" ) );
+	private void initDataStore(Element data, BpmnDiagram diagram) throws PromelaTypeSizeException, InvalidDataTypeException {
+		writer.print( "dataStore:\t" + data.getAttribute( "name" ) );
 		String id = data.getAttribute("id"), name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
-		diagram.addDataStore( id, types.get(name), capacity );
+		if (!dataObjects.containsKey(name)) {
+			for (String key : dataObjects.keySet()) {
+				System.out.print(key + "\t");
+			}
+			System.out.println("\n" + name);
+			throw new InvalidDataTypeException();
+		}
+		writer.println("\ttype: " + types.get(dataObjects.get(name)));
+		diagram.addDataStore( id, types.get(dataObjects.get(name)), capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess process) {
@@ -494,35 +516,35 @@ public class XMLConverter {
 		return code.toString();
 	}
 	
+	public HashMap<String, PromelaType> getTypes() {
+		return types;
+	}
+	
 	@SuppressWarnings("serial")
 	public class WrongTypeException extends Exception {
 	}
 	
+	@SuppressWarnings("serial")
+	public class InvalidDataTypeException extends Exception {
+	}
 	
-//	end of class
-}
-
-//private void addOutputAssociation(ArrayList<Element> associations, BpmnProcess diagram) {
-//	
-//}
-//
-//private void initAssociations(ArrayList<Element> associations, BpmnProcess diagram) {
-//	if(associations.isEmpty()) {
-//    	return;
-//    }
-//    
-//    Element current = null;
-//    Iterator<Element> iter = associations.iterator();
-//    while(iter.hasNext()) {
-//    	current = iter.next();
-//    	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
-//		writer.println( "sourceRef: " + source + " targetRef: " + target );
-//		diagram.addSequenceFlow( source, target );
-//    }
-//    
-//    return;
-//}
-
+	public static void main(String[] args) {
+		XSDConverter converter = new XSDConverter();
+		BpmnDiagram diagram = new BpmnDiagram();
+		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP3.xsd", diagram);
+		System.out.println("**********************************");
+		System.out.println("Map:");
+		for (String key : map.keySet()) {
+			System.out.println( map.get(key).generateDefinitionString(true) );
+		}
+		System.out.println();
+		for (String key : map.keySet()) {
+			System.out.println( map.get(key).generateDefinitionString(true) );
+		}
+		System.out.println();
+	}
+	
+} //	end of class
 
 
 

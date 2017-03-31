@@ -5,8 +5,12 @@
   <bpmn2:itemDefinition id="ItemDefinition_48" isCollection="false" structureRef="ns1.xsd:order"/>
   <bpmn2:itemDefinition id="ItemDefinition_49" isCollection="false" structureRef="ns1.xsd:orderStatus"/>
   <bpmn2:itemDefinition id="ItemDefinition_50" isCollection="false" structureRef="ns1.xsd:shoppingCart"/>
+  <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="ns1.xsd:CWPArray"/>
+  <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="ns1.xsd:order"/>
+  <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="ns1.xsd:orderStatus"/>
+  <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="ns1.xsd:shoppingCart"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_49" name="order"/>
-  <bpmn2:dataStore id="DataStore_2" capacity="5" isUnlimited="false" name="CWPArray"/>
+  <bpmn2:dataStore id="DataStore_2" itemSubjectRef="ItemDefinition_1" capacity="5" isUnlimited="false" name="CWPArray"/>
   <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
     <bpmn2:participant id="Participant_1" name="Customer" processRef="Process_1"/>
     <bpmn2:participant id="Participant_2" name="Shopping Site" processRef="Process_2"/>
