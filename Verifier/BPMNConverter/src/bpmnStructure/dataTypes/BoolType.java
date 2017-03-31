@@ -46,9 +46,5 @@ public class BoolType extends PromelaType {
 	public String getDefaultValue() {
 		return this.defaultValue ? "true" : "false";
 	}
-	
-	public String toString() {
-		return "BoolType";
-	}
 
 }

@@ -116,13 +116,13 @@ public class XSDConverter {
 					declared.put(name, true);
 					
 					if (tag.getTagName().equals("xsd:complexType")) {
-						System.out.println("complexType: " + name + ": ");
+//						System.out.println("complexType: " + name + ": ");
 						sequence((Element) tag.getChildNodes().item(1), def);
 						
 					}else if (tag.getTagName().equals("xsd:simpleType")) {
-						System.out.println("simpleType: " + name + ": ");
+//						System.out.println("simpleType: " + name + ": ");
 						PromelaType type = simpleType(tag);
-						System.out.println();
+//						System.out.println();
 						def.addPromelaType(type);
 					}
 					
@@ -131,13 +131,13 @@ public class XSDConverter {
 						declared.put(name, true);
 						
 						if (tag.getTagName().equals("xsd:complexType")) {
-							System.out.println("complexType: " + name + ": ");
+//							System.out.println("complexType: " + name + ": ");
 							sequence((Element) tag.getChildNodes().item(1), def);
 							
 						}else if (tag.getTagName().equals("xsd:simpleType")) {
-							System.out.println("simpleType: " + name + ": ");
+//							System.out.println("simpleType: " + name + ": ");
 							PromelaType type = simpleType(tag);
-							System.out.println();
+//							System.out.println();
 							def.addPromelaType(type);
 						}
 						
@@ -155,12 +155,12 @@ public class XSDConverter {
 		PromelaType def = null;
 		NodeList nodes = e.getChildNodes();
 		Element temp = null;
-		System.out.print(e.getAttribute("name") + ": ");
+//		System.out.print(e.getAttribute("name") + ": ");
 		String t = e.getAttribute("type");
 		if (!t.isEmpty()) {
 			def = pickType(t, null);
 			typeDef.addPromelaType(e.getAttribute("name"), def);
-			System.out.println(t);
+//			System.out.println(t);
 		}else {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
@@ -168,7 +168,7 @@ public class XSDConverter {
 					def = simpleType(temp);
 					if (def != null) {
 						typeDef.addPromelaType(e.getAttribute("name"), def);
-						System.out.println();
+//						System.out.println();
 //						System.out.println("\t" + def);
 					}else {
 						System.err.println("It wasn't declared in the element type and it's not a simple!");
@@ -210,7 +210,7 @@ public class XSDConverter {
 			return null;
 		}
 		String type = e.getAttribute("base");
-		System.out.print(type);
+//		System.out.print(type);
 		return pickType(type, e);
 	}
 	
@@ -227,7 +227,7 @@ public class XSDConverter {
 				def = new PositiveIntType();
 			}else {
 				def = new PositiveIntType(Integer.parseInt(value));
-				System.out.print(", " + value);
+//				System.out.print(", " + value);
 			}
 			break;
 		case "xsd:int":
@@ -257,7 +257,7 @@ public class XSDConverter {
 				if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					value = enumeration((Element) nodes.item(i));
 					enums[index++] = value;
-					System.out.print(", " + value);
+//					System.out.print(", " + value);
 				}
 			}
 			def = new MtypeType(enums);
@@ -304,7 +304,7 @@ public class XSDConverter {
 		XSDConverter converter = new XSDConverter();
 		BpmnDiagram diagram = new BpmnDiagram();
 		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP3.xsd", diagram);
-		System.out.println("**********************************");
+//		System.out.println("**********************************");
 		System.out.println("Map:");
 		for (String key : map.keySet()) {
 			System.out.println( map.get(key).generateDefinitionString(true) );

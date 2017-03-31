@@ -532,16 +532,16 @@ public class XMLConverter {
 		XSDConverter converter = new XSDConverter();
 		BpmnDiagram diagram = new BpmnDiagram();
 		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP3.xsd", diagram);
+		HashMap<String, String> vars = converter.getVariables();
 		System.out.println("**********************************");
 		System.out.println("Map:");
 		for (String key : map.keySet()) {
 			System.out.println( map.get(key).generateDefinitionString(true) );
 		}
-		System.out.println();
-		for (String key : map.keySet()) {
-			System.out.println( map.get(key).generateDefinitionString(true) );
+		System.out.println("Vars: ");
+		for (String key : vars.keySet()) {
+			System.out.println( key + ": " + vars.get(key) );
 		}
-		System.out.println();
 	}
 	
 } //	end of class

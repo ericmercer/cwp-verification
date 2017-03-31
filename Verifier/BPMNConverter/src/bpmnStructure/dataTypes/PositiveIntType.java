@@ -85,7 +85,4 @@ public class PositiveIntType extends PromelaType {
 		return this.maxSize;
 	}
 	
-	public String toString() {
-		return "PositiveIntType: " + getTypeName();
-	}
 }
