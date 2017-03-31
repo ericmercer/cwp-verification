@@ -3,6 +3,7 @@ package xmlConversion;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,7 +32,7 @@ public class XSDConverter {
 	private BpmnDiagram diagram;
 	
 	public XSDConverter() {
-		types = new HashMap<>();
+		types = new LinkedHashMap<>();
 		declared = new HashMap<>();
 		variables = new HashMap<>();
 	}

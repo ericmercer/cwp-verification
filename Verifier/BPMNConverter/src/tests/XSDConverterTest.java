@@ -1,6 +1,6 @@
 package tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -22,12 +22,13 @@ public class XSDConverterTest {
 		BpmnDiagram diagram = new BpmnDiagram();
 		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP3.xsd", diagram);
 		System.out.println("**********************************");
-		System.out.println("Map:");
+//		System.out.println("Map:");
 		StringBuilder result = new StringBuilder();
 		for (String key : map.keySet()) {
-			System.out.println( map.get(key).generateDefinitionString(true) );
+//			System.out.println( map.get(key).generateDefinitionString(true) );
 			result.append( map.get(key).generateDefinitionString(true) + "\n" );
 		}
+
 		Scanner scanner = null;
 		try {
 			scanner  = new Scanner( new BufferedReader( new FileReader( "src/tests/purchaseCWP3_expected.txt" ) ) );
@@ -36,12 +37,23 @@ public class XSDConverterTest {
 			e.printStackTrace();
 		}
 		StringBuilder temp = new StringBuilder();
+		String line = null;
 		while (scanner.hasNextLine()) {
-			temp.append(scanner.nextLine() + "\n");
+			line = scanner.nextLine();
+			temp.append(line + "\n");
 		}
-		String expected = temp.toString();
-		System.out.println(expected);
-		assertTrue(expected.equals(result));
+		String[] r = result.toString().split("\n");
+		String[] e = temp.toString().split("\n");
+		assertEquals(r.length, e.length);
+		for (int i = 0; i < r.length; i++) {
+			if (!r[i].equals(e[i])) {
+				System.out.println(r[i] + ", " + e[i]);
+			}
+			assertTrue(r[i].equals(e[i]));
+		}
+//		String expected = temp.toString();
+//		System.out.println(expected);
+//		assertTrue(expected.equals(result));
 	}
 
 }

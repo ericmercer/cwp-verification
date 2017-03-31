@@ -25,5 +25,3 @@ cwpType cwp;
 msgType msg;
 mySimple simple;
 };
-
-
