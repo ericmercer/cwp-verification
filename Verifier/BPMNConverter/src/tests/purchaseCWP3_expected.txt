@@ -1,5 +1,5 @@
 typedef cwpType{
-byte testArray;
+byte testArray[10];
 byte seller;
 byte buyer;
 byte item;
@@ -20,7 +20,7 @@ typedef message{
 mtype mtype;
 };
 typedef recurse{
-message myMessage;
+message myMessage[13];
 cwpType cwp;
 msgType msg;
 mySimple simple;

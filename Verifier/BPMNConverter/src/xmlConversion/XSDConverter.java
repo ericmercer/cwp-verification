@@ -159,19 +159,26 @@ public class XSDConverter {
 		String t = e.getAttribute("type");
 		if (!t.isEmpty()) {
 			def = pickType(t, null);
-			typeDef.addPromelaType(e.getAttribute("name"), def);
-//			System.out.println(t);
+			String maxOccurs = e.getAttribute("maxOccurs");
+			if (maxOccurs.isEmpty()) {
+				typeDef.addPromelaType(e.getAttribute("name"), def);
+			}else {
+				typeDef.addPromelaType(e.getAttribute("name"), def, Integer.parseInt(maxOccurs));
+			}
 		}else {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					temp = (Element) nodes.item(i);
 					def = simpleType(temp);
 					if (def != null) {
-						typeDef.addPromelaType(e.getAttribute("name"), def);
-//						System.out.println();
-//						System.out.println("\t" + def);
+						String maxOccurs = e.getAttribute("maxOccurs");
+						if (maxOccurs.isEmpty()) {
+							typeDef.addPromelaType(e.getAttribute("name"), def);
+						}else {
+							typeDef.addPromelaType(e.getAttribute("name"), def, Integer.parseInt(maxOccurs));
+						}
 					}else {
-						System.err.println("It wasn't declared in the element type and it's not a simple!");
+						System.err.println("It wasn't declared in the element type and it's not a simpleType!");
 					}
 				}
 			}

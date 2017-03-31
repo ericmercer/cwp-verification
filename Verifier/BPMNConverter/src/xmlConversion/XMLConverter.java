@@ -100,10 +100,12 @@ public class XMLConverter {
 		for(int i = 0; i < list.getLength(); i++) {
 			if(list.item(i) != null && list.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				e = (Element) list.item(i);
-//				String location = "diagrams/" +  e.getAttribute("location");
+				String location = e.getAttribute("location");
+				String[] parts = location.split("/");
 				XSDConverter xsd = new XSDConverter();
 				dataObjects = xsd.getVariables();
-				types = xsd.importXSD("diagrams/purchaseCWP2.xsd", diagram);
+//				System.out.println(parts[parts.length - 2] + "/" + parts[parts.length - 1]);
+				types = xsd.importXSD(parts[parts.length - 2] + "/" + parts[parts.length - 1], diagram);
 			}
 		}
         
@@ -420,7 +422,7 @@ public class XMLConverter {
 	
 	private void initDataStore(Element data, BpmnDiagram diagram) throws PromelaTypeSizeException, InvalidDataTypeException {
 		writer.print( "dataStore:\t" + data.getAttribute( "name" ) );
-		String id = data.getAttribute("id"), name = data.getAttribute("name"), cap = data.getAttribute("capacity");
+		String name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
 		if (!dataObjects.containsKey(name)) {
 			for (String key : dataObjects.keySet()) {
@@ -430,7 +432,7 @@ public class XMLConverter {
 			throw new InvalidDataTypeException();
 		}
 		writer.println("\ttype: " + types.get(dataObjects.get(name)));
-		diagram.addDataStore( id, types.get(dataObjects.get(name)), capacity );
+		diagram.addDataStore( name, types.get(dataObjects.get(name)), capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess process) {
@@ -529,19 +531,10 @@ public class XMLConverter {
 	}
 	
 	public static void main(String[] args) {
-		XSDConverter converter = new XSDConverter();
-		BpmnDiagram diagram = new BpmnDiagram();
-		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP3.xsd", diagram);
-		HashMap<String, String> vars = converter.getVariables();
-		System.out.println("**********************************");
-		System.out.println("Map:");
-		for (String key : map.keySet()) {
-			System.out.println( map.get(key).generateDefinitionString(true) );
-		}
-		System.out.println("Vars: ");
-		for (String key : vars.keySet()) {
-			System.out.println( key + ": " + vars.get(key) );
-		}
+		XMLConverter converter = new XMLConverter();
+		BpmnDiagram diagram = null;
+		diagram = converter.importXML("diagrams/online_purchase2.bpmn");
+		System.out.println(diagram.getGlobalVariables());
 	}
 	
 } //	end of class

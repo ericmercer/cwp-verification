@@ -108,7 +108,7 @@
 
     <xsd:complexType name="recurse">
     	<xsd:sequence>
-    		<xsd:element name="myMessage" type="Q1:message"></xsd:element>
+    		<xsd:element name="myMessage" type="Q1:message" maxOccurs="13"></xsd:element>
     		<xsd:element name="cwp" type="Q1:cwpType"></xsd:element>
     		<xsd:element name="msg" type="Q1:msgType"></xsd:element>
     		<xsd:element name="simple" type="Q1:mySimple"></xsd:element>

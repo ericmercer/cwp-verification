@@ -259,6 +259,82 @@ public class XMLConverterTest {
 	}
 	
 	@Test
+	public void testonline_purchase2() {
+		XMLConverter convert = new XMLConverter();
+		BpmnDiagram diagram = convert.importXML("diagrams/online_purchase2.bpmn");
+		BpmnDiagram expected = new BpmnDiagram();
+//		expected.addDataStore("DataStore_2", "CWPArray", 5);
+		
+		BpmnProcess first = expected.addProcess("Process_1");
+		
+		first.addStartEvent("StartEvent_1");
+		first.addTask("UserTask_1", "shoppingCart.msg = order\n"
+				+ "select(shoppingCart.item : 0 .. MAX_ITEMS)\n"
+				+ "select(shpppingCart.buyer : 0 .. MAX_BUYERS)\n"
+				+ "select(shoppingCart.cost : 0 .. MAX_COST)");
+		
+		first.addSequenceFlow("StartEvent_1", "UserTask_1");
+		first.addMessageThrowEvent("IntermediateThrowEvent_1");
+		first.addSequenceFlow("UserTask_1", "IntermediateThrowEvent_1");
+		first.addMessageCatchEvent("IntermediateCatchEvent_2");
+		first.addSequenceFlow("IntermediateThrowEvent_1", "IntermediateCatchEvent_2");
+		first.addEndEvent("EndEvent_7");
+//		first.addDataObject("DataObject_2", "shoppingCart", 1);
+		
+		BpmnProcess sub = first.addNormalSubProcess("SubProcess_1");
+		sub.addStartEvent("StartEvent_3");
+		sub.addParallelGateway("ParallelGateway_1");
+		sub.addParallelGateway("ParallelGateway_2");
+		sub.addEndEvent("EndEvent_1");
+		sub.addTask("Task_1");
+		sub.addTask("Task_2");
+		sub.addSequenceFlow("ParallelGateway_1", "Task_1");
+		sub.addSequenceFlow("ParallelGateway_1", "Task_2");
+		sub.addSequenceFlow("Task_1", "ParallelGateway_2");
+		sub.addSequenceFlow("Task_2", "ParallelGateway_2");
+		sub.addSequenceFlow("StartEvent_3", "ParallelGateway_1");
+		sub.addSequenceFlow("ParallelGateway_2", "EndEvent_1");
+		
+		first.addSequenceFlow("IntermediateCatchEvent_2", "SubProcess_1");
+		first.addSequenceFlow("SubProcess_1", "EndEvent_7");
+		
+		BpmnProcess sec = expected.addProcess("Process_2");
+		
+		sec.addExclusiveGateway("ExclusiveGateway_1");
+		sec.addExclusiveGateway("ExclusiveGateway_2");
+		sec.addScriptTask("ScriptTask_1", "orderStatus.msg = outOfStock");
+		sec.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
+		sec.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_2");
+		sec.addTask("UserTask_4", "cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
+		sec.addScriptTask("ScriptTask_3", "orderStatus.msg = cardDenied");
+		sec.addSequenceFlow("ExclusiveGateway_2", "ScriptTask_3");
+		sec.addTask("UserTask_5", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
+		sec.addSequenceFlow("UserTask_4", "UserTask_5");
+		sec.addMessageStartEvent("StartEvent_2");
+		
+		sec.addSequenceFlow("StartEvent_2", "ExclusiveGateway_1");
+		sec.addSequenceFlow("ExclusiveGateway_2", "UserTask_4");
+//		sec.addDataObject("DataObject_6", "orderStatus", 1);
+		sec.addExclusiveGateway("ExclusiveGateway_5");
+		sec.addSequenceFlow("UserTask_5", "ExclusiveGateway_5");
+		sec.addSequenceFlow("ScriptTask_3", "ExclusiveGateway_5");
+		sec.addExclusiveGateway("ExclusiveGateway_6");
+		sec.addSequenceFlow("ScriptTask_1", "ExclusiveGateway_6");
+		sec.addSequenceFlow("ExclusiveGateway_5", "ExclusiveGateway_6");
+		sec.addMessageEndEvent("EndEvent_8");
+		sec.addSequenceFlow("ExclusiveGateway_6", "EndEvent_8");
+		
+		expected.addProcess("Process_3");
+		
+		expected.addMessageFlow("MessageFlow_8", first, "IntermediateThrowEvent_1", 
+				sec, "StartEvent_2", expected.addTypeDef("ns1.xsd:msgType"));
+		expected.addMessageFlow("MessageFlow_8", sec, "EndEvent_8", 
+				first, "IntermediateCatchEvent_2", expected.addTypeDef("ns1.xsd:msgType"));
+		
+		assertTrue( expected.equals(diagram) );
+	}
+	
+	@Test
 	public void testorderFullfillment() {
 		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/orderFulfillment.bpmn");

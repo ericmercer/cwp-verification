@@ -21,7 +21,7 @@ public class XSDConverterTest {
 		XSDConverter converter = new XSDConverter();
 		BpmnDiagram diagram = new BpmnDiagram();
 		HashMap<String, PromelaType> map = converter.importXSD("diagrams/purchaseCWP3.xsd", diagram);
-		System.out.println("**********************************");
+//		System.out.println("**********************************");
 //		System.out.println("Map:");
 		StringBuilder result = new StringBuilder();
 		for (String key : map.keySet()) {
