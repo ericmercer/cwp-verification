@@ -3,11 +3,16 @@ package tests;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
+import bpmnStructure.dataTypes.PromelaType;
+import bpmnStructure.exceptions.PromelaTypeSizeException;
 import xmlConversion.XMLConverter;
+import xmlConversion.XSDConverter;
 
 public class XMLConverterTest {
 
@@ -263,7 +268,14 @@ public class XMLConverterTest {
 		XMLConverter convert = new XMLConverter();
 		BpmnDiagram diagram = convert.importXML("diagrams/online_purchase2.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
-//		expected.addDataStore("DataStore_2", "CWPArray", 5);
+		XSDConverter xsd = new XSDConverter();
+		HashMap<String, PromelaType> types = xsd.importXSD("diagrams/purchaseCWP2.xsd", expected);
+		HashMap<String, String> vars = xsd.getVariables();
+		try {
+			expected.addDataStore("DataStore_2", types.get(vars.get("CWPArray")), 5);
+		} catch (PromelaTypeSizeException e) {
+			e.printStackTrace();
+		}
 		
 		BpmnProcess first = expected.addProcess("Process_1");
 		
@@ -279,7 +291,12 @@ public class XMLConverterTest {
 		first.addMessageCatchEvent("IntermediateCatchEvent_2");
 		first.addSequenceFlow("IntermediateThrowEvent_1", "IntermediateCatchEvent_2");
 		first.addEndEvent("EndEvent_7");
-//		first.addDataObject("DataObject_2", "shoppingCart", 1);
+		try {
+			first.addDataObject("DataObject_2", null, 1);
+		} catch (PromelaTypeSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		BpmnProcess sub = first.addNormalSubProcess("SubProcess_1");
 		sub.addStartEvent("StartEvent_3");
@@ -314,7 +331,13 @@ public class XMLConverterTest {
 		
 		sec.addSequenceFlow("StartEvent_2", "ExclusiveGateway_1");
 		sec.addSequenceFlow("ExclusiveGateway_2", "UserTask_4");
-//		sec.addDataObject("DataObject_6", "orderStatus", 1);
+		
+		try {
+			sec.addDataObject("DataObject_6", null, 1);
+		} catch (PromelaTypeSizeException e) {
+			e.printStackTrace();
+		}
+		
 		sec.addExclusiveGateway("ExclusiveGateway_5");
 		sec.addSequenceFlow("UserTask_5", "ExclusiveGateway_5");
 		sec.addSequenceFlow("ScriptTask_3", "ExclusiveGateway_5");

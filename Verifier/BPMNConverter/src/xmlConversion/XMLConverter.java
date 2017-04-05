@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import bpmnStructure.dataTypes.PromelaType;
+import bpmnStructure.dataTypes.PromelaTypeDef;
 import bpmnStructure.exceptions.PromelaTypeSizeException;
 
 public class XMLConverter {
@@ -32,7 +33,7 @@ public class XMLConverter {
 	
 	private String namespace;
 	private HashMap<String, String> definitions;
-	private HashMap<String, String> messageDefs;
+	private HashMap<String, PromelaTypeDef> messageDefs;
 	private HashMap<String, BpmnProcess> messageEvents;
 	private HashMap<String, PromelaType> types;
 	private HashMap<String, String> dataObjects;
@@ -103,9 +104,9 @@ public class XMLConverter {
 				String location = e.getAttribute("location");
 				String[] parts = location.split("/");
 				XSDConverter xsd = new XSDConverter();
-				dataObjects = xsd.getVariables();
 //				System.out.println(parts[parts.length - 2] + "/" + parts[parts.length - 1]);
 				types = xsd.importXSD(parts[parts.length - 2] + "/" + parts[parts.length - 1], diagram);
+				dataObjects = xsd.getVariables();
 			}
 		}
         
@@ -119,14 +120,16 @@ public class XMLConverter {
         
 		messageDefs = new HashMap<>();
 		list = document.getElementsByTagName(namespace + "message");
-		String temp = null, key = null, value = null;
+		String id = null, name = null;
 		for(int i = 0; i < list.getLength(); i++) {
 			if(list.item(i) != null) {
 				e = (Element) list.item(i);
-				key = e.getAttribute("id");
-				temp = e.getAttribute("itemRef");
-				value = definitions.get(temp);
-				messageDefs.put(key, value);
+				id = e.getAttribute("id");
+				name = e.getAttribute("name");
+				if (!dataObjects.containsKey(name)) {
+					System.err.println("The message found in the bpmn diagram did not match any data elements in the corresponding xsd");
+				}
+				messageDefs.put(id, (PromelaTypeDef) types.get(dataObjects.get(name)));
 			}
 		}
 		
@@ -151,7 +154,7 @@ public class XMLConverter {
 		writer.println( "ProcessList.size:\t" + processList.getLength() );
 		for(int i = 0; i < processList.getLength(); i++) {
 			process = (Element) processList.item(i);
-			String id = process.getAttribute( "id" );
+			id = process.getAttribute( "id" );
 			writer.println( "Process:\t" + id + "\n" );
 			initProcess(process, diagram.addProcess(id));
 		}
@@ -160,7 +163,13 @@ public class XMLConverter {
 		for(int i = 0; i < list.getLength(); i++) {
 			if(list.item(i) != null) {
 				e = (Element) list.item(i);
-				initMessageFlow(e, diagram);
+				try {
+					initMessageFlow(e, diagram);
+				} catch (InvalidDataTypeException e1) {
+					e1.printStackTrace();
+					System.err.println("The message flow tried to reference a message that did not exist");
+					e1.printStackTrace();
+				}
 			}
 		}
 		
@@ -465,16 +474,24 @@ public class XMLConverter {
         return;
 	}
 	
-	private void initMessageFlow(Element current, BpmnDiagram diagram) {
+	private void initMessageFlow(Element current, BpmnDiagram diagram) throws InvalidDataTypeException {
 		if(current == null) {
 			return;
 		}
 		String id = current.getAttribute("id"), source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef"),
-				ref = definitions.get(current.getAttribute("messageRef"));
+				ref = current.getAttribute("messageRef");
+		if (messageDefs.get(ref) == null) {
+			throw new InvalidDataTypeException();
+		}
 		writer.println( "messageFlow:\t" + "sourceRef:\t" + source + "\ttargetRef:\t" + target );
-		diagram.addMessageFlow(id, messageEvents.get(source), source, messageEvents.get(target), target, diagram.addTypeDef(ref));
-//		messageEvents holds the process to which the source and target events belong, which means that just by 
-//		using the the id of the source or target reference as a key, we can get the process to which it belongs
+		diagram.addMessageFlow(id, messageEvents.get(source), source, 
+				messageEvents.get(target), target, messageDefs.get(ref));
+/**		
+		messageEvents holds the process to which the source and target events belong, which means that just by 
+		using the the id of the source or target reference as a key, we can get the process to which it belongs
+		messageDefs is defined when reading in the message objects as a map between the message id and 
+		the typeDef defined in the xsd
+ */
 	}
 	
 	/**
