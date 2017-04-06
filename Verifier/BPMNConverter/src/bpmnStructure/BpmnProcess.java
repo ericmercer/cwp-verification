@@ -8,8 +8,6 @@ import bpmnStructure.activities.ScriptTask;
 import bpmnStructure.activities.Task;
 import bpmnStructure.dataTypes.BoolType;
 import bpmnStructure.dataTypes.PromelaType;
-import bpmnStructure.dataTypes.PromelaTypeDef;
-
 import bpmnStructure.dataTypes.TypeDeclaration;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;

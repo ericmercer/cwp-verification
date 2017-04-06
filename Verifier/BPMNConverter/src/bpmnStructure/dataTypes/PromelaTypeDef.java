@@ -33,7 +33,6 @@ public class PromelaTypeDef extends PromelaType {
 	}
 
 
-
 	public String generateTypeString() {
 		return this.getTypeName() + " " + this.typeName;
 	}
@@ -56,7 +55,7 @@ public class PromelaTypeDef extends PromelaType {
 				output += pt.generateDeclaration() + ";\n";
 
 			}
-			output += "}";
+			output += "};";
 		} else {
 			output = this.generateTypeString();
 		}

@@ -50,6 +50,7 @@ public class TypeDeclaration {
 		return this.type.generateDefinitionString(false);
 	}
 
+
 	public String getVarName() {
 		return varName;
 	}
@@ -57,5 +58,6 @@ public class TypeDeclaration {
 	public void setVarName(String varName) {
 		this.varName = varName;
 	}
+
 
 }

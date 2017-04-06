@@ -132,10 +132,7 @@ public class PromelaGenerator2 {
 
 		// Add Message Flows last
 
-		diagram.addMessageFlow("MessageFlow1", customer, "SendOrder", ss, "ReceiveOrder", msgType);
-
-		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
-
+		
 		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
 
 		System.out.println(pg.generatePromela(2));
@@ -291,7 +288,7 @@ public class PromelaGenerator2 {
 		s += "\n";
 		s += "mtype msg;\n";
 		for (int i = 0; i < number_of_tokens; i++) {
-			s += "run "+main_process;
+			s += "run "+"proc";
 			s += "(" + i + ", end[" + i + "]);\n";
 		}
 		s += "\n";

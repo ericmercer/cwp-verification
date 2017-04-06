@@ -13,6 +13,9 @@ public class Mtypes {
 
 	public static void addMtypes(String[] mt) {
 		for (String m : mt) {
+			if(m == null) {
+				System.out.println("message null");
+			}
 			mtypes.add(m);
 		}
 	}
