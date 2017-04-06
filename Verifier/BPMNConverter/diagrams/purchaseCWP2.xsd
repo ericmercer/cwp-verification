@@ -1,62 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsd:schema xmlns="http://vv.cs.byu.edu/purchaseCWP" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" >
-	<xsd:element name="cwpType">
-		<xsd:complexType>
+<xsd:schema xmlns="http://vv.cs.byu.edu/purchaseCWP" xmlns:Q1="test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="test">
+		<xsd:complexType name="cwpType">
 			<xsd:sequence>
-				<xsd:element name="testArray"  maxOccurs="10">
+				<xsd:element maxOccurs="10" name="testArray">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
-				<xsd:element name="seller" default = "0">
+				<xsd:element default="0" name="seller">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
-				<xsd:element name="buyer" default = "0">
+				<xsd:element default="0" name="buyer">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
-				<xsd:element name="item" default = "0">
+				<xsd:element default="0" name="item">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
-				<xsd:element name="amount" default = "0">
+				<xsd:element default="0" name="amount">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
-				<xsd:element name="itemOwner" default = "0">
+				<xsd:element default="0" name="itemOwner">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
-				<xsd:element name="paymentOwner" default = "0">
+				<xsd:element default="0" name="paymentOwner">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
 			</xsd:sequence>
-		</xsd:complexType>   
-	</xsd:element>
-	<xsd:element name="msgType">
-		<xsd:complexType>
+		</xsd:complexType>
+		<xsd:complexType name="msgType">
 			<xsd:sequence>
 				<xsd:element name="msg">
 					<xsd:simpleType>
@@ -67,28 +64,47 @@
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>  
-				<xsd:element name="item" default = "0">
+				<xsd:element default="0" name="item">
 				    <xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
-				<xsd:element name="cost" default = "0">
+				<xsd:element default="0" name="cost">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
 				<xsd:element name="buyer">
 					<xsd:simpleType>
 						<xsd:restriction base="xsd:integer">
-							<xsd:maxInclusive value="120" />
+							<xsd:maxInclusive value="120"/>
 						</xsd:restriction>
 					</xsd:simpleType>
 				</xsd:element>
 			</xsd:sequence>
 		</xsd:complexType>
-	</xsd:element>
+
+    <xsd:element name="shoppingCart" type="Q1:cwpType"/>
+
+    <xsd:element name="orderStatus" type="Q1:msgType"/>
+
+    <xsd:element name="order" type="Q1:msgType"/>
+
+
+    <xsd:simpleType name="mySimple">
+    	<xsd:restriction base="xsd:int"></xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="message">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="hello"></xsd:enumeration>
+    		<xsd:enumeration value="goodbye"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:element name="CWPArray" type="Q1:cwpType"></xsd:element>
 </xsd:schema>

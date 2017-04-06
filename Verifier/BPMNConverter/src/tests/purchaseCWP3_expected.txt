@@ -1,0 +1,27 @@
+typedef cwpType{
+byte testArray[10];
+byte seller;
+byte buyer;
+byte item;
+byte amount;
+byte itemOwner;
+byte paymentOwner;
+};
+typedef msgType{
+mtype msg;
+byte item;
+byte cost;
+byte buyer;
+};
+typedef mySimple{
+short short;
+};
+typedef message{
+mtype mtype;
+};
+typedef recurse{
+message myMessage[13];
+cwpType cwp;
+msgType msg;
+mySimple simple;
+};

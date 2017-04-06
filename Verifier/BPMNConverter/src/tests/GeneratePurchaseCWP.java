@@ -91,7 +91,7 @@ public class GeneratePurchaseCWP {
 		ss.addScriptTask("shipItem", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
 		ss.addMessageEndEvent("SendStatus");
 
-		ss.addDataStore("CWPArray", "CWPArray", 5);
+//		ss.addDataStore("CWPArray", "CWPArray", 5);
 
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
 		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "false /*outOfStock*/");

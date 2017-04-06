@@ -238,7 +238,7 @@ public class PromelaGenerator2 {
 		 */
 
 		// s += "od\n";
-		s += this.generate_init("process_Customer/*unhardcode*/", number_of_tokens);
+		s += this.generate_init(diagram, number_of_tokens);
 		// init section
 
 		return s;
