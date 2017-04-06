@@ -6,7 +6,8 @@ public class SequenceFlow {
 	private FlowElement end;
 	private int idNumber;
 	private String expression;
-	
+	private boolean isDefault = false;
+
 	public String getExpression() {
 		return expression;
 	}
@@ -15,11 +16,16 @@ public class SequenceFlow {
 		this.expression = expression;
 	}
 
-	public SequenceFlow(FlowElement start, FlowElement end,int idNumber, String expression){
+	public SequenceFlow(FlowElement start, FlowElement end, int idNumber, String expression, boolean isDefault) {
 		this.setStart(start);
 		this.setEnd(end);
 		this.setIdNumber(idNumber);
 		this.expression = expression;
+		this.setDefault(isDefault);
+	}
+	
+	public String getTokenValue(){
+		return this.getEnd().getTokenName() +"_"+ idNumber;
 	}
 
 	public int getIdNumber() {
@@ -45,5 +51,19 @@ public class SequenceFlow {
 	public void setEnd(FlowElement end) {
 		this.end = end;
 	}
-	
+
+	public boolean isDefault() {
+		return isDefault;
+	}
+
+	public void setDefault(boolean isDefault) {
+		this.isDefault = isDefault;
+	}
+
+	public boolean equals(Object o) {
+		SequenceFlow otherElement = (SequenceFlow) o;
+		return this.getStart().equals(otherElement.getStart()) && this.getEnd().equals(otherElement.getEnd());
+		
+	}
+
 }

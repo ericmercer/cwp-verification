@@ -8,7 +8,7 @@ public class TypeDeclaration {
 	public TypeDeclaration(String name, PromelaType p, int capacity) {
 		this.type = p;
 		this.capacity = capacity;
-		this.varName = name;
+		this.setVarName(name);
 
 	}
 
@@ -32,9 +32,9 @@ public class TypeDeclaration {
 		// String typeDeclaration = this.type.generateTypeString();
 		if (this.type.getMaxSize() > 0) {
 		
-			PromelaConstants.addConstant("MAX_" + this.varName.toUpperCase(), this.type.getMaxSize());
+			PromelaConstants.addConstant("MAX_" + this.getVarName().toUpperCase(), this.type.getMaxSize());
 		}
-		String typeDeclaration = this.type.getTypeName() + " " + this.varName;
+		String typeDeclaration = this.type.getTypeName() + " " + this.getVarName();
 		if (this.capacity > 0) {
 			typeDeclaration += "[" + capacity + "]";
 		}
@@ -48,6 +48,14 @@ public class TypeDeclaration {
 	public String generateDefinitionString() {
 		// TODO Auto-generated method stub
 		return this.type.generateDefinitionString(false);
+	}
+
+	public String getVarName() {
+		return varName;
+	}
+
+	public void setVarName(String varName) {
+		this.varName = varName;
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class PromelaTypeDef extends PromelaType {
 
-	private ArrayList<PromelaType> keyVars = new ArrayList<PromelaType>();
+	private ArrayList<TypeDeclaration> keyVars = new ArrayList<TypeDeclaration>();
 	private ArrayList<TypeDeclaration> vars = new ArrayList<TypeDeclaration>();
 	private String typeName;
 	public PromelaTypeDef(String typeName) {
@@ -25,15 +25,14 @@ public class PromelaTypeDef extends PromelaType {
 	}
 
 	public void addPromelaType(String varName, PromelaType p, int capacity) {
-		vars.add(new TypeDeclaration(varName, p, capacity));
-		if (capacity == 1 && varName.substring(0, 3).equalsIgnoreCase("key")) {
-			keyVars.add(p);
+		TypeDeclaration tdec = new TypeDeclaration(varName, p, capacity);
+		vars.add(tdec);
+		if (capacity == 0 && varName.substring(0, 3).equalsIgnoreCase("key")) {
+			getKeyVars().add(tdec);
 		}
 	}
 
-	public String toString() {
-		return null;
-	}
+
 
 	public String generateTypeString() {
 		return this.getTypeName() + " " + this.typeName;
@@ -63,6 +62,14 @@ public class PromelaTypeDef extends PromelaType {
 		}
 
 		return output;
+	}
+
+	public ArrayList<TypeDeclaration> getKeyVars() {
+		return keyVars;
+	}
+
+	public void setKeyVars(ArrayList<TypeDeclaration> keyVars) {
+		this.keyVars = keyVars;
 	}
 
 }

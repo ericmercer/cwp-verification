@@ -1,6 +1,7 @@
 package bpmnStructure.dataTypes;
 
 import java.util.TreeSet;
+
 //TODO: Make this a singleton?
 public class Mtypes {
 
@@ -14,6 +15,20 @@ public class Mtypes {
 		for (String m : mt) {
 			mtypes.add(m);
 		}
+	}
+
+	public static String toPromela() {
+		String out = "mtype = {";
+		int i = 0;
+		for (String mtypeString : mtypes) {
+			i++;
+			out += mtypeString;
+			if (i < mtypes.size()){
+				out += ", ";
+			}
+		}
+		out += "};\n";
+		return out;
 	}
 
 }

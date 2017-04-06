@@ -28,7 +28,7 @@ inline print(number){
 }
 
 
-inline xor_fork(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outseq2,exceptionChannel){
+inline xor_fork(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outseq2,exceptionChannel,token_id){
   in_tokens(inseq) ->
   atomic {
 	if
@@ -40,6 +40,21 @@ inline xor_fork(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outse
 	   out_tokens(outseq2)
 	:: else ->
 	   exceptionChannel!xor_split_false(token_id)
+	   break
+	fi
+  }
+}
+
+inline xor_fork_default(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outseq2){
+  in_tokens(inseq) ->
+  atomic {
+	if
+	::(expr1) ->
+	   print(messageNumber1)
+	   out_tokens(outseq1)
+	:: else ->
+	   print(messageNumber2)
+	   out_tokens(outseq2)
 	   break
 	fi
   }
@@ -65,6 +80,7 @@ inline xor_join(messageNumber, inseq,inseq2, outseq){
 
 	fi
 }
+
 
 
 inline parallel_fork(messageNumber,inseq, outseq1,outseq2){

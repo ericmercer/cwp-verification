@@ -17,7 +17,7 @@ public class PrintMessageManager {
 
 	private PrintMessageManager() {
 		messageMapping = new TreeMap<Integer, String>();
-		lastNumber = 0;
+		lastNumber = 1000;
 	}
 
 	public static synchronized PrintMessageManager getInstance() {
@@ -28,7 +28,7 @@ public class PrintMessageManager {
 	}
 
 	public String addMessage(String message) {
-		int nextNumber = lastNumber++;
+		int nextNumber = lastNumber--;
 		messageMapping.put(nextNumber, message);
 		return nextNumber + "/*" + message + "*/";
 	}
@@ -43,10 +43,11 @@ public class PrintMessageManager {
 			Integer key = entry.getKey();
 			String value = entry.getValue();
 
-			converter.addKeyPair(String.valueOf(key), value);
+			
+			converter.addKeyPair("message: " + String.valueOf(key), value);
 		}
 
-		converter.toText("C:\\Users\\jvisker\\Desktop\\awk.txt");
+		converter.toText("C:\\Users\\jvisker\\Documents\\awk.txt");
 	}
 
 }

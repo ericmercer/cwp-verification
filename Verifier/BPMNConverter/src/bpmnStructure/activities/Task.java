@@ -11,6 +11,10 @@ public class Task extends Activity {
 		this.promela = promela;
 	}
 
+	public String getScript(){
+		return promela;
+	}
+	
 	public void accept(Visitor v) {
 		v.Visit(this);
 

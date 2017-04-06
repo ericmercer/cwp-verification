@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import bpmnStructure.FlowElement;
 import bpmnStructure.Gateway;
+import bpmnStructure.SequenceFlow;
+import bpmnStructure.PrintMessages.PrintMessageManager;
 
 public class ParallelGateway extends Gateway {
 
@@ -55,8 +57,58 @@ public class ParallelGateway extends Gateway {
 		return newElements;
 
 	}
-	
-	public String getProcessTemplateName(){
+
+	@Override
+	public String[] getExecutionOptions() {
+		String executionString = "";
+
+		if (sequenceFlowOut.size() > 1) {
+			// TODO: Set up the guards to the different possible out flows
+			// inline xor_fork(inseq,messageNumber1,expr1, outseq1,
+			// messageNumber2,
+			// expr2,outseq2,exceptionChannel){
+			if (sequenceFlowOut.size() != 2) {
+				System.err.println("wrong number of out flows for diverging gateway " + this.getName() + " "
+						+ sequenceFlowOut.size());
+			}
+			// FlowElement f1 = this.sequenceFlowOut.get(0).getEnd();
+			// FlowElement f2 = this.sequenceFlowOut.get(1).getEnd();
+			SequenceFlow sf1 = this.sequenceFlowOut.get(0);
+			SequenceFlow sf2 = this.sequenceFlowOut.get(1);
+
+			/* no defaults */
+
+			executionString += "parallel_fork(";
+			executionString += this.getDefaultTokenInValue() + ", ";
+			executionString += PrintMessageManager.getInstance().addMessage("parallel fork") + ", ";
+			executionString += sf1.getTokenValue() + ", ";
+			executionString += sf2.getTokenValue();
+
+			executionString += ");\n";
+
+		} else {
+			// FlowElement f1 = this.sequenceFlowIn.get(0).getStart();
+			// FlowElement f2 = this.sequenceFlowIn.get(1).getStart();
+			// FlowElement outFlow = this.sequenceFlowOut.get(0).getEnd();
+			//
+			SequenceFlow sf1 = this.sequenceFlowIn.get(0);
+			SequenceFlow sf2 = this.sequenceFlowIn.get(1);
+			SequenceFlow soutFlow = this.sequenceFlowOut.get(0);
+
+			PrintMessageManager pm = PrintMessageManager.getInstance();
+			String s = "parallel_join(";
+			s += pm.addMessage("parallel_join") + ", ";
+			s += sf1.getTokenValue() + ", ";
+			s += sf2.getTokenValue() + ", ";
+			s += soutFlow.getTokenValue() + ")\n";
+			executionString = s;
+		}
+
+		return new String[] { executionString };
+
+	}
+
+	public String getProcessTemplateName() {
 		return "generic_parallel_gateway";
 	}
 }

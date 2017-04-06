@@ -1,9 +1,12 @@
 package bpmnStructure;
 
 import java.util.ArrayList;
+
+import bpmnStructure.PrintMessages.PrintMessageManager;
+import bpmnStructure.dataTypes.TypeDeclaration;
 import visitor.Visitor;
 
-public class FlowElement {
+public abstract class FlowElement {
 
 	public static int flowElementCount = 0;
 	private String name;
@@ -14,8 +17,16 @@ public class FlowElement {
 	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();
 	public ArrayList<SequenceFlow> sequenceFlowIn = new ArrayList<SequenceFlow>();
 
+	private ArrayList<MessageFlow> messageFlows = new ArrayList<MessageFlow>();
+
+	private ArrayList<TypeDeclaration> relatedDataObjects = new ArrayList<TypeDeclaration>();
+
 	public FlowElement(String name) {
 		this.setName(name);
+	}
+
+	public String getScript() {
+		return null;
 	}
 
 	/*
@@ -27,24 +38,58 @@ public class FlowElement {
 
 	}
 
-	public void addDefaultSequenceFlow(FlowElement f) {
-		this.addSequenceFlow(f, "true");
+	/* returns info to execute */
+	/* guard -> script; next flows */
+
+	public String[] getExecutionOptions() {
+		/* default assumes only one flow in */
+		String executionString = "in_tokens(/*def*/" + this.getDefaultTokenInValue() + ") -> ";/* \n */
+
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getName()) + ");\n";
+		for (SequenceFlow outFlow : this.sequenceFlowOut) {
+			// FlowElement out = outFlow.getEnd();
+			executionString += "out_tokens(" + outFlow.getTokenValue() + ")\n";
+
+		}
+		return new String[] { executionString };
 
 	}
 
-	public void addSequenceFlow(FlowElement f, String expression) {
-		SequenceFlow connector = new SequenceFlow(this, f, sequenceFlowCount++, expression);
+	public String getDefaultTokenInValue() {
+		if (this.sequenceFlowIn.size() > 0) {
+			return this.sequenceFlowIn.get(0).getTokenValue();
+		} else {
+			return this.getTokenName();
+		}
+
+	}
+	
+	public String getDefaultTokenOutValue(){
+		if (this.sequenceFlowOut.size() > 0) {
+			return this.sequenceFlowOut.get(0).getTokenValue();
+		} else {
+			return this.getTokenName();
+		}
+	}
+
+	public void addDefaultSequenceFlow(FlowElement f) {
+		this.addSequenceFlow(f, "", true);
+
+	}
+
+	public void addSequenceFlow(FlowElement f, boolean isDefault) {
+		this.addSequenceFlow(f, "", isDefault);
+	}
+
+	public void addSequenceFlow(FlowElement f, String expression, boolean isDefault) {
+		SequenceFlow connector = new SequenceFlow(this, f, sequenceFlowCount++, expression, isDefault);
 		sequenceFlowOut.add(connector);
 		f.sequenceFlowIn.add(connector);
 
 	}
 
-	public void addMessageFlow(FlowElement f) {
-		// TODO: implement
-	}
-
-	public void addAssociation(FlowElement f) {
-		// TODO: implement
+	public void addMessageFlow(MessageFlow mf) {
+		getMessageFlows().add(mf);
 	}
 
 	public void accept(Visitor v) {
@@ -132,6 +177,18 @@ public class FlowElement {
 		return name;
 	}
 
+	public String getProcessName() {
+		return "process_" + this.getName();
+	}
+
+	public String getTokenName() {
+		return "token_" + this.getName();
+	}
+
+	public String getChannelName() {
+		return "channel_" + this.getName();
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -144,5 +201,26 @@ public class FlowElement {
 		output.append("\n\t\toutFlows: " + this.sequenceFlowOut.size());
 		return output.toString();
 	}
-	
+
+	public ArrayList<MessageFlow> getMessageFlows() {
+		return messageFlows;
+	}
+
+	public void setMessageFlows(ArrayList<MessageFlow> messageFlows) {
+		this.messageFlows = messageFlows;
+	}
+
+	public void addAssociatedDataObject(TypeDeclaration td) {
+		getRelatedDataObjects().add(td);
+
+	}
+
+	public ArrayList<TypeDeclaration> getRelatedDataObjects() {
+		return relatedDataObjects;
+	}
+
+	public void setRelatedDataObjects(ArrayList<TypeDeclaration> relatedDataObjects) {
+		this.relatedDataObjects = relatedDataObjects;
+	}
+
 }

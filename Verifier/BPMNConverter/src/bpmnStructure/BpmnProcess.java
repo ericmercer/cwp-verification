@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import bpmnStructure.activities.ScriptTask;
 import bpmnStructure.activities.Task;
+import bpmnStructure.dataTypes.BoolType;
 import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
 
@@ -22,6 +23,7 @@ import bpmnStructure.gateways.ParallelGateway;
 import bpmnStructure.messages.MessageCatchEvent;
 import bpmnStructure.messages.MessageThrowEvent;
 import bpmnStructure.subProcesses.NormalSubProcess;
+import bpmnStructure.subProcesses.SubProcess;
 
 public class BpmnProcess extends FlowElement {
 	// this will be used as the interface into creating BPMN structures
@@ -33,7 +35,7 @@ public class BpmnProcess extends FlowElement {
 	// TODO: Add method to export structure to BPMN xml format
 
 	private TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
-	private ArrayList<TypeDeclaration> processVariables = new ArrayList<TypeDeclaration>();
+	private TreeMap<String, TypeDeclaration> processVariables = new TreeMap<String, TypeDeclaration>();
 
 	// TODO: Somehow guarantee the uniqueness of the initial element
 	// InitialElement firstElement = new
@@ -64,17 +66,25 @@ public class BpmnProcess extends FlowElement {
 	// TODO: Consider how to handler errors if one of the elements does not
 	// exist
 	public void addSequenceFlow(String idFrom, String idTo) {
-		this.addSequenceFlow(idFrom, idTo, "");
+		/*
+		 * there is an implicit true guard on normal flows - it will not always
+		 * be needed in the promela though
+		 */
+		this.addSequenceFlow(idFrom, idTo, "true", false);
 	}
 
 	public void addDefaultSequenceFlow(String idFrom, String idTo) {
-		this.addSequenceFlow(idFrom, idTo, "true");
+		this.addSequenceFlow(idFrom, idTo, "", true);
 	}
 
 	public void addSequenceFlow(String idFrom, String idTo, String expression) {
+		this.addSequenceFlow(idFrom, idTo, expression, false);
+	}
+
+	public void addSequenceFlow(String idFrom, String idTo, String expression, boolean isDefault) {
 		FlowElement f1 = elements.get(idFrom);
 		FlowElement f2 = elements.get(idTo);
-		f1.addSequenceFlow(f2, expression);
+		f1.addSequenceFlow(f2, expression, isDefault);
 	}
 
 	public BpmnProcess addNormalSubProcess(String id) {
@@ -138,48 +148,38 @@ public class BpmnProcess extends FlowElement {
 		addFlowElement(id, new IntermediateEvent(id));
 	}
 
-	public void addMessageThrowEvent(String id) {
+	public void addMessageThrowEvent(String id, String dataObjectId) {
 		addFlowElement(id, new MessageThrowEvent(id));
-
+		addDataAssociation(id, dataObjectId);
 	}
 
-	public void addMessageThrowEvent(String id, String promela) {
-		addFlowElement(id, new MessageThrowEvent(id));
-
-	}
-
-	public void addMessageCatchEvent(String id) {
+	public void addMessageCatchEvent(String id, String dataObjectId) {
 		addFlowElement(id, new MessageCatchEvent(id));
-	}
-
-	public void addMessageCatchEvent(String id, String promela) {
-		addFlowElement(id, new MessageCatchEvent(id));
+		addDataAssociation(id, dataObjectId);
 	}
 
 	public void addDataObject(String name, PromelaType pt, int capacity) throws PromelaTypeSizeException {
 		// TODO Auto-generated method stub
-		this.processVariables.add(new TypeDeclaration(name, pt, capacity));
+		this.processVariables.put(name, new TypeDeclaration(name, pt, capacity));
+
 	}
 
-	public void addMessageStartEvent(String id) {
+	public void addMessageStartEvent(String id, String dataObjectId) {
 		addFlowElement(id, new MessageStartEvent(id));
+		addDataAssociation(id, dataObjectId);
 	}
 
-	public void addMessageStartEvent(String id, String promela) {
-		addFlowElement(id, new MessageStartEvent(id));
-	}
-
-	public void addMessageEndEvent(String id) {
+	public void addMessageEndEvent(String id, String dataObjectId) {
 		addFlowElement(id, new MessageEndEvent(id));
+		addDataAssociation(id, dataObjectId);
 	}
 
-	public void addMessageEndEvent(String id, String promela) {
-		addFlowElement(id, new MessageEndEvent(id));
-	}
-	
-	public void addDataStore(String name, PromelaType pt, int capacity) {
-		// TODO Auto-generated method stub
-
+	public void addDataAssociation(String flowElementId, String dataObjectId) {
+		TypeDeclaration td = processVariables.get(dataObjectId);
+		if (td == null) {
+			System.err.println("no data object foudnd for: " + dataObjectId);
+		}
+		elements.get(flowElementId).addAssociatedDataObject(td);
 	}
 
 	/**** End of XML interface methods **************/
@@ -263,39 +263,107 @@ public class BpmnProcess extends FlowElement {
 	}
 
 	public String generateProctype() {
-		String proctypeString = "proctype " + "process_" + this.getName() + "(" + "" + ")" + "{\n";
+
+		boolean isNormalStart = true;
+		PromelaType messageType = null;
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			if (f instanceof MessageStartEvent) {
+				isNormalStart = false;
+				// TODO: Get message start event
+				MessageStartEvent mst = (MessageStartEvent) f;
+				messageType = mst.getRelatedDataObjects().get(0).getType();
+			}
+		}
+
+		String proctypeString = "proctype " + this.getProcessName() + "(" + "byte " + TokenId.getName() + ";"
+				+ " chan reportChannel";
+		if (!isNormalStart) {
+			proctypeString += "; " + messageType.getTypeName() + " message";
+		}
+		proctypeString += ")" + "{\n";
 
 		proctypeString += "byte ";
 		int step = 0;
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {
 			FlowElement f = entry.getValue();
 			step++;
-			proctypeString += "token_" + f.getName();
-			if (step < elements.entrySet().size()) {
-				proctypeString += ", ";
-			} else {
-				proctypeString += ";\n";
+			for (SequenceFlow sf : f.sequenceFlowIn) {
+				proctypeString += sf.getTokenValue();
+				if (step < elements.entrySet().size()) {
+					proctypeString += ", ";
+				} else {
+					proctypeString += ";\n";
+				}
+			}
+
+		}
+
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			if (f instanceof SubProcess) {
+				proctypeString += "chan " + f.getChannelName() + "= [1] of {mtype}" + ";\n";
+
+			}
+		}
+
+		for (Entry<String, TypeDeclaration> entry : processVariables.entrySet()) {
+			proctypeString += entry.getValue().generateDeclaration() + ";\n";
+		}
+
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			if (f instanceof StartEvent) {
+
+				proctypeString += "byte " + f.getDefaultTokenInValue() + " = 1;\n";
+
 			}
 
 		}
 
 		proctypeString += "/*process transition do loop*/\n";
 		// TODO: Possibly make sure there are more than zero transitions
+		/*atomic*/
+		proctypeString += "atomic{\n";
 		proctypeString += "do\n";
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {
 			FlowElement f = entry.getValue();
-			proctypeString += "::" + "in_tokens(" + "token_" + f.getName() + ") -> " + "\n";
-			//TODO: RUN SCRIPT HERE
-			proctypeString += "   skip;"+"\n";
-			
-			for (SequenceFlow outFlow : f.sequenceFlowOut) {
-				FlowElement out = outFlow.getEnd();
-				proctypeString += "      out_tokens("+"token_" + out.getName()+")\n";
-						
+			String[] options = f.getExecutionOptions();
+			for (String option : options) {
+				proctypeString += "::" + option;
 			}
 
 		}
 		proctypeString += "od\n";
+		/*end atomic*/
+		proctypeString += "}\n";
+		step = 0;
+		proctypeString += "if\n";
+		proctypeString += "::(";
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			step++;
+			for (SequenceFlow sf : f.sequenceFlowIn) {
+				proctypeString += sf.getTokenValue() + " == 0 ";
+
+				if (step < elements.entrySet().size()) {
+					proctypeString += "&& ";
+				}
+			}
+
+		}
+		proctypeString += ")->\n";
+		proctypeString += "reportChannel!normal\n";
+		proctypeString += "::else->\n";
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			for (SequenceFlow sf : f.sequenceFlowIn) {
+				proctypeString += "printf(\"" + sf.getTokenValue() + " %d\\n\", " + sf.getTokenValue() + ");\n";
+			}
+		}
+		proctypeString += "reportChannel!abnormal\n";
+		proctypeString += "fi\n";
+
 		proctypeString += "}\n";
 		return proctypeString;
 		// do
@@ -315,6 +383,21 @@ public class BpmnProcess extends FlowElement {
 		// report!abnormal
 		// fi
 		// od
+	}
+
+	public ArrayList<SubProcess> getAllSubProcesses() {
+		ArrayList<SubProcess> subProcesses = new ArrayList<SubProcess>();
+
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			if (f instanceof SubProcess) {
+				SubProcess s = (SubProcess) f;
+				subProcesses.add(s);
+				subProcesses.addAll(s.getAllSubProcesses());
+			}
+
+		}
+		return subProcesses;
 	}
 
 }
