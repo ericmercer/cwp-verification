@@ -5,6 +5,7 @@ import bpmnStructure.BpmnProcess;
 import bpmnStructure.PrintMessages.PrintMessageManager;
 import bpmnStructure.dataTypes.*;
 import bpmnStructure.exceptions.PromelaTypeSizeException;
+import bpmnStructure.subProcesses.SubProcess;
 
 public class PromelaGenerator2 {
 
@@ -132,10 +133,13 @@ public class PromelaGenerator2 {
 
 		// Add Message Flows last
 
-		
+		diagram.addMessageFlow("MessageFlow1", customer, "SendOrder", ss, "ReceiveOrder", msgType);
+
+		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
+
 		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
 
-		System.out.println(pg.generatePromela(2));
+		System.out.println(pg.generatePromela(1));
 		PrintMessageManager.getInstance().generateAwkScript();
 
 	}
@@ -210,34 +214,7 @@ public class PromelaGenerator2 {
 		s += this.getGlobalVariables(number_of_tokens);
 
 		s += diagram.getProcTypes();
-		// typdefs
 
-		// global variables (Data Stores) - needs bound
-		// String s = "print(" +
-		// PrintMessageManager.getInstance().addMessage("hello") + ");\n";
-		// do section
-		// s += "do\n";
-		/*
-		 * s += ":: " + this.generate_xor_fork("gateway1", "Diverging Gatway",
-		 * "var[token_id].isReady", "incrementCount", "test", "true",
-		 * "gateway2_1", "report"); s += ":: " + this.generate_xor_join(
-		 * "xor join", "gateway2_1", "gateway2_2", "subprocess");
-		 * 
-		 * s += ":: " + this.generate_parallel_fork("parallel fork",
-		 * "parallelFork", "task1", "task2");
-		 * 
-		 * s += ":: " + this.generate_parallel_join("parallel join",
-		 * "parallelJoin1", "parallelJoin2", "end");
-		 * 
-		 * s += ":: " + this.generate_end_activity("end", "end", "report");
-		 * 
-		 * s += ":: " + this.generate_subprocess_start("subprocess",
-		 * "subprocess", "subprocess"); s += "\n"; s += ":: " +
-		 * this.generate_subprocess_end("end subprocess", "subprocessEnd",
-		 * "processToken", "parallelFork");
-		 */
-
-		// s += "od\n";
 		s += this.generate_init(diagram, number_of_tokens);
 		// init section
 
@@ -287,8 +264,16 @@ public class PromelaGenerator2 {
 
 		s += "\n";
 		s += "mtype msg;\n";
+		
+		String main_process = "";
+		for (BpmnProcess bp: diagram.getAllProcesses()){
+			if (!bp.isMessageInitiated() && !(bp instanceof SubProcess)){
+				main_process = bp.getProcessName();
+			}
+		}
+		
 		for (int i = 0; i < number_of_tokens; i++) {
-			s += "run "+"proc";
+			s += "run "+main_process;
 			s += "(" + i + ", end[" + i + "]);\n";
 		}
 		s += "\n";

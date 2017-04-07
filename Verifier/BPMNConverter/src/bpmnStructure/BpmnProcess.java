@@ -8,6 +8,8 @@ import bpmnStructure.activities.ScriptTask;
 import bpmnStructure.activities.Task;
 import bpmnStructure.dataTypes.BoolType;
 import bpmnStructure.dataTypes.PromelaType;
+import bpmnStructure.dataTypes.PromelaTypeDef;
+
 import bpmnStructure.dataTypes.TypeDeclaration;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
@@ -42,6 +44,17 @@ public class BpmnProcess extends FlowElement {
 
 	public BpmnProcess(String id) {
 		super(id);
+	}
+
+	public boolean isMessageInitiated() {
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+			FlowElement f = entry.getValue();
+			if (f instanceof MessageStartEvent) {
+				return true;
+
+			}
+		}
+		return false;
 	}
 
 	private void addFlowElement(String id, FlowElement f) {
@@ -321,7 +334,7 @@ public class BpmnProcess extends FlowElement {
 
 		proctypeString += "/*process transition do loop*/\n";
 		// TODO: Possibly make sure there are more than zero transitions
-		/*atomic*/
+		/* atomic */
 		proctypeString += "atomic{\n";
 		proctypeString += "do\n";
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {
@@ -333,7 +346,7 @@ public class BpmnProcess extends FlowElement {
 
 		}
 		proctypeString += "od\n";
-		/*end atomic*/
+		/* end atomic */
 		proctypeString += "}\n";
 		step = 0;
 		proctypeString += "if\n";
