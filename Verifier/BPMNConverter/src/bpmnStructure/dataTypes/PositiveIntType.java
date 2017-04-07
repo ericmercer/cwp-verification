@@ -14,15 +14,15 @@ public class PositiveIntType extends PromelaType {
 		this(256, 0);
 	}
 
-	public PositiveIntType( int maxSize) throws PromelaTypeSizeException {
+	public PositiveIntType( int maxSize)  {
 		this(maxSize, 0);
 	}
 
-	public PositiveIntType(int maxSize, int defaultValue) throws PromelaTypeSizeException {
+	public PositiveIntType(int maxSize, int defaultValue)  {
 		this(maxSize, defaultValue, 1);
 	}
 
-	public PositiveIntType(int maxSize, int defaultValue, int capacity) throws PromelaTypeSizeException {
+	public PositiveIntType(int maxSize, int defaultValue, int capacity)  {
 		this.maxSize = maxSize;
 		this.defaultValue = defaultValue;
 		// add one to the number because it needs to include the number

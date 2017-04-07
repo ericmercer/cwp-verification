@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class AWKconverter {
 
 	public static void main(String args[]) {
 		AWKconverter convert = new AWKconverter("awks/dictionary.txt");
-		convert.toText("awks/awkScript.txt");
+		convert.toFile("awks/awkScript.txt");
 		return;
 	}
 
@@ -54,30 +55,42 @@ public class AWKconverter {
 
 	}
 
-	public void toText(String path) {
+	public void toFile(String path) {
 		try {
 			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(path)));
 
-			writer.println("#!/bin/awk -f");
-			writer.println();
-			writer.println("BEGIN {}");
-			writer.println("{");
-
-			
-			for (Entry<String, String> entry : dictionary.entrySet()) {
-
-				writer.println("gsub(/" + entry.getKey() + "/, \"" + entry.getValue() + "\");");
-
-			}
-			writer.println("print;");
-			writer.println("}");
-			writer.println("END {}");
+			writer.print(this.toText());	
 			writer.close();
-
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public String toText() {
+
+		StringBuilder builder = new StringBuilder();
+		String newline = "\n";
+
+		builder.append("#!/bin/awk -f").append(newline);
+		builder.append(newline);
+		builder.append("BEGIN {}").append(newline);
+		;
+		builder.append("{").append(newline);
+		;
+
+		for (Entry<String, String> entry : dictionary.entrySet()) {
+
+			builder.append("gsub(/" + entry.getKey() + "/, \"" + entry.getValue() + "\");").append(newline);
+			;
+
+		}
+		builder.append("print;").append(newline);
+		builder.append("}").append(newline);
+		builder.append("END {}").append(newline);
+
+		return builder.toString();
 	}
 	// This code didn't quite work for me
 	// public void toText(String path) {

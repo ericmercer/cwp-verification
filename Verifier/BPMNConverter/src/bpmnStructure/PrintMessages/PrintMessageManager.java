@@ -37,7 +37,7 @@ public class PrintMessageManager {
 		return messageMapping;
 	}
 
-	public void generateAwkScript() {
+	public String generateAwkScript() {
 		AWKconverter converter = new AWKconverter();
 		for (Entry<Integer, String> entry : messageMapping.entrySet()) {
 			Integer key = entry.getKey();
@@ -47,7 +47,7 @@ public class PrintMessageManager {
 			converter.addKeyPair("message: " + String.valueOf(key), value);
 		}
 
-		converter.toText("C:\\Users\\jvisker\\Documents\\awk.txt");
+		return converter.toText();
 	}
 
 }

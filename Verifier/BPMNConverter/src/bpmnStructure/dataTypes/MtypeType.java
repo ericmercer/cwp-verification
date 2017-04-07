@@ -10,7 +10,7 @@ public class MtypeType extends PromelaType {
 		this(mtypeValues, "");
 	}
 
-	public MtypeType(String[] mtypeValues, String defaultValue) throws PromelaTypeSizeException {
+	public MtypeType(String[] mtypeValues, String defaultValue)  {
 		this.defaultValue = defaultValue;
 		Mtypes.addMtypes(mtypeValues);
 		// TODO Auto-generated constructor stub

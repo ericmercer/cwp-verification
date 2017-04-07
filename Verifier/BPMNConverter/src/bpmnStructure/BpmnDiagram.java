@@ -28,7 +28,7 @@ public class BpmnDiagram {
 
 	}
 
-	public void addDataStore(String name, PromelaType td, int capacity) throws PromelaTypeSizeException {
+	public void addDataStore(String name, PromelaType td, int capacity)  {
 		globalVariables.add(new TypeDeclaration(name, td, capacity));
 		// TODO: Assumes zero to one data stores will be used
 		TokenId.setName(name + "Index");

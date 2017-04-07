@@ -11,7 +11,7 @@ public class BoolType extends PromelaType {
 		this(false);
 	}
 
-	public BoolType(boolean defaultValue) throws PromelaTypeSizeException {
+	public BoolType(boolean defaultValue)  {
 		// this.typeName = name;
 		this.defaultValue = defaultValue;
 	}

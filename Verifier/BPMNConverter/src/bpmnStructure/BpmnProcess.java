@@ -169,7 +169,7 @@ public class BpmnProcess extends FlowElement {
 		addDataAssociation(id, dataObjectId);
 	}
 
-	public void addDataObject(String name, PromelaType pt, int capacity) throws PromelaTypeSizeException {
+	public void addDataObject(String name, PromelaType pt, int capacity)  {
 		// TODO Auto-generated method stub
 		this.processVariables.put(name, new TypeDeclaration(name, pt, capacity));
 
