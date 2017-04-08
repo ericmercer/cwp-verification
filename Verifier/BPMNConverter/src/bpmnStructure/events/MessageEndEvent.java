@@ -9,8 +9,8 @@ import bpmnStructure.dataTypes.TypeDeclaration;
 
 public class MessageEndEvent extends EndEvent{
 
-	public MessageEndEvent(String elementId) {
-		super(elementId);
+	public MessageEndEvent(String elementId, String elementName) {
+		super(elementId,elementName);
 		
 	}
 
@@ -27,11 +27,10 @@ public class MessageEndEvent extends EndEvent{
 
 		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> \n";/* \n */
 		executionString += "atomic{\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementId()) + ");\n";
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
+		
 		/*send the object via a "message", but really we are just going to spawn a new process here*/
 		executionString += "   " + mf.getChannelName() + "!" + TokenId.getName() + ", " + variableName + ";\n";
-//		executionString += "run " + mf.getEndProcess().getProcessName();
-//		executionString += "(" + TokenId.getName() + ", " + "reportchan" + ", " + variableName + ")\n";
 		executionString += "break;\n";
 		executionString += "}\n";
 		return new String[] { executionString };

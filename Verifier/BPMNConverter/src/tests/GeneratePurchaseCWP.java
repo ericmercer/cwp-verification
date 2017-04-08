@@ -10,6 +10,14 @@ import bpmnStructure.dataTypes.PromelaTypeDef;
 
 public class GeneratePurchaseCWP {
 
+	
+	private int elementCounter = 0;
+	
+	public String getNextId(){
+		return ""+ elementCounter;
+	}
+	
+	
 	public  BpmnDiagram getManualBpmn() {
 		BpmnDiagram diagram = new BpmnDiagram();
 
@@ -58,7 +66,7 @@ public class GeneratePurchaseCWP {
 		
 		customer.addDataObject("shoppingCart", msgType, 0);
 
-		customer.addStartEvent("StartOrder");
+		customer.addStartEvent("vv","StartOrderName");
 		
 		String code1 = "shoppingCart.msg = order;\n";
 		code1 += "byte temp;\n";
@@ -75,7 +83,7 @@ public class GeneratePurchaseCWP {
 		customer.addMessageThrowEvent("SendOrder", "shoppingCart");
 		customer.addMessageCatchEvent("ReceiveStatus", "shoppingCart");
 
-		customer.addSequenceFlow("StartOrder", "chooseItem");
+		customer.addSequenceFlow("vv", "chooseItem");
 		customer.addSequenceFlow("chooseItem", "SendOrder");
 		customer.addSequenceFlow("SendOrder", "ReceiveStatus");
 

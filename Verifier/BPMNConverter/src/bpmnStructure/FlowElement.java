@@ -10,13 +10,25 @@ public abstract class FlowElement {
 
 	public static int flowElementCount = 0;
 	private String elementId;
+	private String elementName;
 	
-	public FlowElement(String name) {
-		this.setElementId(name);
+	public FlowElement(String elementId, String name) {
+		this.setElementId(elementId);
+		this.setElementName(name);
 	}
 
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
+	}
+	
+	public String getElementInfo(){
+		
+		if (elementName.equals(elementId)){
+			return "g" + elementId;
+		}else{
+			return "h" +  elementName + "-" + elementId;
+		}
+		
 	}
 	
 	static int sequenceFlowCount = 1;
@@ -41,7 +53,7 @@ public abstract class FlowElement {
 		/* default assumes only one flow in */
 		String executionString = "in_tokens(/*def*/" + this.getDefaultTokenInValue() + ") -> ";/* \n */
 		executionString += "atomic{\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementId()) + ");\n";
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		for (SequenceFlow outFlow : this.sequenceFlowOut) {
 			// FlowElement out = outFlow.getEnd();
 			executionString += "out_tokens(" + outFlow.getTokenValue() + ")\n";
@@ -91,13 +103,7 @@ public abstract class FlowElement {
 
 	public void accept(Visitor v) {
 		v.Visit(this);
-		// visited = true;
-		// System.out.println("flowElement: " + this.name);
-		// for (FlowElement f: sequenceFlow){
-		// if (!f.visited){
-		// f.accept(v);
-		// }
-		// }
+
 
 	}
 
@@ -119,13 +125,9 @@ public abstract class FlowElement {
 
 	}
 
-	public FlowElement() {
-		// id = flowElementCount++;
-	}
 
-	public String getProcessTemplateName() {
-		return "FlowElement";
-	}
+
+
 
 	public boolean equals(Object o) {
 		FlowElement otherElement = (FlowElement) o;
@@ -173,6 +175,8 @@ public abstract class FlowElement {
 	public String getElementId() {
 		return elementId;
 	}
+	
+	
 
 	public String getProcessName() {
 		return "process_" + this.getElementId();
@@ -226,6 +230,14 @@ public abstract class FlowElement {
 	public ArrayList<FlowElement> splitIntoPieces() {
 		return null;
 
+	}
+
+	public String getElementName() {
+		return elementName;
+	}
+
+	public void setElementName(String elementName) {
+		this.elementName = elementName;
 	}
 
 }

@@ -11,8 +11,8 @@ import bpmnStructure.dataTypes.TypeDeclaration;
 
 public class MessageThrowEvent extends Event {
 
-	public MessageThrowEvent(String elementId) {
-		super(elementId);
+	public MessageThrowEvent(String elementId,String elementName) {
+		super(elementId, elementName);
 	
 	}
 
@@ -29,7 +29,7 @@ public class MessageThrowEvent extends Event {
 		/*send the object via a "message", but really we are just going to spawn a new process here*/
 //		executionString += "   " + mf.getChannelName() + "!" + variableName + ";\n";
 		executionString += "atomic{\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementId()) + ");\n";
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		executionString += "run " + mf.getEndProcess().getProcessName();
 		executionString += "(" + TokenId.getName() + ", " +"reportChannel" + ", " + variableName + ")\n";
 		executionString += "out_tokens(" +  this.sequenceFlowOut.get(0).getTokenValue() + ")\n";

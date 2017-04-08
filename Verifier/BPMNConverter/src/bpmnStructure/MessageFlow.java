@@ -6,7 +6,7 @@ import bpmnStructure.dataTypes.PromelaTypeDef;
 public class MessageFlow {
 
 	private PromelaType type;
-	private String name;
+	private String messageFlowId;
 	private FlowElement startElement;
 	private BpmnProcess startProcess;
 	private FlowElement endElement;
@@ -14,8 +14,7 @@ public class MessageFlow {
 
 	public MessageFlow(String messageFlowId, PromelaType messageDataType, BpmnProcess startProcess,
 			FlowElement startElement, BpmnProcess endProcess, FlowElement endElement) {
-		// TODO Auto-generated constructor stub
-		setName(messageFlowId);
+		setMessageFlowId(messageFlowId);
 		Channels.addChannel(this.getChannelName(), messageDataType);
 		type = messageDataType;
 		this.startElement = startElement;
@@ -25,21 +24,37 @@ public class MessageFlow {
 
 	}
 
+	public FlowElement getStartElement() {
+		return startElement;
+	}
+
+	public void setStartElement(FlowElement startElement) {
+		this.startElement = startElement;
+	}
+
+	public BpmnProcess getStartProcess() {
+		return startProcess;
+	}
+
+	public void setStartProcess(BpmnProcess startProcess) {
+		this.startProcess = startProcess;
+	}
+
 	public PromelaType getType() {
 		// TODO Auto-generated method stub
 		return type;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public String getChannelName() {
-		return "chan_" + name;
+		return "chan_" + messageFlowId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getMessageFlowId() {
+		return messageFlowId;
+	}
+
+	public void setMessageFlowId(String messageFlowId) {
+		this.messageFlowId = messageFlowId;
 	}
 
 	public FlowElement getEndElement() {

@@ -31,15 +31,13 @@ public class BpmnProcess extends FlowElement {
 	// -Only one start
 	// -Gates only split into two and converge from two directions
 
-	
-
 	private TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
 	private TreeMap<String, TypeDeclaration> processVariables = new TreeMap<String, TypeDeclaration>();
 
 	private StartEvent start = null;
 
-	public BpmnProcess(String id) {
-		super(id);
+	public BpmnProcess(String id, String elementName) {
+		super(id, elementName);
 	}
 
 	public boolean isMessageInitiated() {
@@ -95,89 +93,110 @@ public class BpmnProcess extends FlowElement {
 	}
 
 	public BpmnProcess addNormalSubProcess(String id) {
-		NormalSubProcess subProcess = new NormalSubProcess(id);
+		return addNormalSubProcess(id, id);
+	}
+
+	public BpmnProcess addNormalSubProcess(String id, String name) {
+		NormalSubProcess subProcess = new NormalSubProcess(id, id);
 		addFlowElement(id, subProcess);
 		return subProcess;
 	}
 
 	// ids must be unique
 	public void addStartEvent(String id) {
-
-		setStart(new BasicStartEvent(id));
-		addFlowElement(id, getStart());
-
+		addStartEvent(id, id);
 	}
 
-	public void addStartEvent(String id, String promela) {
-
-		setStart(new BasicStartEvent(id));
+	public void addStartEvent(String id, String name) {
+		setStart(new BasicStartEvent(id, name));
 		addFlowElement(id, getStart());
-
 	}
 
 	public void addTask(String id) {
-		addFlowElement(id, new Task(id, ""));
+		addFlowElement(id, new Task(id, id));
 	}
 
-	public void addTask(String id, String promela) {
-		addFlowElement(id, new Task(id, promela));
-	}
-
-	public void addScriptTask(String id) {
-		addFlowElement(id, new ScriptTask(id, ""));
+	public void addTask(String id, String name) {
+		addFlowElement(id, new Task(id, name));
 	}
 
 	public void addScriptTask(String id, String promela) {
-		addFlowElement(id, new ScriptTask(id, promela));
+		addScriptTask(id, promela, id);
+	}
+
+	public void addScriptTask(String id, String promela, String name) {
+		addFlowElement(id, new ScriptTask(id, name, promela));
 	}
 
 	public void addEndEvent(String id) {
-		addFlowElement(id, new BasicEndEvent(id));
+		addEndEvent(id, id);
 	}
 
-	public void addEndEvent(String id, String promela) {
-		addFlowElement(id, new BasicEndEvent(id));
+	public void addEndEvent(String id, String name) {
+		addFlowElement(id, new BasicEndEvent(id, name));
 	}
 
 	public void addExclusiveGateway(String id) {
-		addFlowElement(id, new ExclusiveGateway(id));
+		addExclusiveGateway(id, id);
+	}
+
+	public void addExclusiveGateway(String id, String name) {
+		addFlowElement(id, new ExclusiveGateway(id, name));
 	}
 
 	public void addParallelGateway(String id) {
-		addFlowElement(id, new ParallelGateway(id));
+		addParallelGateway(id, id);
+	}
+
+	public void addParallelGateway(String id, String name) {
+		addFlowElement(id, new ParallelGateway(id, name));
 	}
 
 	public void addIntermediateEvent(String id) {
-		addFlowElement(id, new IntermediateEvent(id));
+		addIntermediateEvent(id, id);
 	}
 
-	public void addIntermediateEvent(String id, String promela) {
-		addFlowElement(id, new IntermediateEvent(id));
+	public void addIntermediateEvent(String id, String name) {
+		addFlowElement(id, new IntermediateEvent(id, name));
 	}
 
 	public void addMessageThrowEvent(String id, String dataObjectId) {
-		addFlowElement(id, new MessageThrowEvent(id));
+		addMessageThrowEvent(id, id, dataObjectId);
+	}
+
+	public void addMessageThrowEvent(String id, String name, String dataObjectId) {
+		addFlowElement(id, new MessageThrowEvent(id, name));
 		addDataAssociation(id, dataObjectId);
 	}
 
 	public void addMessageCatchEvent(String id, String dataObjectId) {
-		addFlowElement(id, new MessageCatchEvent(id));
+		addMessageCatchEvent(id, id, dataObjectId);
+	}
+
+	public void addMessageCatchEvent(String id, String name, String dataObjectId) {
+		addFlowElement(id, new MessageCatchEvent(id, name));
 		addDataAssociation(id, dataObjectId);
 	}
 
-	public void addDataObject(String name, PromelaType pt, int capacity)  {
-		// TODO Auto-generated method stub
+	public void addDataObject(String name, PromelaType pt, int capacity) {
 		this.processVariables.put(name, new TypeDeclaration(name, pt, capacity));
-
 	}
 
 	public void addMessageStartEvent(String id, String dataObjectId) {
-		addFlowElement(id, new MessageStartEvent(id));
+		addMessageStartEvent(id, id, dataObjectId);
+	}
+
+	public void addMessageStartEvent(String id, String name, String dataObjectId) {
+		addFlowElement(id, new MessageStartEvent(id, name));
 		addDataAssociation(id, dataObjectId);
 	}
 
 	public void addMessageEndEvent(String id, String dataObjectId) {
-		addFlowElement(id, new MessageEndEvent(id));
+		addMessageEndEvent(id, id, dataObjectId);
+	}
+
+	public void addMessageEndEvent(String id, String name, String dataObjectId) {
+		addFlowElement(id, new MessageEndEvent(id, name));
 		addDataAssociation(id, dataObjectId);
 	}
 
@@ -277,7 +296,7 @@ public class BpmnProcess extends FlowElement {
 			FlowElement f = entry.getValue();
 			if (f instanceof MessageStartEvent) {
 				isNormalStart = false;
-			
+
 				MessageStartEvent mst = (MessageStartEvent) f;
 				messageType = mst.getRelatedDataObjects().get(0).getType();
 			}
@@ -292,20 +311,21 @@ public class BpmnProcess extends FlowElement {
 
 		proctypeString += "byte ";
 		int step = 0;
-		for (Entry<String, FlowElement> entry : elements.entrySet()) {
-			FlowElement f = entry.getValue();
+		ArrayList<FlowElement> declarationElements = getAllElementsWitInboundSequenceFlow();
+		for (FlowElement f : declarationElements) {
+
 			step++;
+
 			for (SequenceFlow sf : f.sequenceFlowIn) {
 				proctypeString += sf.getTokenValue();
-				if (step < elements.entrySet().size()) {
+				if (step < declarationElements.size()) {
 					proctypeString += ", ";
-				} else {
-					proctypeString += ";\n";
-				}
+				} 
 			}
 
 		}
-
+		proctypeString += ";\n";
+		
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {
 			FlowElement f = entry.getValue();
 			if (f instanceof SubProcess) {
@@ -373,7 +393,19 @@ public class BpmnProcess extends FlowElement {
 		proctypeString += "}\n";
 		proctypeString += "}\n";
 		return proctypeString;
-		
+
+	}
+
+	public ArrayList<FlowElement> getAllElementsWitInboundSequenceFlow() {
+		ArrayList<FlowElement> inElements = new ArrayList<FlowElement>();
+		for (Entry<String, FlowElement> entry : elements.entrySet()) {
+
+			FlowElement f = entry.getValue();
+			if (f.sequenceFlowIn.size() > 0) {
+				inElements.add(f);
+			}
+		}
+		return inElements;
 	}
 
 	public ArrayList<SubProcess> getAllSubProcesses() {

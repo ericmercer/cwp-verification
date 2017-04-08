@@ -5,8 +5,8 @@ import bpmnStructure.Gateway;
 
 public class DivergingExclusiveGateway extends Gateway {
 
-	public DivergingExclusiveGateway(String name) {
-		super(name);
+	public DivergingExclusiveGateway(String elementId,String elementName) {
+		super(elementId, elementName);
 	}
 
 

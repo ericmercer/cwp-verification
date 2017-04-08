@@ -4,8 +4,8 @@ import visitor.Visitor;
 
 public class BasicStartEvent extends StartEvent {
 
-	public BasicStartEvent(String elementId) {
-		super(elementId);
+	public BasicStartEvent(String elementId, String elementName) {
+		super(elementId,elementName);
 	}
 
 	public void accept(Visitor v) {

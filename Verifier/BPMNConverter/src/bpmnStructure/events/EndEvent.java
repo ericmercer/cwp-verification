@@ -4,8 +4,8 @@ import bpmnStructure.Event;
 
 
 public class EndEvent extends Event {
-	public EndEvent(String elementId) {
-		super(elementId);
+	public EndEvent(String elementId, String elementName) {
+		super(elementId,elementName);
 	}
 
 	@Override

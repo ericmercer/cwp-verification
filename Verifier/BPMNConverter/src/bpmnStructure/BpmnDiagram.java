@@ -16,12 +16,17 @@ public class BpmnDiagram {
 
 	public TypeDefManager typeManager = new TypeDefManager();
 
-	public PromelaTypeDef addTypeDef(String name) {
-		return typeManager.addTypeDef(name);
+	public PromelaTypeDef addTypeDef(String elementId) {
+		return typeManager.addTypeDef(elementId);
 	}
 
 	public BpmnProcess addProcess(String processName) {
-		BpmnProcess process = new BpmnProcess(processName);
+		return addProcess(processName, processName);
+
+	}
+
+	public BpmnProcess addProcess(String processName, String elementName) {
+		BpmnProcess process = new BpmnProcess(processName, elementName);
 		mainProcesses.add(process);
 
 		return process;

@@ -1,8 +1,6 @@
 package bpmnStructure.gateways;
 
-import java.util.ArrayList;
 
-import bpmnStructure.FlowElement;
 import bpmnStructure.Gateway;
 import bpmnStructure.SequenceFlow;
 import bpmnStructure.PrintMessages.PrintMessageManager;
@@ -11,8 +9,8 @@ public class ParallelGateway extends Gateway {
 
 	/* possibly translate normal gateways into two gatways if multiple inputs */
 	/* coud use a visitor to translate structure */
-	public ParallelGateway(String elementId) {
-		super(elementId);
+	public ParallelGateway(String elementId,String elementName) {
+		super(elementId, elementName);
 	}
 
 

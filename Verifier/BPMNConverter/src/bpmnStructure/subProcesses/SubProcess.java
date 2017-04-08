@@ -12,8 +12,8 @@ public class SubProcess extends BpmnProcess {
 	 * 
 	 * A subprocess must have a report channel to return
 	 */
-	public SubProcess(String elementId) {
-		super(elementId);
+	public SubProcess(String elementId,String elementName) {
+		super(elementId, elementName);
 
 	}
 

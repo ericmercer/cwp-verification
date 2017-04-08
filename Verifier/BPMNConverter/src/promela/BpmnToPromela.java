@@ -5,12 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import bpmnStructure.BpmnDiagram;
-import bpmnStructure.BpmnProcess;
+
 import bpmnStructure.PrintMessages.PrintMessageManager;
-import bpmnStructure.dataTypes.BoolType;
-import bpmnStructure.dataTypes.MtypeType;
-import bpmnStructure.dataTypes.PositiveIntType;
-import bpmnStructure.dataTypes.PromelaTypeDef;
+
 import tests.GeneratePurchaseCWP;
 
 public class BpmnToPromela {

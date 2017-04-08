@@ -5,8 +5,8 @@ import visitor.Visitor;
 
 public class DivergingParallelGateway extends Gateway{
 
-	public DivergingParallelGateway(String name) {
-		super(name);
+	public DivergingParallelGateway(String elementId,String elementName) {
+		super(elementId, elementName);
 	}
 	public void accept(Visitor v) {
 		v.Visit(this);

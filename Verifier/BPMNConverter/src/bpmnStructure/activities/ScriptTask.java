@@ -1,25 +1,25 @@
 package bpmnStructure.activities;
 
-import bpmnStructure.FlowElement;
-import bpmnStructure.SequenceFlow;
 import bpmnStructure.PrintMessages.PrintMessageManager;
 
 public class ScriptTask extends Task {
+	String promela = null;
 
-	public ScriptTask(String name, String promela) {
-		super(name, promela);
-		// TODO Auto-generated constructor stub
+	public ScriptTask(String elementId, String elementName, String promela) {
+
+		super(elementId, elementName);
+		this.promela = promela;
 	}
 
 	@Override
 	public String[] getExecutionOptions() {
 		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> \n";/* \n */
 		executionString += "atomic{\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementId()) + ");\n";
+		executionString += "print(" + PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		executionString += "   " + promela + "\n";
 		executionString += "out_tokens(" + this.getDefaultTokenOutValue() + ")\n";
 		executionString += "}\n";
-		return new String[]{executionString};
+		return new String[] { executionString };
 
 	}
 

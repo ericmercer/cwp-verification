@@ -19,8 +19,8 @@ public class MessageCatchEvent extends Event {
 	 * I am assuming that there is only one message flow attached to an
 	 * flowelement for now
 	 */
-	public MessageCatchEvent(String elementId) {
-		super(elementId);
+	public MessageCatchEvent(String elementId,String elementName) {
+		super(elementId, elementName);
 
 	}
 

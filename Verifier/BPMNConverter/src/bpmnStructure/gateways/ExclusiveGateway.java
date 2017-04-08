@@ -10,8 +10,8 @@ public class ExclusiveGateway extends Gateway {
 	/* possibly translate normal gateways into two gateways if multiple inputs */
 	/* could use a visitor to translate structure */
 
-	public ExclusiveGateway(String elementId) {
-		super(elementId);
+	public ExclusiveGateway(String elementId,String elementName) {
+		super(elementId, elementName);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ExclusiveGateway extends Gateway {
 			if (!isDefault1 && !isDefault2) {
 				executionString += "xor_fork(";
 				executionString += this.getDefaultTokenInValue() + ", ";
-				executionString += PrintMessageManager.getInstance().addMessage(this.getElementId() + ": xor_fork first choice") + ", ";
+				executionString += PrintMessageManager.getInstance().addMessage(this.getElementInfo() + ": xor_fork first choice") + ", ";
 				executionString += this.sequenceFlowOut.get(0).getExpression() + ", ";
 				executionString += sf1.getTokenValue() + ", ";
 				executionString += PrintMessageManager.getInstance().addMessage("xor_fork second choice") + ", ";
@@ -61,17 +61,14 @@ public class ExclusiveGateway extends Gateway {
 				executionString += normalSequenceFlow.getExpression() + ", ";
 				executionString += normalSequenceFlow.getTokenValue() + ", ";
 				executionString += PrintMessageManager.getInstance()
-						.addMessage(this.getElementId() + ": xor_fork_default default choice") + ", ";
+						.addMessage(this.getElementInfo() + ": xor_fork_default default choice") + ", ";
 				executionString += defaultFlow.getTokenValue();
 				executionString += ");\n";
-				// inline xor_fork_default(inseq,messageNumber1,expr1, outseq1,
-				// messageNumber2,defaultSeq){
+			
 			}
 
 		} else {
-			// FlowElement f1 = this.sequenceFlowIn.get(0).getStart();
-			// FlowElement f2 = this.sequenceFlowIn.get(1).getStart();
-			// FlowElement outFlow = this.sequenceFlowOut.get(0).getEnd();
+			
 
 			SequenceFlow sf1 = this.sequenceFlowIn.get(0);
 			SequenceFlow sf2 = this.sequenceFlowIn.get(1);
@@ -79,7 +76,7 @@ public class ExclusiveGateway extends Gateway {
 
 			PrintMessageManager pm = PrintMessageManager.getInstance();
 			String s = "xor_join(";
-			s += pm.addMessage(this.getElementId() +": xor join") + ", ";
+			s += pm.addMessage(this.getElementInfo() +": xor join") + ", ";
 			s += sf1.getTokenValue() + ", ";
 			s += sf2.getTokenValue() + ", ";
 			s += soutFlow.getTokenValue() + ")\n";
@@ -90,15 +87,6 @@ public class ExclusiveGateway extends Gateway {
 
 	}
 
-	public String generate_xor_join(String message, String inseq, String inseq2, String outseq) {
-		PrintMessageManager pm = PrintMessageManager.getInstance();
-		String s = "xor_join(";
-		s += pm.addMessage(message) + ", ";
-		s += inseq + ", ";
-		s += inseq2 + ", ";
-		s += outseq + ")\n";
 
-		return s;
-	}
 
 }
