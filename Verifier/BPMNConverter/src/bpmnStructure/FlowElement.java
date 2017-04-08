@@ -24,9 +24,9 @@ public abstract class FlowElement {
 	public String getElementInfo(){
 		
 		if (elementName.equals(elementId)){
-			return "g" + elementId;
+			return elementId;
 		}else{
-			return "h" +  elementName + "-" + elementId;
+			return  elementName + "-" + elementId;
 		}
 		
 	}

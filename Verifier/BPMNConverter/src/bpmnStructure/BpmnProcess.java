@@ -366,13 +366,13 @@ public class BpmnProcess extends FlowElement {
 		proctypeString += "atomic{\n";
 		proctypeString += "if\n";
 		proctypeString += "::(";
-		for (Entry<String, FlowElement> entry : elements.entrySet()) {
-			FlowElement f = entry.getValue();
+		for (FlowElement f : declarationElements) {
+			
 			step++;
 			for (SequenceFlow sf : f.sequenceFlowIn) {
 				proctypeString += sf.getTokenValue() + " == 0 ";
 
-				if (step < elements.entrySet().size()) {
+				if (step < declarationElements.size()) {
 					proctypeString += "&& ";
 				}
 			}
