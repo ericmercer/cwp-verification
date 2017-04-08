@@ -1,10 +1,10 @@
 package bpmnStructure.dataTypes;
 
-import bpmnStructure.exceptions.PromelaTypeSizeException;
+
 
 public class PidType extends PromelaType {
 
-	public PidType(String name) throws PromelaTypeSizeException {
+	public PidType(String name)  {
 		
 		// TODO Auto-generated constructor stub
 	}

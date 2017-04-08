@@ -18,13 +18,19 @@ public class BpmnToPromela {
 		// directory to write to
 		// get BpmnDiagram / give files needed for BPMN import
 		// ask for number of instances you want to run it for
-		int number_of_instances = 1;
+		
+		/*number of instances to run if no datastore is set*/
+		int default_number_of_instances = 1;
+		
 
 		String beginningPath = "C:\\Users\\jvisker\\Documents\\";
 		BpmnDiagram bpmnMemoryStructure = getManualBpmn();
-		PromelaGenerator2 pg = new PromelaGenerator2(bpmnMemoryStructure);
+		PromelaGenerator pg = new PromelaGenerator(bpmnMemoryStructure);
+		
+		
+		int dataStoreSize = bpmnMemoryStructure.getDataStoreSize();
 
-		String promelaString = pg.generatePromela(number_of_instances);
+		String promelaString = pg.generatePromela(dataStoreSize>0?dataStoreSize:default_number_of_instances);
 		String awkScript = PrintMessageManager.getInstance().generateAwkScript();
 
 		writeStringToFile(promelaString, beginningPath + "generatedPromela.pml");
@@ -54,31 +60,35 @@ public class BpmnToPromela {
 
 		PromelaTypeDef cwtype = diagram.addTypeDef("cwpType");
 
-		int MAX_SELLERS = 5;
-		int MAX_BUYERS = 5;
-		int MAX_ITEM = 5;
-		int MAX_AMOUNT = 5;
-		int MAX_ITEMOWNER = 5;
-		int MAX_PAYMENTOWNER = 5;
-
+		int maxValue = 0;
+		
+		int MAX_SELLERS = maxValue;
+		int MAX_BUYERS = maxValue;
+		int MAX_ITEM = maxValue;
+		int MAX_AMOUNT = maxValue;
+		int MAX_ITEMOWNER = maxValue;
+		int MAX_PAYMENTOWNER = maxValue;
+		int MAX_ITEM2 = maxValue;
+		int MAX_COST = maxValue;
+		int MAX_BUYERS2 = maxValue;
+		
+		
 		cwtype.addPromelaType("seller", new PositiveIntType(MAX_SELLERS, 0));
 		cwtype.addPromelaType("buyer", new PositiveIntType(MAX_BUYERS, 0));
 		cwtype.addPromelaType("item", new PositiveIntType(MAX_ITEM, 0));
 		cwtype.addPromelaType("amount", new PositiveIntType(MAX_AMOUNT, 0));
 		cwtype.addPromelaType("itemOwner", new PositiveIntType(MAX_ITEMOWNER, 0));
 		cwtype.addPromelaType("paymentOwner", new PositiveIntType(MAX_PAYMENTOWNER, 0));
-
-		// cwtype.addPromelaType("v7", innertype, 4);
-
-		/* how to add an array */
 		cwtype.addPromelaType("boolVal", new BoolType(true));
 
+		
+		
+		diagram.addDataStore("cwpArray", cwtype, 3);
+		
 		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
 		msgType.addPromelaType("msg",
 				new MtypeType(new String[] { "order", "outOfStock", "shipped", "cardDenied" }, "shipped"));
-		int MAX_ITEM2 = 5;
-		int MAX_COST = 5;
-		int MAX_BUYERS2 = 5;
+
 		msgType.addPromelaType("item", new PositiveIntType(MAX_ITEM2), 0);
 		msgType.addPromelaType("cost", new PositiveIntType(MAX_COST, 0));
 		msgType.addPromelaType("buyer", new PositiveIntType(MAX_BUYERS2, 0));
@@ -143,7 +153,7 @@ public class BpmnToPromela {
 		ss.addScriptTask("shipItem", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer;");
 		ss.addMessageEndEvent("SendStatus", "orderStatus");
 
-		diagram.addDataStore("cwpArray", cwtype, 4);
+	
 
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
 		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "false /*outOfStock*/");
@@ -154,7 +164,7 @@ public class BpmnToPromela {
 
 		ss.addSequenceFlow("cardDeniedMessage", "join1");
 		ss.addSequenceFlow("shipItem", "join1");
-
+		
 		ss.addSequenceFlow("join2", "SendStatus");
 		ss.addSequenceFlow("ChargeCreditCard", "cardDeniedMessage");
 		ss.addSequenceFlow("ChargeCreditCard", "prepareItemForShipping");
@@ -163,10 +173,9 @@ public class BpmnToPromela {
 		// Add Message Flows last
 
 		diagram.addMessageFlow("MessageFlow1", customer, "SendOrder", ss, "ReceiveOrder", msgType);
-
 		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
 
-		PromelaGenerator2 pg = new PromelaGenerator2(diagram);
+
 		return diagram;
 	}
 

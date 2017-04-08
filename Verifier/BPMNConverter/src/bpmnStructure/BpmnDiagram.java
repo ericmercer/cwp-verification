@@ -6,13 +6,14 @@ import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
 import bpmnStructure.dataTypes.TypeDefManager;
 import bpmnStructure.dataTypes.TypeDeclaration;
-import bpmnStructure.exceptions.PromelaTypeSizeException;
+
 
 public class BpmnDiagram {
 
 	ArrayList<BpmnProcess> mainProcesses = new ArrayList<BpmnProcess>();
 	ArrayList<MessageFlow> messageFlows = new ArrayList<MessageFlow>();
 	ArrayList<TypeDeclaration> globalVariables = new ArrayList<TypeDeclaration>();
+	TypeDeclaration dataStore;
 
 	public TypeDefManager typeManager = new TypeDefManager();
 
@@ -28,10 +29,21 @@ public class BpmnDiagram {
 
 	}
 
-	public void addDataStore(String name, PromelaType td, int capacity)  {
-		globalVariables.add(new TypeDeclaration(name, td, capacity));
+	public int getDataStoreSize() {
+		if (dataStore == null) {
+			return 0;
+		}
+
+		return dataStore.getCapacity();
+
+	}
+
+	public void addDataStore(String name, PromelaType td, int capacity) {
+		TypeDeclaration dataStoreVariable = new TypeDeclaration(name, td, capacity);
+		globalVariables.add(dataStoreVariable);
 		// TODO: Assumes zero to one data stores will be used
 		TokenId.setName(name + "Index");
+		dataStore = dataStoreVariable;
 	}
 
 	public void addMessageFlow(String messageFlowId, BpmnProcess process1, String flowElement1Name,
@@ -40,7 +52,7 @@ public class BpmnDiagram {
 		FlowElement startElement = process1.getFlowElement(flowElement1Name);
 		FlowElement endElement = process2.getFlowElement(flowElement2Name);
 
-		MessageFlow mf = new MessageFlow(messageFlowId, messageDataType, process1, startElement,process2, endElement);
+		MessageFlow mf = new MessageFlow(messageFlowId, messageDataType, process1, startElement, process2, endElement);
 
 		startElement.addMessageFlow(mf);
 		endElement.addMessageFlow(mf);
@@ -63,9 +75,9 @@ public class BpmnDiagram {
 
 	public String getGlobalVariables(int number_of_tokens) {
 		String out = "";
-		
-		//out += "chan end[" + number_of_tokens + "] = [1] of {mtype};\n";
-		
+
+		// out += "chan end[" + number_of_tokens + "] = [1] of {mtype};\n";
+
 		for (TypeDeclaration var : globalVariables) {
 			out += var.generateDeclaration() + ";\n";
 		}

@@ -30,7 +30,7 @@ public class TypeDeclaration {
 
 	public String generateDeclaration() {
 		// String typeDeclaration = this.type.generateTypeString();
-		if (this.type.getMaxSize() > 0) {
+		if (this.type.getMaxSize() >= 0) {
 		
 			PromelaConstants.addConstant("MAX_" + this.getVarName().toUpperCase(), this.type.getMaxSize());
 		}

@@ -2,7 +2,7 @@ package bpmnStructure.dataTypes;
 
 import java.util.ArrayList;
 
-import bpmnStructure.exceptions.PromelaTypeSizeException;
+
 
 public class TypeDefManager {
 

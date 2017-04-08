@@ -1,12 +1,12 @@
 package bpmnStructure.dataTypes;
 
-import bpmnStructure.exceptions.PromelaTypeSizeException;
+
 
 public class MtypeType extends PromelaType {
 
 	String defaultValue = "";
 
-	public MtypeType(String[] mtypeValues) throws PromelaTypeSizeException {
+	public MtypeType(String[] mtypeValues)  {
 		this(mtypeValues, "");
 	}
 

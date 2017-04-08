@@ -17,7 +17,6 @@ import bpmnStructure.events.IntermediateEvent;
 import bpmnStructure.events.MessageEndEvent;
 import bpmnStructure.events.MessageStartEvent;
 import bpmnStructure.events.StartEvent;
-import bpmnStructure.exceptions.PromelaTypeSizeException;
 import bpmnStructure.gateways.ExclusiveGateway;
 import bpmnStructure.gateways.ParallelGateway;
 import bpmnStructure.messages.MessageCatchEvent;

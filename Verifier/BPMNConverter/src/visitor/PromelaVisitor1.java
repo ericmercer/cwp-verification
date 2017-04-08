@@ -11,13 +11,13 @@ import bpmnStructure.gateways.ConvergingParallelGateway;
 import bpmnStructure.gateways.DivergingExclusiveGateway;
 import bpmnStructure.gateways.DivergingParallelGateway;
 import bpmnStructure.gateways.ExclusiveGateway;
-import promela.PromelaProcess;
+
 
 public class PromelaVisitor1 implements Visitor {
 
 	/* Instantiate a PROMELA template class that */
 	/* handles building the PROMELA file */
-	ArrayList<PromelaProcess> processes = new ArrayList<PromelaProcess>();
+
 	
 	@Override
 	public void Visit(BasicStartEvent f) {

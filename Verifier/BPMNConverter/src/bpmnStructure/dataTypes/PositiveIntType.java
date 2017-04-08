@@ -1,6 +1,6 @@
 package bpmnStructure.dataTypes;
 
-import bpmnStructure.exceptions.PromelaTypeSizeException;
+
 
 public class PositiveIntType extends PromelaType {
 
@@ -10,7 +10,7 @@ public class PositiveIntType extends PromelaType {
 
 	// default maximum length to 256 if not specified, and the default value to
 	// zero
-	public PositiveIntType() throws PromelaTypeSizeException {
+	public PositiveIntType() {
 		this(256, 0);
 	}
 
@@ -27,7 +27,7 @@ public class PositiveIntType extends PromelaType {
 		this.defaultValue = defaultValue;
 		// add one to the number because it needs to include the number
 		this.setNumOfBits((int) Math.ceil(Math.log(maxSize + 1) / Math.log(2)));
-		// PromelaConstants.addConstant("MAX_" + name.toUpperCase(), maxSize);
+		
 	}
 
 	public int getNumOfBits() {
@@ -38,10 +38,6 @@ public class PositiveIntType extends PromelaType {
 		this.numOfBits = numOfBits;
 	}
 
-	// @Override
-	// public boolean isKey() {
-	// return this.typeName.substring(0, 3).equals("key");
-	// }
 
 	@Override
 	public String generateTypeString() {
