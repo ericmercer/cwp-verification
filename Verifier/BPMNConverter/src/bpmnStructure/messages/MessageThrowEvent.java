@@ -28,11 +28,12 @@ public class MessageThrowEvent extends Event {
 		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> \n";/* \n */
 		/*send the object via a "message", but really we are just going to spawn a new process here*/
 //		executionString += "   " + mf.getChannelName() + "!" + variableName + ";\n";
+		executionString += "atomic{\n";
 		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getName()) + ");\n";
 		executionString += "run " + mf.getEndProcess().getProcessName();
-		executionString += "(" + TokenId.getName() + ", " +"end["+TokenId.getName() + "]" + ", " + variableName + ")\n";
+		executionString += "(" + TokenId.getName() + ", " +"reportChannel" + ", " + variableName + ")\n";
 		executionString += "out_tokens(" +  this.sequenceFlowOut.get(0).getTokenValue() + ")\n";
-
+		executionString += "}\n";
 		return new String[] { executionString };
 
 	}

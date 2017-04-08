@@ -57,7 +57,8 @@ public class MessageCatchEvent extends Event {
 				executionString += "eval("+variableName +"." + key.getVarName() + "), ";
 			}
 		}
-		executionString += variableName + "];\n";
+		executionString += variableName + "]->\n";
+		executionString += "atomic{\n";
 		
 		executionString += mf.getChannelName() + "??eval(" + TokenId.getName() + ")" + ", ";
 		if (type instanceof PromelaTypeDef) {
@@ -73,7 +74,7 @@ public class MessageCatchEvent extends Event {
 		executionString += "decrement_tokens("+this.getDefaultTokenInValue() + ");\n";
 		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getName()) + ");\n";
 		executionString += "out_tokens(" + this.sequenceFlowOut.get(0).getTokenValue() + ")\n";
-
+		executionString += "}\n";
 		return new String[] { executionString };
 
 	}

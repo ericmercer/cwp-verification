@@ -44,13 +44,14 @@ public abstract class FlowElement {
 	public String[] getExecutionOptions() {
 		/* default assumes only one flow in */
 		String executionString = "in_tokens(/*def*/" + this.getDefaultTokenInValue() + ") -> ";/* \n */
-
+		executionString += "atomic{\n";
 		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getName()) + ");\n";
 		for (SequenceFlow outFlow : this.sequenceFlowOut) {
 			// FlowElement out = outFlow.getEnd();
 			executionString += "out_tokens(" + outFlow.getTokenValue() + ")\n";
 
 		}
+		executionString += "}\n";
 		return new String[] { executionString };
 
 	}

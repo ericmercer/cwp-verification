@@ -25,12 +25,12 @@ public class PromelaGenerator2 {
 
 		PromelaTypeDef cwtype = diagram.addTypeDef("cwpType");
 
-		int MAX_SELLERS = 280;
-		int MAX_BUYERS = 255;
-		int MAX_ITEM = 255;
-		int MAX_AMOUNT = 255;
-		int MAX_ITEMOWNER = 255;
-		int MAX_PAYMENTOWNER = 255;
+		int MAX_SELLERS = 10;
+		int MAX_BUYERS = 10;
+		int MAX_ITEM = 10;
+		int MAX_AMOUNT = 10;
+		int MAX_ITEMOWNER = 10;
+		int MAX_PAYMENTOWNER = 10;
 
 		cwtype.addPromelaType("seller", new PositiveIntType(MAX_SELLERS, 0));
 		cwtype.addPromelaType("buyer", new PositiveIntType(MAX_BUYERS, 0));
@@ -144,54 +144,51 @@ public class PromelaGenerator2 {
 
 	}
 
-
-	
 	public String generatePromela(int number_of_tokens) {
-	PrintMessageManager pm = PrintMessageManager.getInstance();
+		PrintMessageManager pm = PrintMessageManager.getInstance();
 
-	String typeDefs = diagram.typeManager.generateTypeDefString() + "\n";
-	String constantDefinitions = PromelaConstants.generateConstantString() + "\n";
+		String typeDefs = diagram.typeManager.generateTypeDefString() + "\n";
+		String constantDefinitions = PromelaConstants.generateConstantString() + "\n";
 
-	String s = "";
-	s += "#include \"BPMN.pml\"\n\n";
-	s += Mtypes.toPromela();
+		String s = "";
+		s += "#include \"BPMN.pml\"\n\n";
+		s += Mtypes.toPromela();
 
-	s += "/*definitions*/\n";
+		s += "/*definitions*/\n";
 
-	s += constantDefinitions;
-	s += typeDefs;
-	s += this.getGlobalVariables(number_of_tokens);
+		s += constantDefinitions;
+		s += typeDefs;
+		s += this.getGlobalVariables(number_of_tokens);
 
-	s += diagram.getProcTypes();
+		s += diagram.getProcTypes();
 
-	s += this.generate_init(diagram, number_of_tokens);
-	// init section
+		s += this.generate_init(diagram, number_of_tokens);
+		// init section
 
-	return s;
+		return s;
 
-}
-	
+	}
+
 	/* all start events live in the init */
 	public String generate_init(BpmnDiagram diagram, int number_of_tokens) {
 		String s = "";
 		s += "init {\n";
 
 		s += "atomic {\n";
-		// Moving this to be global
-		// s += "chan end[" + number_of_tokens + "] = [1] of {mtype}\n";
+		s += "chan end[" + number_of_tokens + "] = [1] of {mtype}\n";
 
 		s += "\n";
 		s += "mtype msg;\n";
-		
+
 		String main_process = "";
-		for (BpmnProcess bp: diagram.getAllProcesses()){
-			if (!bp.isMessageInitiated() && !(bp instanceof SubProcess)){
+		for (BpmnProcess bp : diagram.getAllProcesses()) {
+			if (!bp.isMessageInitiated() && !(bp instanceof SubProcess)) {
 				main_process = bp.getProcessName();
 			}
 		}
-		
+
 		for (int i = 0; i < number_of_tokens; i++) {
-			s += "run "+main_process;
+			s += "run " + main_process;
 			s += "(" + i + ", end[" + i + "]);\n";
 		}
 		s += "\n";

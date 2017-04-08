@@ -14,10 +14,11 @@ public class ScriptTask extends Task {
 	@Override
 	public String[] getExecutionOptions() {
 		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> \n";/* \n */
+		executionString += "atomic{\n";
 		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getName()) + ");\n";
 		executionString += "   " + promela + "\n";
 		executionString += "out_tokens(" + this.getDefaultTokenOutValue() + ")\n";
-
+		executionString += "}\n";
 		return new String[]{executionString};
 
 	}

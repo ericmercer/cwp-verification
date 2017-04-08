@@ -334,8 +334,7 @@ public class BpmnProcess extends FlowElement {
 
 		proctypeString += "/*process transition do loop*/\n";
 		// TODO: Possibly make sure there are more than zero transitions
-		/* atomic */
-		proctypeString += "atomic{\n";
+
 		proctypeString += "do\n";
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {
 			FlowElement f = entry.getValue();
@@ -346,9 +345,9 @@ public class BpmnProcess extends FlowElement {
 
 		}
 		proctypeString += "od\n";
-		/* end atomic */
-		proctypeString += "}\n";
+
 		step = 0;
+		proctypeString += "atomic{\n";
 		proctypeString += "if\n";
 		proctypeString += "::(";
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {
@@ -375,6 +374,7 @@ public class BpmnProcess extends FlowElement {
 		proctypeString += "reportChannel!abnormal\n";
 		proctypeString += "fi\n";
 
+		proctypeString += "}\n";
 		proctypeString += "}\n";
 		return proctypeString;
 		// do

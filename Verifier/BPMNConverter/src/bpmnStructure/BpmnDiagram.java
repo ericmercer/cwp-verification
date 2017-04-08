@@ -64,7 +64,7 @@ public class BpmnDiagram {
 	public String getGlobalVariables(int number_of_tokens) {
 		String out = "";
 		
-		out += "chan end[" + number_of_tokens + "] = [1] of {mtype};\n";
+		//out += "chan end[" + number_of_tokens + "] = [1] of {mtype};\n";
 		
 		for (TypeDeclaration var : globalVariables) {
 			out += var.generateDeclaration() + ";\n";

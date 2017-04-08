@@ -54,12 +54,12 @@ public class BpmnToPromela {
 
 		PromelaTypeDef cwtype = diagram.addTypeDef("cwpType");
 
-		int MAX_SELLERS = 280;
-		int MAX_BUYERS = 255;
-		int MAX_ITEM = 255;
-		int MAX_AMOUNT = 255;
-		int MAX_ITEMOWNER = 255;
-		int MAX_PAYMENTOWNER = 255;
+		int MAX_SELLERS = 5;
+		int MAX_BUYERS = 5;
+		int MAX_ITEM = 5;
+		int MAX_AMOUNT = 5;
+		int MAX_ITEMOWNER = 5;
+		int MAX_PAYMENTOWNER = 5;
 
 		cwtype.addPromelaType("seller", new PositiveIntType(MAX_SELLERS, 0));
 		cwtype.addPromelaType("buyer", new PositiveIntType(MAX_BUYERS, 0));
@@ -76,9 +76,9 @@ public class BpmnToPromela {
 		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
 		msgType.addPromelaType("msg",
 				new MtypeType(new String[] { "order", "outOfStock", "shipped", "cardDenied" }, "shipped"));
-		int MAX_ITEM2 = 255;
-		int MAX_COST = 255;
-		int MAX_BUYERS2 = 255;
+		int MAX_ITEM2 = 5;
+		int MAX_COST = 5;
+		int MAX_BUYERS2 = 5;
 		msgType.addPromelaType("item", new PositiveIntType(MAX_ITEM2), 0);
 		msgType.addPromelaType("cost", new PositiveIntType(MAX_COST, 0));
 		msgType.addPromelaType("buyer", new PositiveIntType(MAX_BUYERS2, 0));
