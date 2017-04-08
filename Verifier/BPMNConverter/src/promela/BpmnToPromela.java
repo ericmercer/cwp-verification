@@ -59,7 +59,8 @@ public class BpmnToPromela {
 		// put them in promela in the right order for dependencies to work
 
 		PromelaTypeDef cwtype = diagram.addTypeDef("cwpType");
-
+		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
+		
 		int maxValue = 0;
 		
 		int MAX_SELLERS = maxValue;
@@ -83,11 +84,10 @@ public class BpmnToPromela {
 
 		
 		
-		diagram.addDataStore("cwpArray", cwtype, 3);
+		diagram.addDataStore("cwpArray", cwtype, 1);
 		
-		PromelaTypeDef msgType = diagram.addTypeDef("msgType");
-		msgType.addPromelaType("msg",
-				new MtypeType(new String[] { "order", "outOfStock", "shipped", "cardDenied" }, "shipped"));
+
+		msgType.addPromelaType("msg",new MtypeType(new String[] { "order", "outOfStock", "shipped", "cardDenied" }, "shipped"));
 
 		msgType.addPromelaType("item", new PositiveIntType(MAX_ITEM2), 0);
 		msgType.addPromelaType("cost", new PositiveIntType(MAX_COST, 0));
@@ -95,9 +95,12 @@ public class BpmnToPromela {
 
 		/******* Define Processes ***************/
 		BpmnProcess customer = diagram.addProcess("Customer");
+		BpmnProcess ss = diagram.addProcess("ShoppingSite");
+		
 		customer.addDataObject("shoppingCart", msgType, 0);
 
 		customer.addStartEvent("StartOrder");
+		
 		String code1 = "shoppingCart.msg = order;\n";
 		code1 += "byte temp;\n";
 		code1 += "select(temp : 0 .. MAX_ITEM);\n";
@@ -106,11 +109,9 @@ public class BpmnToPromela {
 		code1 += "shoppingCart.item = temp;\n";
 		code1 += "select(temp : 0 .. MAX_COST);\n";
 		code1 += "shoppingCart.item = temp;\n";
+		
 		customer.addScriptTask("chooseItem", code1);
-		// parameter
-		// pass
-		// in
-		// script itself
+
 		customer.addEndEvent("EndOrder");
 		customer.addMessageThrowEvent("SendOrder", "shoppingCart");
 		customer.addMessageCatchEvent("ReceiveStatus", "shoppingCart");
@@ -137,7 +138,7 @@ public class BpmnToPromela {
 		customer.addSequenceFlow("ReceiveStatus", "NotificationSubProcess");
 		customer.addSequenceFlow("NotificationSubProcess", "EndOrder");
 
-		BpmnProcess ss = diagram.addProcess("ShoppingSite");
+		
 		ss.addDataObject("orderStatus", msgType, 0);
 
 		ss.addMessageStartEvent("ReceiveOrder", "orderStatus");

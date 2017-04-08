@@ -1,23 +1,22 @@
 package promela;
 
+import java.util.ArrayList;
+
 import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
-import bpmnStructure.PrintMessages.PrintMessageManager;
 import bpmnStructure.dataTypes.*;
 
 import bpmnStructure.subProcesses.SubProcess;
 
 public class PromelaGenerator {
 
-	private static BpmnDiagram diagram;
+	private  BpmnDiagram diagram;
 
 	public PromelaGenerator(BpmnDiagram diagram) {
-		PromelaGenerator.diagram = diagram;
+		this.diagram = diagram;
 	}
 
-
 	public String generatePromela(int number_of_tokens) {
-		PrintMessageManager pm = PrintMessageManager.getInstance();
 
 		String typeDefs = diagram.typeManager.generateTypeDefString() + "\n";
 		String constantDefinitions = PromelaConstants.generateConstantString() + "\n";
@@ -35,7 +34,6 @@ public class PromelaGenerator {
 		s += diagram.getProcTypes();
 
 		s += this.generate_init(diagram, number_of_tokens);
-		// init section
 
 		return s;
 
@@ -43,29 +41,34 @@ public class PromelaGenerator {
 
 	/* all start events live in the init */
 	public String generate_init(BpmnDiagram diagram, int number_of_tokens) {
+
+		ArrayList<BpmnProcess> mainProcesses = new ArrayList<BpmnProcess>();
+		for (BpmnProcess bp : diagram.getAllProcesses()) {
+			if (!bp.isMessageInitiated()&& !(bp instanceof SubProcess) ) {
+				mainProcesses.add(bp);
+			}
+		}
 		String s = "";
 		s += "init {\n";
 
 		s += "atomic {\n";
-		s += "chan end[" + number_of_tokens + "] = [1] of {mtype}\n";
+		s += "chan end[" + (number_of_tokens * mainProcesses.size()) + "] = [1] of {mtype}\n";
 
 		s += "\n";
-		s += "mtype msg;\n";
 
-		String main_process = "";
-		for (BpmnProcess bp : diagram.getAllProcesses()) {
-			if (!bp.isMessageInitiated() && !(bp instanceof SubProcess)) {
-				main_process = bp.getProcessName();
+
+		
+		for (int pCounter = 0; pCounter < mainProcesses.size();pCounter++) {
+			for (int i = 0; i < number_of_tokens; i++) {
+				int channelNumber = pCounter * (mainProcesses.size() + 1)+ i;
+				s += "run " + mainProcesses.get(pCounter).getProcessName();
+				s += "(" + channelNumber + ", end[" + channelNumber + "]);\n";
 			}
 		}
-
-		for (int i = 0; i < number_of_tokens; i++) {
-			s += "run " + main_process;
-			s += "(" + i + ", end[" + i + "]);\n";
-		}
 		s += "\n";
+		s += "mtype msg;\n";
 		s += "do\n";
-		for (int i = 0; i < number_of_tokens; i++) {
+		for (int i = 0; i < number_of_tokens * mainProcesses.size(); i++) {
 			s += ":: end[" + i + "]?msg -> \n";
 			s += "   printf(\"%e: %d\\n\", msg, " + i + ")\n";
 			s += "assert(msg==normal)\n";
