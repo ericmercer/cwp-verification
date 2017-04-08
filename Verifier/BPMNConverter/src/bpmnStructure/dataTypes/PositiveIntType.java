@@ -41,8 +41,6 @@ public class PositiveIntType extends PromelaType {
 
 	@Override
 	public String generateTypeString() {
-		// TODO Auto-generated method stub
-
 		/*
 		 * unless I can figure out how to define an array of an unsigned, this
 		 * goes away
@@ -52,7 +50,6 @@ public class PositiveIntType extends PromelaType {
 	}
 
 	public String getTypeName() {
-		// TODO Auto-generated method stub
 
 		/*
 		 * unless I can figure out how to define an array of an unsigned, this

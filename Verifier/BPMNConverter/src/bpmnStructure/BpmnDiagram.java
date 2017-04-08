@@ -45,7 +45,7 @@ public class BpmnDiagram {
 	public void addDataStore(String name, PromelaType td, int capacity) {
 		TypeDeclaration dataStoreVariable = new TypeDeclaration(name, td, capacity);
 		globalVariables.add(dataStoreVariable);
-		// TODO: Assumes zero to one data stores will be used
+		
 		TokenId.setName(name + "Index");
 		dataStore = dataStoreVariable;
 	}

@@ -28,8 +28,7 @@ public class ParallelGateway extends Gateway {
 				System.err.println("wrong number of out flows for diverging gateway " + this.getElementId() + " "
 						+ sequenceFlowOut.size());
 			}
-			// FlowElement f1 = this.sequenceFlowOut.get(0).getEnd();
-			// FlowElement f2 = this.sequenceFlowOut.get(1).getEnd();
+			
 			SequenceFlow sf1 = this.sequenceFlowOut.get(0);
 			SequenceFlow sf2 = this.sequenceFlowOut.get(1);
 
@@ -44,10 +43,7 @@ public class ParallelGateway extends Gateway {
 			executionString += ");\n";
 
 		} else {
-			// FlowElement f1 = this.sequenceFlowIn.get(0).getStart();
-			// FlowElement f2 = this.sequenceFlowIn.get(1).getStart();
-			// FlowElement outFlow = this.sequenceFlowOut.get(0).getEnd();
-			//
+			
 			SequenceFlow sf1 = this.sequenceFlowIn.get(0);
 			SequenceFlow sf2 = this.sequenceFlowIn.get(1);
 			SequenceFlow soutFlow = this.sequenceFlowOut.get(0);

@@ -46,7 +46,7 @@ public class TypeDeclaration {
 	}
 
 	public String generateDefinitionString() {
-		// TODO Auto-generated method stub
+		
 		return this.type.generateDefinitionString(false);
 	}
 

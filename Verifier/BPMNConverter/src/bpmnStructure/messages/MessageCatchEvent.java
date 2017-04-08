@@ -41,13 +41,8 @@ public class MessageCatchEvent extends Event {
 
 		String variableName = tdec.getVarName();
 
-		String executionString = this.getDefaultTokenInValue() + " > 0 && ";/* \n */
-		// TypeDeclaration payloadDeclaration = new TypeDeclaration("payload",
-		// this.td, 0);
-		// executionString += payloadDeclaration.generateDeclaration() + ";\n";
-		// TODO: Main function
-		// TODO: Add keys
-		
+		String executionString = this.getDefaultTokenInValue() + " > 0 && ";
+
 		
 		executionString += mf.getChannelName() + "??[eval(" + TokenId.getName() + ")" + ", ";
 		if (type instanceof PromelaTypeDef) {

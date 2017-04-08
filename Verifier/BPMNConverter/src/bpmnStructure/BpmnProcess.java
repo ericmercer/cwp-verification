@@ -254,7 +254,7 @@ public class BpmnProcess extends FlowElement {
 
 	}
 
-	// TODO: Improve this, possibly move outside of method
+	// TODO: Future Work - Improve this, possibly move outside of method
 	// Also this will not reach to subprocesses currently
 	/* find generic gateways and split into two gateways */
 	public void unambiguate() {

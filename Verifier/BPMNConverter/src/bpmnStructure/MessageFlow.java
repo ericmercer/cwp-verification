@@ -41,7 +41,6 @@ public class MessageFlow {
 	}
 
 	public PromelaType getType() {
-		// TODO Auto-generated method stub
 		return type;
 	}
 

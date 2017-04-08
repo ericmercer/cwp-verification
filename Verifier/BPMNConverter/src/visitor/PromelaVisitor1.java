@@ -1,6 +1,5 @@
 package visitor;
 
-import java.util.ArrayList;
 
 import bpmnStructure.FlowElement;
 import bpmnStructure.activities.Task;
@@ -21,57 +20,57 @@ public class PromelaVisitor1 implements Visitor {
 	
 	@Override
 	public void Visit(BasicStartEvent f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		System.out.println(f.getElementId());
 
 	}
 
 	@Override
 	public void Visit(BasicEndEvent f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		System.out.println(f.getElementId());
 	}
 
 	@Override
 	public void Visit(Task f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		System.out.println(f.getElementId());
 	}
 
 	@Override
 	public void Visit(ConvergingExclusiveGateway f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		System.out.println(f.getElementId());
 	}
 
 	@Override
 	public void Visit(DivergingExclusiveGateway f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		System.out.println(f.getElementId());
 	}
 
 	@Override
 	public void Visit(ExclusiveGateway f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		System.out.println(f.getElementId());
 	}
 
 	@Override
 	public void Visit(FlowElement f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		System.out.println(f.getElementId());
 
 	}
 
 	@Override
 	public void Visit(ConvergingParallelGateway f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		
 	}
 
 	@Override
 	public void Visit(DivergingParallelGateway f) {
-		// TODO Auto-generated method stub
+		// TODO Future - Auto-generated method stub
 		
 	}
 
