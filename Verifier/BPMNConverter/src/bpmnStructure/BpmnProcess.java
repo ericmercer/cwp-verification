@@ -31,14 +31,11 @@ public class BpmnProcess extends FlowElement {
 	// -Only one start
 	// -Gates only split into two and converge from two directions
 
-	// TODO: Add method to export structure to BPMN xml format
+	
 
 	private TreeMap<String, FlowElement> elements = new TreeMap<String, FlowElement>();
 	private TreeMap<String, TypeDeclaration> processVariables = new TreeMap<String, TypeDeclaration>();
 
-	// TODO: Somehow guarantee the uniqueness of the initial element
-	// InitialElement firstElement = new
-	// TypeSizePairInitialElement("InitialElement");
 	private StartEvent start = null;
 
 	public BpmnProcess(String id) {
@@ -60,7 +57,7 @@ public class BpmnProcess extends FlowElement {
 		if (!elements.containsKey(id)) {
 			elements.put(id, f);
 		} else {
-			// TODO: throw error
+			System.err.println("Duplicate Flow Element: " + id);
 		}
 	}
 
@@ -376,23 +373,7 @@ public class BpmnProcess extends FlowElement {
 		proctypeString += "}\n";
 		proctypeString += "}\n";
 		return proctypeString;
-		// do
-		// :: in_tokens(start) -> /* Task */
-		// printf("Task\n")
-		// out_tokens(end)
-		// :: in_tokens(end) -> /* End Event */
-		// printf("End\n")
-		// break
-		// od
-		//
-		// /* Check completion: all tokens must be consumed */
-		// if
-		// :: (start == 0 && end == 0) ->
-		// report!normal
-		// :: else ->
-		// report!abnormal
-		// fi
-		// od
+		
 	}
 
 	public ArrayList<SubProcess> getAllSubProcesses() {

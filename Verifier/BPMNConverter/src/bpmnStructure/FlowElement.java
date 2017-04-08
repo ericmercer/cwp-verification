@@ -10,8 +10,7 @@ public abstract class FlowElement {
 
 	public static int flowElementCount = 0;
 	private String name;
-	// public int id;
-	// public boolean visited = false;
+
 	static int sequenceFlowCount = 1;
 
 	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();

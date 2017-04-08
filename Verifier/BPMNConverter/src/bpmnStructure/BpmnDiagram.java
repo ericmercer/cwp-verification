@@ -7,7 +7,6 @@ import bpmnStructure.dataTypes.PromelaTypeDef;
 import bpmnStructure.dataTypes.TypeDefManager;
 import bpmnStructure.dataTypes.TypeDeclaration;
 
-
 public class BpmnDiagram {
 
 	ArrayList<BpmnProcess> mainProcesses = new ArrayList<BpmnProcess>();
@@ -120,5 +119,7 @@ public class BpmnDiagram {
 		}
 		return out;
 	}
+
+	// TODO: Future Work - Add method to export structure to BPMN xml format
 
 }
