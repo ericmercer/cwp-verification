@@ -16,7 +16,7 @@ public class PrintVisitor implements Visitor {
 	@Override
 	public void Visit(BasicStartEvent f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.getName());
+		System.out.println(f.getElementId());
 //		f.visited = true;
 
 		for (SequenceFlow f1 : f.sequenceFlowOut) {
@@ -29,42 +29,42 @@ public class PrintVisitor implements Visitor {
 	@Override
 	public void Visit(BasicEndEvent f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.getName());
+		System.out.println(f.getElementId());
 //		f.visited = true;
 	}
 
 	@Override
 	public void Visit(Task f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.getName());
+		System.out.println(f.getElementId());
 //		f.visited = true;
 	}
 
 	@Override
 	public void Visit(ConvergingExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.getName());
+		System.out.println(f.getElementId());
 //		f.visited = true;
 	}
 
 	@Override
 	public void Visit(DivergingExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.getName());
+		System.out.println(f.getElementId());
 //		f.visited = true;
 	}
 
 	@Override
 	public void Visit(ExclusiveGateway f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.getName());
+		System.out.println(f.getElementId());
 //		f.visited = true;
 	}
 
 	@Override
 	public void Visit(FlowElement f) {
 		// TODO Auto-generated method stub
-		System.out.println(f.getName());
+		System.out.println(f.getElementId());
 //		f.visited = true;
 
 		for (SequenceFlow f1 : f.sequenceFlowOut) {

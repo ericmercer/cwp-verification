@@ -12,13 +12,13 @@ public class SubProcess extends BpmnProcess {
 	 * 
 	 * A subprocess must have a report channel to return
 	 */
-	public SubProcess(String id) {
-		super(id);
+	public SubProcess(String elementId) {
+		super(elementId);
 
 	}
 
 	public String getChannelName() {
-		return "subprocessReturnChannel_" + this.getName();
+		return "subprocessReturnChannel_" + this.getElementId();
 	}
 
 	@Override
@@ -46,49 +46,10 @@ public class SubProcess extends BpmnProcess {
 		waitProcess += "out_tokens(" + sout.getTokenValue() + ")\n";
 		waitProcess += "}\n";
 
-		/*
-		 * ::in_tokens(token_NotificationSubProcess_10) -> atomic{ run
-		 * process_NotificationSubProcess(cwpArrayIndex,
-		 * subprocessReturnChannel_NotificationSubProcess); }
-		 * 
-		 * 
-		 * ::len(subprocessReturnChannel_NotificationSubProcess) > 0 -> atomic{
-		 * mtype tempS; subprocessReturnChannel_NotificationSubProcess?tempS; if
-		 * ::tempS == normal; ::else -> reportChannel!tempS fi
-		 * out_tokens(token_EndOrder_11) }
-		 */
+		
 		return new String[] { startProcess, waitProcess };
 
-		// public String[] getExecutionOptions() {
-		// String startProcess = "in_tokens(" + this.getDefaultTokenInValue() +
-		// ") -> ";/* \n */
-		// startProcess += "atomic{\n";
-		// startProcess += "run " + this.getProcessName() + "(" +
-		// TokenId.getName() + ", " + this.getChannelName() + ")"
-		// + "; \n";
-		// startProcess += "/*wait for subprocess to return*/\n";
-		// /*
-		// * this might be different if there is exception handling in the
-		// future
-		// */
-		// startProcess += "if\n";
-		// startProcess += "::" + this.getChannelName() + "??" + "normal" +
-		// ";\n";
-		// startProcess += "::" + this.getChannelName() + "??" + "abnormal" +
-		// ";\n";
-		// startProcess += "reportChannel!abnormal\n";
-		// startProcess += "break;\n";
-		// startProcess += "::" + this.getChannelName() + "??" +
-		// "xor_split_false" + ";\n";
-		// startProcess += "reportChannel!xor_split_false\n";
-		// startProcess += "break;\n";
-		//
-		// startProcess += "fi\n";
-		//
-		//// FlowElement out = this.sequenceFlowOut.get(0).getEnd();
-		// SequenceFlow sout = this.sequenceFlowOut.get(0);
-		// startProcess += "out_tokens(" + sout.getTokenValue() + ")\n";
-		// startProcess += "}\n";
+		
 	}
 
 }

@@ -1,15 +1,13 @@
 package bpmnStructure.events;
 
 import bpmnStructure.Event;
-import bpmnStructure.FlowElement;
-import bpmnStructure.SequenceFlow;
+
 
 public class EndEvent extends Event {
-	public EndEvent(String name) {
-		super(name);
+	public EndEvent(String elementId) {
+		super(elementId);
 	}
 
-	// TODO: OVERRIDE THIS IN END EVENT THAT SENDS MESSAGE
 	@Override
 	public String[] getExecutionOptions() {
 		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> ";

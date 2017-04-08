@@ -19,8 +19,8 @@ public class MessageCatchEvent extends Event {
 	 * I am assuming that there is only one message flow attached to an
 	 * flowelement for now
 	 */
-	public MessageCatchEvent(String name) {
-		super(name);
+	public MessageCatchEvent(String elementId) {
+		super(elementId);
 
 	}
 
@@ -72,7 +72,7 @@ public class MessageCatchEvent extends Event {
 		
 		
 		executionString += "decrement_tokens("+this.getDefaultTokenInValue() + ");\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getName()) + ");\n";
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementId()) + ");\n";
 		executionString += "out_tokens(" + this.sequenceFlowOut.get(0).getTokenValue() + ")\n";
 		executionString += "}\n";
 		return new String[] { executionString };

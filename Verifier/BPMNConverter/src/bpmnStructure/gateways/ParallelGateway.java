@@ -11,8 +11,8 @@ public class ParallelGateway extends Gateway {
 
 	/* possibly translate normal gateways into two gatways if multiple inputs */
 	/* coud use a visitor to translate structure */
-	public ParallelGateway(String name) {
-		super(name);
+	public ParallelGateway(String elementId) {
+		super(elementId);
 	}
 
 
@@ -27,7 +27,7 @@ public class ParallelGateway extends Gateway {
 			// messageNumber2,
 			// expr2,outseq2,exceptionChannel){
 			if (sequenceFlowOut.size() != 2) {
-				System.err.println("wrong number of out flows for diverging gateway " + this.getName() + " "
+				System.err.println("wrong number of out flows for diverging gateway " + this.getElementId() + " "
 						+ sequenceFlowOut.size());
 			}
 			// FlowElement f1 = this.sequenceFlowOut.get(0).getEnd();

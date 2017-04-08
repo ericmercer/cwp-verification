@@ -1,6 +1,5 @@
 package bpmnStructure.gateways;
 
-import bpmnStructure.FlowElement;
 import bpmnStructure.Gateway;
 import bpmnStructure.SequenceFlow;
 import bpmnStructure.TokenId;
@@ -8,11 +7,11 @@ import bpmnStructure.PrintMessages.PrintMessageManager;
 
 public class ExclusiveGateway extends Gateway {
 
-	/* possibly translate normal gateways into two gatways if multiple inputs */
+	/* possibly translate normal gateways into two gateways if multiple inputs */
 	/* could use a visitor to translate structure */
 
-	public ExclusiveGateway(String name) {
-		super(name);
+	public ExclusiveGateway(String elementId) {
+		super(elementId);
 	}
 
 	@Override
@@ -25,7 +24,7 @@ public class ExclusiveGateway extends Gateway {
 			// messageNumber2,
 			// expr2,outseq2,exceptionChannel){
 			if (sequenceFlowOut.size() != 2) {
-				System.err.println("wrong number of out flows for diverging gateway " + this.getName() + " "
+				System.err.println("wrong number of out flows for diverging gateway " + this.getElementId() + " "
 						+ sequenceFlowOut.size());
 			}
 			// FlowElement f1 = this.sequenceFlowOut.get(0).getEnd();
@@ -40,7 +39,7 @@ public class ExclusiveGateway extends Gateway {
 			if (!isDefault1 && !isDefault2) {
 				executionString += "xor_fork(";
 				executionString += this.getDefaultTokenInValue() + ", ";
-				executionString += PrintMessageManager.getInstance().addMessage(this.getName() + ": xor_fork first choice") + ", ";
+				executionString += PrintMessageManager.getInstance().addMessage(this.getElementId() + ": xor_fork first choice") + ", ";
 				executionString += this.sequenceFlowOut.get(0).getExpression() + ", ";
 				executionString += sf1.getTokenValue() + ", ";
 				executionString += PrintMessageManager.getInstance().addMessage("xor_fork second choice") + ", ";
@@ -62,7 +61,7 @@ public class ExclusiveGateway extends Gateway {
 				executionString += normalSequenceFlow.getExpression() + ", ";
 				executionString += normalSequenceFlow.getTokenValue() + ", ";
 				executionString += PrintMessageManager.getInstance()
-						.addMessage(this.getName() + ": xor_fork_default default choice") + ", ";
+						.addMessage(this.getElementId() + ": xor_fork_default default choice") + ", ";
 				executionString += defaultFlow.getTokenValue();
 				executionString += ");\n";
 				// inline xor_fork_default(inseq,messageNumber1,expr1, outseq1,
@@ -80,7 +79,7 @@ public class ExclusiveGateway extends Gateway {
 
 			PrintMessageManager pm = PrintMessageManager.getInstance();
 			String s = "xor_join(";
-			s += pm.addMessage(this.getName() +": xor join") + ", ";
+			s += pm.addMessage(this.getElementId() +": xor join") + ", ";
 			s += sf1.getTokenValue() + ", ";
 			s += sf2.getTokenValue() + ", ";
 			s += soutFlow.getTokenValue() + ")\n";

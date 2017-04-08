@@ -200,7 +200,7 @@ public class BpmnProcess extends FlowElement {
 	public boolean equals(Object o) {
 		// return elements.equals(o);
 		BpmnProcess otherElement = (BpmnProcess) o;
-		if (!this.getName().equals(otherElement.getName())) {
+		if (!this.getElementId().equals(otherElement.getElementId())) {
 			return false;
 		}
 		for (Entry<String, FlowElement> entry : elements.entrySet()) {
@@ -257,7 +257,7 @@ public class BpmnProcess extends FlowElement {
 		}
 
 		for (FlowElement f : itemsToAdd) {
-			elements.put(f.getName(), f);
+			elements.put(f.getElementId(), f);
 		}
 	}
 
@@ -277,7 +277,7 @@ public class BpmnProcess extends FlowElement {
 			FlowElement f = entry.getValue();
 			if (f instanceof MessageStartEvent) {
 				isNormalStart = false;
-				// TODO: Get message start event
+			
 				MessageStartEvent mst = (MessageStartEvent) f;
 				messageType = mst.getRelatedDataObjects().get(0).getType();
 			}

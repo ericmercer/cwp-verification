@@ -15,7 +15,7 @@ public class ScriptTask extends Task {
 	public String[] getExecutionOptions() {
 		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> \n";/* \n */
 		executionString += "atomic{\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getName()) + ");\n";
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementId()) + ");\n";
 		executionString += "   " + promela + "\n";
 		executionString += "out_tokens(" + this.getDefaultTokenOutValue() + ")\n";
 		executionString += "}\n";

@@ -14,7 +14,4 @@ public class DivergingParallelGateway extends Gateway{
 
 	}
 
-	public String getProcessTemplateName(){
-		return "split_and_gate_only";
-	}
 }

@@ -2,9 +2,9 @@ package bpmnStructure;
 
 public class Event extends FlowElement {
 
-	public Event(String name)
+	public Event(String elementId)
 	{
-		super(name);
+		super(elementId);
 	}
 
 
