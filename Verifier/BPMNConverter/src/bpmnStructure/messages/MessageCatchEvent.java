@@ -67,7 +67,7 @@ public class MessageCatchEvent extends Event {
 		
 		
 		executionString += "decrement_tokens("+this.getDefaultTokenInValue() + ");\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementId()) + ");\n";
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		executionString += "out_tokens(" + this.sequenceFlowOut.get(0).getTokenValue() + ")\n";
 		executionString += "}\n";
 		return new String[] { executionString };

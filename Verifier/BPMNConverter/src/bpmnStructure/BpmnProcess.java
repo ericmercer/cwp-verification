@@ -97,7 +97,7 @@ public class BpmnProcess extends FlowElement {
 	}
 
 	public BpmnProcess addNormalSubProcess(String id, String name) {
-		NormalSubProcess subProcess = new NormalSubProcess(id, id);
+		NormalSubProcess subProcess = new NormalSubProcess(id, name);
 		addFlowElement(id, subProcess);
 		return subProcess;
 	}

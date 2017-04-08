@@ -4,6 +4,7 @@ import bpmnStructure.BpmnProcess;
 import bpmnStructure.FlowElement;
 import bpmnStructure.SequenceFlow;
 import bpmnStructure.TokenId;
+import bpmnStructure.PrintMessages.PrintMessageManager;
 
 public class SubProcess extends BpmnProcess {
 
@@ -25,6 +26,7 @@ public class SubProcess extends BpmnProcess {
 	public String[] getExecutionOptions() {
 		String startProcess = "in_tokens(" + this.getDefaultTokenInValue() + ") -> \n";/* \n */
 		startProcess += "atomic{\n";
+		startProcess += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		startProcess += "run " + this.getProcessName() + "(" + TokenId.getName() + ", " + this.getChannelName() + ")"
 				+ "; \n";
 		startProcess += "}\n";

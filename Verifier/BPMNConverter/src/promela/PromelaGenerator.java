@@ -70,7 +70,7 @@ public class PromelaGenerator {
 		s += "do\n";
 		for (int i = 0; i < number_of_tokens * mainProcesses.size(); i++) {
 			s += ":: end[" + i + "]?msg -> \n";
-			s += "   printf(\"%e: %d\\n\", msg, " + i + ")\n";
+			s += "   printf(\"FINISHED %d: %e \\n\"," +i+ ",msg"+ ")\n";
 			s += "assert(msg==normal)\n";
 		}
 

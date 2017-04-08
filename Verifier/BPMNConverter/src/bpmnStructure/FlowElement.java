@@ -40,11 +40,6 @@ public abstract class FlowElement {
 
 	private ArrayList<TypeDeclaration> relatedDataObjects = new ArrayList<TypeDeclaration>();
 
-	
-
-	
-
-
 
 	/* returns info to execute */
 	/* guard -> script; next flows */

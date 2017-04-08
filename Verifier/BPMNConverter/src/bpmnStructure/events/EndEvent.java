@@ -1,6 +1,7 @@
 package bpmnStructure.events;
 
 import bpmnStructure.Event;
+import bpmnStructure.PrintMessages.PrintMessageManager;
 
 
 public class EndEvent extends Event {
@@ -10,9 +11,11 @@ public class EndEvent extends Event {
 
 	@Override
 	public String[] getExecutionOptions() {
-		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> ";
-
+		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> \n";
+		executionString += "atomic{\n";
+		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		executionString += "break;\n";
+		executionString += "}\n";
 		return new String[] { executionString };
 
 

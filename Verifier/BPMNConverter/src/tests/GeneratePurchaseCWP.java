@@ -66,7 +66,7 @@ public class GeneratePurchaseCWP {
 		
 		customer.addDataObject("shoppingCart", msgType, 0);
 
-		customer.addStartEvent("vv","StartOrderName");
+		
 		
 		String code1 = "shoppingCart.msg = order;\n";
 		code1 += "byte temp;\n";
@@ -77,17 +77,15 @@ public class GeneratePurchaseCWP {
 		code1 += "select(temp : 0 .. MAX_COST);\n";
 		code1 += "shoppingCart.item = temp;\n";
 		
-		customer.addScriptTask("chooseItem", code1);
+		customer.addStartEvent("1","StartOrder");
+		customer.addScriptTask("2", code1,"chooseItem");
+		customer.addMessageThrowEvent("3","SendOrder", "shoppingCart");
+		customer.addMessageCatchEvent("4","ReceiveStatus", "shoppingCart");
+		customer.addEndEvent("6","EndOrder");
+		
 
-		customer.addEndEvent("EndOrder");
-		customer.addMessageThrowEvent("SendOrder", "shoppingCart");
-		customer.addMessageCatchEvent("ReceiveStatus", "shoppingCart");
-
-		customer.addSequenceFlow("vv", "chooseItem");
-		customer.addSequenceFlow("chooseItem", "SendOrder");
-		customer.addSequenceFlow("SendOrder", "ReceiveStatus");
-
-		BpmnProcess notificationsSubProcess = customer.addNormalSubProcess("NotificationSubProcess");
+		BpmnProcess notificationsSubProcess = customer.addNormalSubProcess("5","NotificationSubProcess");
+		
 		notificationsSubProcess.addStartEvent("StartNofications");
 		notificationsSubProcess.addParallelGateway("parallelGatewayNotifDiverging");
 		notificationsSubProcess.addTask("EmailUser");
@@ -102,8 +100,11 @@ public class GeneratePurchaseCWP {
 		notificationsSubProcess.addSequenceFlow("EmailStore", "parallelGatewayNotifConverging");
 		notificationsSubProcess.addSequenceFlow("parallelGatewayNotifConverging", "EndNotifications");
 
-		customer.addSequenceFlow("ReceiveStatus", "NotificationSubProcess");
-		customer.addSequenceFlow("NotificationSubProcess", "EndOrder");
+		customer.addSequenceFlow("1", "2");
+		customer.addSequenceFlow("2", "3");
+		customer.addSequenceFlow("3", "4");
+		customer.addSequenceFlow("4", "5");
+		customer.addSequenceFlow("5", "6");
 
 		
 		ss.addDataObject("orderStatus", msgType, 0);
@@ -140,8 +141,8 @@ public class GeneratePurchaseCWP {
 
 		// Add Message Flows last
 
-		diagram.addMessageFlow("MessageFlow1", customer, "SendOrder", ss, "ReceiveOrder", msgType);
-		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "ReceiveStatus", msgType);
+		diagram.addMessageFlow("MessageFlow1", customer, "3", ss, "ReceiveOrder", msgType);
+		diagram.addMessageFlow("MessageFlow2", ss, "SendStatus", customer, "4", msgType);
 
 
 		return diagram;
