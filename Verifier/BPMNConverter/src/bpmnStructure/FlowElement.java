@@ -11,7 +11,7 @@ public abstract class FlowElement {
 	public static int flowElementCount = 0;
 	private String elementId;
 	private String elementName;
-	
+
 	public FlowElement(String elementId, String name) {
 		this.setElementId(elementId);
 		this.setElementName(name);
@@ -20,17 +20,17 @@ public abstract class FlowElement {
 	public void setElementId(String elementId) {
 		this.elementId = elementId;
 	}
-	
-	public String getElementInfo(){
-		
-		if (elementName.equals(elementId)){
+
+	public String getElementInfo() {
+
+		if (elementName.equals(elementId)) {
 			return elementId;
-		}else{
-			return  elementName + "-" + elementId;
+		} else {
+			return elementName + "-" + elementId;
 		}
-		
+
 	}
-	
+
 	static int sequenceFlowCount = 1;
 
 	public ArrayList<SequenceFlow> sequenceFlowOut = new ArrayList<SequenceFlow>();
@@ -40,7 +40,6 @@ public abstract class FlowElement {
 
 	private ArrayList<TypeDeclaration> relatedDataObjects = new ArrayList<TypeDeclaration>();
 
-
 	/* returns info to execute */
 	/* guard -> script; next flows */
 
@@ -48,7 +47,7 @@ public abstract class FlowElement {
 		/* default assumes only one flow in */
 		String executionString = "in_tokens(/*def*/" + this.getDefaultTokenInValue() + ") -> ";/* \n */
 		executionString += "atomic{\n";
-		executionString += "print("+ PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
+		executionString += "print(" + PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		for (SequenceFlow outFlow : this.sequenceFlowOut) {
 			// FlowElement out = outFlow.getEnd();
 			executionString += "out_tokens(" + outFlow.getTokenValue() + ")\n";
@@ -67,8 +66,8 @@ public abstract class FlowElement {
 		}
 
 	}
-	
-	public String getDefaultTokenOutValue(){
+
+	public String getDefaultTokenOutValue() {
 		if (this.sequenceFlowOut.size() > 0) {
 			return this.sequenceFlowOut.get(0).getTokenValue();
 		} else {
@@ -99,7 +98,6 @@ public abstract class FlowElement {
 	public void accept(Visitor v) {
 		v.Visit(this);
 
-
 	}
 
 	public void RedirectInboundFlowsTo(FlowElement newElement) {
@@ -119,10 +117,6 @@ public abstract class FlowElement {
 		}
 
 	}
-
-
-
-
 
 	public boolean equals(Object o) {
 		FlowElement otherElement = (FlowElement) o;
@@ -170,10 +164,11 @@ public abstract class FlowElement {
 	public String getElementId() {
 		return elementId;
 	}
-	
-	
 
 	public String getProcessName() {
+		if (!this.getElementName().equals(this.getElementId())) {
+			return "process_" + this.getElementName() + "_" + this.getElementId();
+		}
 		return "process_" + this.getElementId();
 	}
 
@@ -184,8 +179,6 @@ public abstract class FlowElement {
 	public String getChannelName() {
 		return "channel_" + this.getElementId();
 	}
-
-	
 
 	public String toString() {
 		StringBuilder output = new StringBuilder();
@@ -216,8 +209,8 @@ public abstract class FlowElement {
 	public void setRelatedDataObjects(ArrayList<TypeDeclaration> relatedDataObjects) {
 		this.relatedDataObjects = relatedDataObjects;
 	}
-	
-	//TODO: Future Work - Preprocessing
+
+	// TODO: Future Work - Preprocessing
 	/*
 	 * if there is a way that an element can be split into less ambiguous
 	 * pieces, then do it other wise return
