@@ -21,23 +21,23 @@ import bpmnStructure.dataTypes.MtypeType;
 import bpmnStructure.dataTypes.PositiveIntType;
 import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
-import bpmnStructure.exceptions.PromelaTypeSizeException;
 
 public class XSDConverter {
 	
 	private String namespace;
 	private HashMap<String, PromelaType> types;
 	private HashMap<String, Boolean> declared;
-	private HashMap<String, String> variables;
+	private HashMap<String, PromelaType> variables;
 	private BpmnDiagram diagram;
 	
 	public XSDConverter() {
-		types = new LinkedHashMap<>();
-		declared = new HashMap<>();
-		variables = new HashMap<>();
 	}
 	
 	public HashMap<String, PromelaType> importXSD(String fileName, BpmnDiagram diagram) {
+		
+		types = new LinkedHashMap<>();
+		declared = new HashMap<>();
+		variables = new HashMap<>();
 		
 		File inputFile = new File( fileName );
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -64,12 +64,12 @@ public class XSDConverter {
 			}
 			
 			for (String key : variables.keySet()) {
-				if ( !types.containsKey(variables.get(key)) ) {
-					System.out.println("The gobal variable type did not exist!!!");
-					throw new Exception();
+				if ( !types.containsValue(variables.get(key)) ) {
+					System.out.println(types.keySet());
+					throw new Exception("The gobal variable type did not exist!!! (" + key + ")");
 				}
 			}
-			
+			return variables;
 		}  catch (ParserConfigurationException e) {
 			System.err.println( "You have an error in the configuration of your xml file!" );
 			e.printStackTrace();
@@ -81,12 +81,15 @@ public class XSDConverter {
 		} catch (IOException e) {
 			System.err.println("The file doesn't exist!");
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.err.println(e.getMessage());
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.err.println("Not a valid input file!");
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 
-		return types;
+		return null;
 	}
 	
 	private PromelaType addTypes(Element element) throws Exception {
@@ -101,25 +104,28 @@ public class XSDConverter {
 			if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				tag = (Element) nodes.item(i);
 				name = tag.getAttribute("name");
-				
-				if (tag.getTagName().equals("xsd:element")) {
+//				System.out.println(name);
+				if (tag.getTagName().equals(namespace + "element")) {
 					String typeName = tag.getAttribute("type");
+					if (typeName == null || typeName.isEmpty()) {
+						throw new Exception("all elements must have a type; they cannot be anonymous types (" + name + ")");
+					}
 					if (typeName.contains(":")) {
 						typeName = typeName.substring(typeName.indexOf(":") + 1);
 //						System.out.println("globalVarType: " + typeName);
 					}
-					variables.put(name, typeName);
+					variables.put(name, pickType(typeName, tag));
 					
 				}else if (!types.containsKey(name)) {
 					def = diagram.addTypeDef(name);
 					types.put(name, def);
 					declared.put(name, true);
 					
-					if (tag.getTagName().equals("xsd:complexType")) {
+					if (tag.getTagName().equals(namespace + "complexType")) {
 //						System.out.println("complexType: " + name + ": ");
 						sequence((Element) tag.getChildNodes().item(1), def);
 						
-					}else if (tag.getTagName().equals("xsd:simpleType")) {
+					}else if (tag.getTagName().equals(namespace + "simpleType")) {
 //						System.out.println("simpleType: " + name + ": ");
 						PromelaType type = simpleType(tag);
 //						System.out.println();
@@ -129,12 +135,12 @@ public class XSDConverter {
 				}else {
 					if (!declared.get(name)) { // it was made but not declared
 						declared.put(name, true);
-						
-						if (tag.getTagName().equals("xsd:complexType")) {
+						def = (PromelaTypeDef) types.get(name);
+						if (tag.getTagName().equals(namespace + "complexType")) {
 //							System.out.println("complexType: " + name + ": ");
 							sequence((Element) tag.getChildNodes().item(1), def);
 							
-						}else if (tag.getTagName().equals("xsd:simpleType")) {
+						}else if (tag.getTagName().equals(namespace + "simpleType")) {
 //							System.out.println("simpleType: " + name + ": ");
 							PromelaType type = simpleType(tag);
 //							System.out.println();
@@ -142,8 +148,8 @@ public class XSDConverter {
 						}
 						
 					}else { // it was made and declared before; bark!
-						System.err.println("This type has already been declared!!!");
-						throw new Exception();
+//						System.err.println("This type has already been declared!!!");
+						throw new Exception("This type has already been declared!!! (" + name + ")");
 					}
 				}
 			}
@@ -151,7 +157,7 @@ public class XSDConverter {
 		return null;
 	}
 	
-	private PromelaType element(Element e, PromelaTypeDef typeDef) throws NumberFormatException, PromelaTypeSizeException {
+	private PromelaType element(Element e, PromelaTypeDef typeDef) throws Exception {
 		PromelaType def = null;
 		NodeList nodes = e.getChildNodes();
 		Element temp = null;
@@ -178,7 +184,7 @@ public class XSDConverter {
 							typeDef.addPromelaType(e.getAttribute("name"), def, Integer.parseInt(maxOccurs));
 						}
 					}else {
-						System.err.println("It wasn't declared in the element type and it's not a simpleType!");
+						throw new Exception("It wasn't declared in the element type and it's not a simpleType!");
 					}
 				}
 			}
@@ -186,8 +192,8 @@ public class XSDConverter {
 		return typeDef;
 	}
 	
-	private PromelaType sequence(Element e, PromelaTypeDef typeDef) throws NumberFormatException, PromelaTypeSizeException {
-		if(!e.getTagName().equals("xsd:sequence")) {
+	private PromelaType sequence(Element e, PromelaTypeDef typeDef) throws Exception {
+		if(!e.getTagName().equals(namespace + "sequence")) {
 			return null;
 		}
 		NodeList nodes = e.getChildNodes();
@@ -199,8 +205,8 @@ public class XSDConverter {
 		return typeDef;
 	}
 	
-	private PromelaType simpleType(Element e) throws NumberFormatException, PromelaTypeSizeException {
-		if(!e.getTagName().equals("xsd:simpleType")) {
+	private PromelaType simpleType(Element e) throws Exception {
+		if(!e.getTagName().equals(namespace + "simpleType")) {
 			return null;
 		}
 		NodeList nodes = e.getChildNodes();
@@ -212,8 +218,8 @@ public class XSDConverter {
 		return null;
 	}
 	
-	private PromelaType restriction(Element e) throws NumberFormatException, PromelaTypeSizeException {
-		if(!e.getTagName().equals("xsd:restriction")) {
+	private PromelaType restriction(Element e) throws Exception {
+		if(!e.getTagName().equals(namespace + "restriction")) {
 			return null;
 		}
 		String type = e.getAttribute("base");
@@ -221,12 +227,16 @@ public class XSDConverter {
 		return pickType(type, e);
 	}
 	
-	private PromelaType pickType(String typeName, Element e) throws PromelaTypeSizeException {
+	private PromelaType pickType(String typeName, Element e) throws Exception {
+		String type = typeName;
+		if (type.contains(namespace)) {
+			type = type.substring(type.indexOf(":") + 1);
+		}
 		NodeList nodes = null;
 		PromelaType def = null;
 		String value = null;
-		switch(typeName) {
-		case "xsd:integer":
+		switch(type) {
+		case "integer":
 			if (e != null && e.getChildNodes() != null) {
 				value = maxInclusive((Element) e.getChildNodes().item(1));
 			}
@@ -237,7 +247,7 @@ public class XSDConverter {
 //				System.out.print(", " + value);
 			}
 			break;
-		case "xsd:int":
+		case "int":
 			if (e != null && e.getChildNodes() != null && e.getChildNodes().getLength() > 1) {
 				value = maxInclusive((Element) e.getChildNodes().item(1));
 			}
@@ -247,7 +257,7 @@ public class XSDConverter {
 				def = new PositiveIntType(Integer.parseInt(value));
 			}
 			break;
-		case "xsd:string":
+		case "string":
 			if (e == null) {
 				break;	
 			}
@@ -269,7 +279,7 @@ public class XSDConverter {
 			}
 			def = new MtypeType(enums);
 			break;
-		case "xsd:boolean":
+		case "boolean":
 			def = new BoolType();
 			break;
 		default:
@@ -289,21 +299,21 @@ public class XSDConverter {
 		return def;
 	}
 	
-	private String enumeration(Element e) {
-		if(!e.getTagName().equals("xsd:enumeration")) {
-			return null;
+	private String enumeration(Element e) throws Exception {
+		if(!e.getTagName().equals(namespace + "enumeration")) {
+			throw new Exception("There were no enumerations in the string data structure!");
 		}
 		return e.getAttribute("value");
 	}
 	
 	private String maxInclusive(Element e) {
-		if (!e.getTagName().equals("xsd:maxInclusive")) {
+		if (!e.getTagName().equals(namespace + "maxInclusive")) {
 			return null;
 		}
 		return e.getAttribute("value");
 	}
 	
-	public HashMap<String, String> getVariables() {
+	public HashMap<String, PromelaType> getVariables() {
 		return variables;
 	}
 	

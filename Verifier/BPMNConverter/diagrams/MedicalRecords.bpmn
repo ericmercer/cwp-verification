@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.2.Final-v20161020-1541-B59" targetNamespace="http://org.eclipse.bpmn2/default/process">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="http://www.example.org/MedicalRecordsScheme" xmlns:ns1.xsd="http://www.example.org/MedicalRecordsScheme" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170221-1647-B60" targetNamespace="http://org.eclipse.bpmn2/default/process">
+  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="platform:/resource/BPMNConverter/diagrams/MedicalRecordsScheme.xsd" namespace="http://www.example.org/MedicalRecordsScheme"/>
   <bpmn2:itemDefinition id="ItemDefinition_9" isCollection="false" structureRef="xs:boolean"/>
+  <bpmn2:itemDefinition id="ItemDefinition_26" isCollection="false" structureRef="ns1.xsd:condition"/>
   <bpmn2:process id="MedicalRecords" name="Default Process" isExecutable="false">
     <bpmn2:ioSpecification id="InputOutputSpecification_4">
       <bpmn2:dataOutput id="DataOutput_5" name="Acceptance"/>
@@ -39,6 +41,9 @@
       <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:task id="Task_4" name="Reject">
+      <bpmn2:documentation id="Documentation_7"><![CDATA[<PROMELA>
+condition = false
+</PROMELA>]]></bpmn2:documentation>
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_7">
@@ -54,6 +59,9 @@
       </bpmn2:dataOutputAssociation>
     </bpmn2:task>
     <bpmn2:task id="Task_5" name="Accept">
+      <bpmn2:documentation id="Documentation_6"><![CDATA[<PROMELA>
+condition = true
+</PROMELA>]]></bpmn2:documentation>
       <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_8">
@@ -81,7 +89,7 @@
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2" language="http://www.java.com/java">condition == false</bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_13" sourceRef="Task_3" targetRef="ExclusiveGateway_3"/>
-    <bpmn2:dataObject id="DataObject_2" name="condition" itemSubjectRef="ItemDefinition_9">
+    <bpmn2:dataObject id="DataObject_2" name="condition" itemSubjectRef="ItemDefinition_26">
       <bpmn2:dataState id="DataState_1" name="Data State 1"/>
     </bpmn2:dataObject>
     <bpmn2:association id="Association_1" sourceRef="ExclusiveGateway_3" targetRef="DataObject_2"/>

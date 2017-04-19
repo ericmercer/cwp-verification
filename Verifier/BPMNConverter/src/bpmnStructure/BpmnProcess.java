@@ -6,10 +6,7 @@ import java.util.TreeMap;
 
 import bpmnStructure.activities.ScriptTask;
 import bpmnStructure.activities.Task;
-import bpmnStructure.dataTypes.BoolType;
 import bpmnStructure.dataTypes.PromelaType;
-import bpmnStructure.dataTypes.PromelaTypeDef;
-
 import bpmnStructure.dataTypes.TypeDeclaration;
 import bpmnStructure.events.BasicEndEvent;
 import bpmnStructure.events.BasicStartEvent;
@@ -102,7 +99,7 @@ public class BpmnProcess extends FlowElement {
 		return subProcess;
 	}
 
-	// ids must be unique
+	// id's must be unique
 	public void addStartEvent(String id) {
 		addStartEvent(id, id);
 	}
@@ -203,7 +200,12 @@ public class BpmnProcess extends FlowElement {
 	public void addDataAssociation(String flowElementId, String dataObjectId) {
 		TypeDeclaration td = processVariables.get(dataObjectId);
 		if (td == null) {
-			System.err.println("no data object foudnd for: " + dataObjectId);
+			System.err.println("no data object found for: " + dataObjectId);
+//			try {
+//				throw new Exception();
+//			} catch(Exception e) {
+//				e.printStackTrace();
+//			}
 		}
 		elements.get(flowElementId).addAssociatedDataObject(td);
 	}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/structure/" targetNamespace="http://www.example.org/structure/">
+    <element name="complexImpl" type="tns:myComplex"></element>
+
+    <complexType name="myComplex">
+    	<sequence>
+    		<element name="myInt" type="int"></element>
+    		<element name="types">
+    			<simpleType>
+    				<restriction base="string">
+    					<enumeration value="yellow"></enumeration>
+    					<enumeration value="green"></enumeration>
+    					<enumeration value="blue"></enumeration>
+    				</restriction>
+    			</simpleType>
+    		</element>
+    		<element name="array" type="int" maxOccurs="10"></element>
+    	</sequence>
+    </complexType>
+
+    <simpleType name="mySimple">
+    	<restriction base="double"></restriction>
+    </simpleType>
+
+    <element name="simpleImpl" type="tns:mySimple"></element>
+
+    <element name="illegal">
+    	<complexType>
+    		<sequence>
+    			<element name="illegal1" type="string"></element>
+    		</sequence>
+    	</complexType>
+    </element>
+
+    <element name="hasIllegal" type="tns:containsIllegal"></element>
+    
+    <complexType name="containsIllegal">
+    	<sequence>
+    		<element name="illegalElement" type="string"></element>
+    	</sequence>
+    </complexType>
+</schema>

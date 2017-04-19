@@ -1,7 +1,6 @@
 package tests;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 
@@ -11,7 +10,6 @@ import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
-import bpmnStructure.exceptions.PromelaTypeSizeException;
 import xmlConversion.XMLConverter;
 import xmlConversion.XSDConverter;
 
@@ -57,14 +55,14 @@ public class XMLConverterTest {
 		expected.addProcess("processes_2");
 		BpmnProcess proc1 = expected.addProcess("Process_1");
 		
-		proc1.addMessageStartEvent("StartEvent_2");
-		proc1.addMessageEndEvent("EndEvent_2");
+		proc1.addMessageStartEvent("StartEvent_2", "StartEvent_2");
+		proc1.addMessageEndEvent("EndEvent_2", "EndEvent_2");
 		proc1.addSequenceFlow("StartEvent_2", "EndEvent_2");
 		
 		BpmnProcess proc2 = expected.addProcess("Process_2");
 		proc2.addEndEvent("EndEvent_1");
-		proc2.addMessageCatchEvent("IntermediateCatchEvent_1");
-		proc2.addMessageThrowEvent("IntermediateThrowEvent_1");
+		proc2.addMessageCatchEvent("IntermediateCatchEvent_1", "IntermediateCatchEvent_1");
+		proc2.addMessageThrowEvent("IntermediateThrowEvent_1", "IntermediateThrowEvent_1");
 		proc2.addStartEvent("StartEvent_1");
 		proc2.addSequenceFlow("StartEvent_1", "IntermediateThrowEvent_1");
 		proc2.addSequenceFlow("IntermediateCatchEvent_1", "EndEvent_1");
@@ -261,33 +259,23 @@ public class XMLConverterTest {
 		BpmnDiagram expected = new BpmnDiagram();
 		XSDConverter xsd = new XSDConverter();
 		HashMap<String, PromelaType> types = xsd.importXSD("diagrams/purchaseCWP2.xsd", expected);
-		HashMap<String, String> vars = xsd.getVariables();
-		try {
-			expected.addDataStore("DataStore_2", types.get(vars.get("CWPArray")), 5);
-		} catch (PromelaTypeSizeException e) {
-			e.printStackTrace();
-		}
+		HashMap<String, PromelaType> vars = xsd.getVariables();
+		expected.addDataStore("CWPArray", vars.get("CWPArray"), 5);
 		
 		BpmnProcess first = expected.addProcess("Process_1");
-		
+		first.addDataObject("shoppingCart", types.get(vars.get("shoppingCart")), 1);
 		first.addStartEvent("StartEvent_1");
-		first.addTask("UserTask_1", "shoppingCart.msg = order\n"
+		first.addScriptTask("UserTask_1", "shoppingCart.msg = order\n"
 				+ "select(shoppingCart.item : 0 .. MAX_ITEMS)\n"
 				+ "select(shpppingCart.buyer : 0 .. MAX_BUYERS)\n"
 				+ "select(shoppingCart.cost : 0 .. MAX_COST)");
 		
 		first.addSequenceFlow("StartEvent_1", "UserTask_1");
-		first.addMessageThrowEvent("IntermediateThrowEvent_1");
+		first.addMessageThrowEvent("IntermediateThrowEvent_1", "shoppingCart");
 		first.addSequenceFlow("UserTask_1", "IntermediateThrowEvent_1");
-		first.addMessageCatchEvent("IntermediateCatchEvent_2");
+		first.addMessageCatchEvent("IntermediateCatchEvent_2", "shoppingCart");
 		first.addSequenceFlow("IntermediateThrowEvent_1", "IntermediateCatchEvent_2");
 		first.addEndEvent("EndEvent_7");
-		try {
-			first.addDataObject("DataObject_2", types.get(vars.get("shoppingCart")), 1);
-		} catch (PromelaTypeSizeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		BpmnProcess sub = first.addNormalSubProcess("SubProcess_1");
 		sub.addStartEvent("StartEvent_3");
@@ -307,27 +295,22 @@ public class XMLConverterTest {
 		first.addSequenceFlow("SubProcess_1", "EndEvent_7");
 		
 		BpmnProcess sec = expected.addProcess("Process_2");
+		sec.addDataObject("orderStatus", types.get(vars.get("orderStatus")), 1);
 		
 		sec.addExclusiveGateway("ExclusiveGateway_1");
 		sec.addExclusiveGateway("ExclusiveGateway_2");
 		sec.addScriptTask("ScriptTask_1", "orderStatus.msg = outOfStock");
 		sec.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
 		sec.addSequenceFlow("ExclusiveGateway_1", "ExclusiveGateway_2");
-		sec.addTask("UserTask_4", "cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
+		sec.addScriptTask("UserTask_4", "cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller");
 		sec.addScriptTask("ScriptTask_3", "orderStatus.msg = cardDenied");
 		sec.addSequenceFlow("ExclusiveGateway_2", "ScriptTask_3");
-		sec.addTask("UserTask_5", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
+		sec.addScriptTask("UserTask_5", "cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer");
 		sec.addSequenceFlow("UserTask_4", "UserTask_5");
-		sec.addMessageStartEvent("StartEvent_2");
+		sec.addMessageStartEvent("StartEvent_2", "orderStatus");
 		
 		sec.addSequenceFlow("StartEvent_2", "ExclusiveGateway_1");
 		sec.addSequenceFlow("ExclusiveGateway_2", "UserTask_4");
-		
-		try {
-			sec.addDataObject("DataObject_6", types.get(vars.get("orderStatus")), 1);
-		} catch (PromelaTypeSizeException e) {
-			e.printStackTrace();
-		}
 		
 		sec.addExclusiveGateway("ExclusiveGateway_5");
 		sec.addSequenceFlow("UserTask_5", "ExclusiveGateway_5");
@@ -335,15 +318,15 @@ public class XMLConverterTest {
 		sec.addExclusiveGateway("ExclusiveGateway_6");
 		sec.addSequenceFlow("ScriptTask_1", "ExclusiveGateway_6");
 		sec.addSequenceFlow("ExclusiveGateway_5", "ExclusiveGateway_6");
-		sec.addMessageEndEvent("EndEvent_8");
+		sec.addMessageEndEvent("EndEvent_8", "orderStatus");
 		sec.addSequenceFlow("ExclusiveGateway_6", "EndEvent_8");
 		
 		expected.addProcess("Process_3");
 		
 		expected.addMessageFlow("MessageFlow_8", first, "IntermediateThrowEvent_1", 
-				sec, "StartEvent_2", (PromelaTypeDef) types.get(vars.get("order")));
+				sec, "StartEvent_2", (PromelaTypeDef) vars.get("order"));
 		expected.addMessageFlow("MessageFlow_9", sec, "EndEvent_8", 
-				first, "IntermediateCatchEvent_2", (PromelaTypeDef) types.get(vars.get("order")));
+				first, "IntermediateCatchEvent_2", (PromelaTypeDef) vars.get("order"));
 		
 		assertTrue( expected.equals(diagram) );
 	}
@@ -438,41 +421,49 @@ public class XMLConverterTest {
 //		assertTrue( expected.equals(diagram) );
 //	}
 	
-//	@Test
-//	public void testvendingMachine() {
-//		XMLConverter convert = new XMLConverter();
-//		BpmnDiagram diagram = convert.importXML("diagrams/vendingMachine.bpmn");
-//		BpmnDiagram expected = new BpmnDiagram();
-//		BpmnProcess correct = expected.addProcess("vendingMachine");
-//		
-//		correct.addStartEvent("StartEvent_1");
-//		correct.addEndEvent("EndEvent_1");
-//		
-//		correct.addTask("Task_1", null);
-//		correct.addSequenceFlow("StartEvent_1", "Task_1");
-//		
-//		correct.addTask("UserTask_1", null);
-//		correct.addExclusiveGateway("ExclusiveGateway_1");
-//		correct.addScriptTask("ScriptTask_1", null);
-//		correct.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
-//		correct.addSequenceFlow("UserTask_1", "ExclusiveGateway_1");
-//		
-//		correct.addTask("SendTask_2", null);
-//		correct.addSequenceFlow("ExclusiveGateway_1", "SendTask_2");
-//		
-//		correct.addExclusiveGateway("ExclusiveGateway_2");
-//		correct.addSequenceFlow("Task_1", "ExclusiveGateway_2");
-//		correct.addSequenceFlow("ExclusiveGateway_2", "UserTask_1");
-//		correct.addSequenceFlow("SendTask_2", "ExclusiveGateway_2");
-//		
-//		correct.addTask("Task_2", null);
-//		correct.addTask("Task_3", null);
-//		
-//		correct.addSequenceFlow("Task_3", "EndEvent_1");
-//		correct.addSequenceFlow("ScriptTask_1", "Task_2");
-//		correct.addSequenceFlow("Task_2", "Task_3");
-//		
-//		assertTrue( expected.equals(diagram) );
-//	}
+	@Test
+	public void testvendingMachine() {
+		XMLConverter convert = new XMLConverter();
+		BpmnDiagram diagram = convert.importXML("diagrams/vendingMachine.bpmn");
+		BpmnDiagram expected = new BpmnDiagram();
+		XSDConverter xsd = new XSDConverter();
+		HashMap<String, PromelaType> types = xsd.importXSD("diagrams/vendingMachineData.xsd", expected);
+		System.out.println(types);
+		HashMap<String, PromelaType> vars = xsd.getVariables();
+		System.out.println(vars);
+		expected.addDataStore("DataStore_2", vars.get("ItemValuesArray"), 0);
+		BpmnProcess correct = expected.addProcess("vendingMachine");
+		
+		correct.addStartEvent("StartEvent_1");
+		correct.addEndEvent("EndEvent_1");
+		correct.addDataObject("DataObject_2", vars.get("Money"), 0);
+		correct.addTask("Task_1", "Count money"); // has promela code inside
+		correct.addSequenceFlow("StartEvent_1", "Task_1");
+		
+		correct.addTask("UserTask_1", "Input what you want to buy");
+		correct.addExclusiveGateway("ExclusiveGateway_1");
+		correct.addScriptTask("ScriptTask_1", "Script Task 1", "Money = Money - ItemValuesArray[ItemValuesArrayIndex]");
+		correct.addSequenceFlow("ExclusiveGateway_1", "ScriptTask_1");
+		correct.addSequenceFlow("UserTask_1", "ExclusiveGateway_1");
+		
+		correct.addTask("SendTask_2", "Tell user there is not enough money for that");
+		correct.addSequenceFlow("ExclusiveGateway_1", "SendTask_2");
+		
+		correct.addExclusiveGateway("ExclusiveGateway_2");
+		correct.addSequenceFlow("Task_1", "ExclusiveGateway_2");
+		correct.addSequenceFlow("ExclusiveGateway_2", "UserTask_1");
+		correct.addSequenceFlow("SendTask_2", "ExclusiveGateway_2");
+		
+		correct.addTask("Task_2", "Give item");
+		correct.addTask("Task_3", "Return change"); // userMoney = Money - ItemValuesArray[ItemValuesArrayIndex]
+		
+		correct.addSequenceFlow("Task_3", "EndEvent_1");
+		correct.addSequenceFlow("ScriptTask_1", "Task_2");
+		correct.addSequenceFlow("Task_2", "Task_3");
+		
+		correct.addDataObject("DataObject_3", vars.get("BackUpData"), 0);
+		
+		assertTrue( expected.equals(diagram) );
+	}
 
 }

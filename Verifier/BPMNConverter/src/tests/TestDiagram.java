@@ -125,7 +125,7 @@ public class TestDiagram {
 		correct.addExclusiveGateway("ExclusiveGateway_6");
 		
 		BpmnProcess sub = correct.addNormalSubProcess("SubProcess_2");
-		sub.addMessageStartEvent("StartEvent_2");
+		sub.addMessageStartEvent("StartEvent_2", "StartEvent_2");
 		sub.addEndEvent("EndEvent_4");
 		sub.addEndEvent("EndEvent_5");
 		sub.addTask("UserTask_2", null);
