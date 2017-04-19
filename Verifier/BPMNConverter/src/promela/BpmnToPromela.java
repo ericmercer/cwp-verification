@@ -23,11 +23,11 @@ public class BpmnToPromela {
 				
 
 				String beginningPath = "/Users/iainlee/Documents/workspace/BPMN_project";
-				String pathToDiagram = "/cwp-verification/Verifier/BPMNConverter/diagrams/online_purchase2.bpmn";
+				String pathToDiagram = "/cwp-verification/Verifier/BPMNConverter/";
 				String pathToResults = "";
 				
 				XMLConverter xml = new XMLConverter();
-				BpmnDiagram bpmnMemoryStructure = xml.importXML(beginningPath + pathToDiagram);
+				BpmnDiagram bpmnMemoryStructure = xml.importXML(beginningPath + pathToDiagram, "diagrams/online_purchase2.bpmn");
 				
 				PromelaGenerator pg = new PromelaGenerator(bpmnMemoryStructure);
 				
@@ -39,6 +39,8 @@ public class BpmnToPromela {
 
 				writeStringToFile(promelaString, beginningPath + pathToResults + "generatedPromela.pml");
 				writeStringToFile(awkScript, beginningPath + pathToResults + "messageTranslation.awk");
+				
+				System.out.println("finished");
 	}
 	
 	public static void promelaGeneratorTest() {

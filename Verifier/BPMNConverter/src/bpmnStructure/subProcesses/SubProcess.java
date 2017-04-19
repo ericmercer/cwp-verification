@@ -1,7 +1,6 @@
 package bpmnStructure.subProcesses;
 
 import bpmnStructure.BpmnProcess;
-import bpmnStructure.FlowElement;
 import bpmnStructure.SequenceFlow;
 import bpmnStructure.TokenId;
 import bpmnStructure.PrintMessages.PrintMessageManager;

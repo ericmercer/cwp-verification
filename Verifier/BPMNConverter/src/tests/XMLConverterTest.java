@@ -18,7 +18,7 @@ public class XMLConverterTest {
 	@Test
 	public void test2_Step() {
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/2_step.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/2_step.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("Process_1");
 //		correct = convert.importXML("tests/diagrams/2_step.bpmn");
@@ -32,7 +32,7 @@ public class XMLConverterTest {
 	@Test
 	public void test4_Step() {
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/4_step.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/4_step.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("Process_1");
 		correct.addStartEvent("StartEvent_1");
@@ -49,28 +49,32 @@ public class XMLConverterTest {
 	@Test
 	public void test2_processes() {
 		XMLConverter converter = new XMLConverter();
-		BpmnDiagram result = converter.importXML("diagrams/2_processes.bpmn");
+		BpmnDiagram result = converter.importXML("", "diagrams/2_processes.bpmn");
 		assertTrue(result != null);
 		BpmnDiagram expected = new BpmnDiagram();
+		XSDConverter xsd = new XSDConverter();
+		HashMap<String, PromelaType> vars = xsd.importXSD("diagrams/purchaseCWP2.xsd", expected);
 		expected.addProcess("processes_2");
 		BpmnProcess proc1 = expected.addProcess("Process_1");
+		proc1.addDataObject("shoppingCart", vars.get("shoppingCart"), 1);
 		
-		proc1.addMessageStartEvent("StartEvent_2", "StartEvent_2");
-		proc1.addMessageEndEvent("EndEvent_2", "EndEvent_2");
+		proc1.addMessageStartEvent("StartEvent_2", "shoppingCart");
+		proc1.addMessageEndEvent("EndEvent_2", "shoppingCart");
 		proc1.addSequenceFlow("StartEvent_2", "EndEvent_2");
 		
 		BpmnProcess proc2 = expected.addProcess("Process_2");
+		proc2.addDataObject("shoppingCart", vars.get("shoppingCart"), 1);
 		proc2.addEndEvent("EndEvent_1");
-		proc2.addMessageCatchEvent("IntermediateCatchEvent_1", "IntermediateCatchEvent_1");
-		proc2.addMessageThrowEvent("IntermediateThrowEvent_1", "IntermediateThrowEvent_1");
+		proc2.addMessageCatchEvent("IntermediateCatchEvent_1", "shoppingCart");
+		proc2.addMessageThrowEvent("IntermediateThrowEvent_1", "shoppingCart");
 		proc2.addStartEvent("StartEvent_1");
 		proc2.addSequenceFlow("StartEvent_1", "IntermediateThrowEvent_1");
 		proc2.addSequenceFlow("IntermediateCatchEvent_1", "EndEvent_1");
 		
 		expected.addMessageFlow("MessageFlow_1", proc2, "IntermediateThrowEvent_1", 
-				proc1, "StartEvent_2", expected.addTypeDef("xs:boolean"));
+				proc1, "StartEvent_2", expected.addTypeDef("shoppingCart"));
 		expected.addMessageFlow("MessageFlow_2", proc1, "EndEvent_2", 
-				proc2, "IntermediateCatchEvent_1", expected.addTypeDef("xs:boolean"));
+				proc2, "IntermediateCatchEvent_1", expected.addTypeDef("shoppingCart"));
 		
 		assertTrue(expected.equals(result));
 	}
@@ -255,7 +259,7 @@ public class XMLConverterTest {
 	@Test
 	public void testonline_purchase2() {
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/online_purchase2.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/online_purchase2.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		XSDConverter xsd = new XSDConverter();
 		HashMap<String, PromelaType> types = xsd.importXSD("diagrams/purchaseCWP2.xsd", expected);
@@ -424,7 +428,7 @@ public class XMLConverterTest {
 	@Test
 	public void testvendingMachine() {
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/vendingMachine.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/vendingMachine.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		XSDConverter xsd = new XSDConverter();
 		HashMap<String, PromelaType> types = xsd.importXSD("diagrams/vendingMachineData.xsd", expected);

@@ -29,7 +29,7 @@ public class XMLConverter {
 	
 	private BpmnDiagram diagram;
 	private PrintWriter writer;
-	
+	private String basePath;
 	private String namespace;
 	private HashMap<String, String> definitions;
 	private HashMap<String, PromelaTypeDef> messageDefs;
@@ -40,13 +40,13 @@ public class XMLConverter {
 	public XMLConverter() {
 	}
 	
-	public BpmnDiagram importXML( String fileName ) {
+	public BpmnDiagram importXML(String basePath, String fileName ) {
 		
 		initExport();
 		
 		try {
-			File inputFile = new File( fileName );
-			
+			File inputFile = new File( basePath + fileName );
+			this.basePath = basePath;
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse( inputFile );
@@ -110,7 +110,10 @@ public class XMLConverter {
 				String[] parts = location.split("/");
 				XSDConverter xsd = new XSDConverter();
 //				System.out.println(parts[parts.length - 2] + "/" + parts[parts.length - 1]);
-				variables = xsd.importXSD(parts[parts.length - 2] + "/" + parts[parts.length - 1], diagram);
+				variables = xsd.importXSD(basePath + parts[parts.length - 2] + "/" + parts[parts.length - 1], diagram);
+				if (variables == null) {
+					System.out.println("weird");
+				}
 			}
 		}
         
@@ -159,12 +162,16 @@ public class XMLConverter {
 		
 		messageEvents = new HashMap<>();
 		Element process = null;
+		NodeList temp = null;
 		writer.println( "ProcessList.size:\t" + processList.getLength() );
 		for(int i = 0; i < processList.getLength(); i++) {
 			process = (Element) processList.item(i);
-			id = process.getAttribute( "id" );
-			writer.println( "Process:\t" + id + "\n" );
-			initProcess(process, diagram.addProcess(id));
+			temp = process.getElementsByTagName(namespace + "startEvent");
+			if (temp != null && temp.getLength() > 0) {
+				id = process.getAttribute( "id" );
+				writer.println( "Process:\t" + id + "\n" );
+				initProcess(process, diagram.addProcess(id));
+			}
 		}
 		
 		list = document.getElementsByTagName(namespace + "messageFlow");
@@ -380,7 +387,7 @@ public class XMLConverter {
 		if(code == null) {
 			process.addTask( task.getAttribute("id"), task.getAttribute("name") );
 		}else {
-			process.addScriptTask( task.getAttribute("id"), task.getAttribute("name"), code );
+			process.addScriptTask( task.getAttribute("id"), code, task.getAttribute("name") );
 		}
 	}
 	
@@ -388,24 +395,20 @@ public class XMLConverter {
 		task.getElementsByTagName("script");
 		writer.println( "scriptTask:\t" + task.getAttribute( "id" ) );
 		NodeList list = task.getElementsByTagName(namespace + "script");
-		ArrayList<String> code = null;
+		StringBuilder code = null;
 		if(list != null && list.getLength() != 0) {
 			Element doc = (Element) list.item(0);
 			Scanner scan = new Scanner(doc.getTextContent());
-			code = new ArrayList<>();
+			code = new StringBuilder();
 			while(scan.hasNext()) {
-				code.add(scan.nextLine());
+				code.append(scan.nextLine());
 			}
 			scan.close();
-			writer.println(code.toString());
+			writer.println("code: " + code.toString());
 		}
 		String dataName = getDataName(task);
 //		System.out.println("scriptTask: " + dataName);
-		if(code == null || code.size() == 0) {
-			process.addScriptTask( task.getAttribute("id"), code.toString() );
-		}else {
-			process.addScriptTask( task.getAttribute("id"), code.toString(), dataName );
-		}
+		process.addScriptTask( task.getAttribute("id"), code.toString(), dataName );
 	}
 	
 	private void initExclusiveGate(Element exclusiveGate, BpmnProcess process) {
@@ -419,7 +422,7 @@ public class XMLConverter {
 	}
 	
 	private void initDataObject(Element data, BpmnProcess process) throws NumberFormatException, InvalidDataTypeException {
-		writer.println( "dataObject:\t" + data.getAttribute("name") );
+		writer.print( "dataObject:\t" + data.getAttribute("name") );
 		dataObjects.put(data.getAttribute("id"), data.getAttribute("name"));
 		NodeList list = data.getElementsByTagName(namespace + "documentation");
 		String code = null;
@@ -428,13 +431,15 @@ public class XMLConverter {
 			code = getCode("<CAPACITY>", "</CAPACITY>", doc);
 		}
 		String name = data.getAttribute("name");
-		if (!variables.containsKey(name)) {
+		String definition = definitions.get(data.getAttribute("itemSubjectRef"));
+		if (!variables.containsKey(definition)) {
 			throw new InvalidDataTypeException();
 		}
+		writer.println("\ttype: " + variables.get(definition).getTypeName());
 		if(code == null) {
-			process.addDataObject( data.getAttribute("name"), variables.get(name), 1 );
+			process.addDataObject( name, variables.get(definition), 0 );
 		}else {
-			process.addDataObject( data.getAttribute("name"), variables.get(name), Integer.parseInt(code) );
+			process.addDataObject( name, variables.get(definition), Integer.parseInt(code) );
 		}
 	}
 	
@@ -442,15 +447,16 @@ public class XMLConverter {
 		writer.print( "dataStore:\t" + data.getAttribute( "name" ) );
 		String name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
-		if (!variables.containsKey(name)) {
+		String definition = definitions.get(data.getAttribute("itemSubjectRef"));
+		if (!variables.containsKey(definition)) {
 			for (String key : variables.keySet()) {
 				System.out.print(key + "\t");
 			}
 			System.out.println("\n" + name);
 			throw new InvalidDataTypeException();
 		}
-		writer.println("\ttype: " + variables.get(name));
-		diagram.addDataStore( name, variables.get(name), capacity );
+		writer.println("\ttype: " + variables.get(definition).getTypeName());
+		diagram.addDataStore( name, variables.get(definition), capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess process) {
@@ -513,33 +519,33 @@ public class XMLConverter {
 	 */
 	private String getCode(String startTag, String stopTag, Element doc) {
 		Scanner scan = new Scanner(doc.getTextContent());
-		ArrayList<String> code = new ArrayList<>();
+		StringBuilder code = new StringBuilder();
 		boolean take = false;
 		String current = null;
 		while(scan.hasNextLine()) {
 			current = scan.nextLine();
-			if(current.equals(startTag)) {
-				take = true;
-			}
-			if(take) {
-				code.add(current);
-			}
 			if (current.equals(stopTag)) {
 				take = false;
+			}
+			if(take) {
+				code.append(current + "\n");
+			}
+			if(current.equals(startTag)) {
+				take = true;
 			}
 		}
 		scan.close();
 //		System.out.println(code.toString());
-		if(code.size() == 1 || !code.get(code.size() - 1).equals(stopTag)) {
-//			throw an error because we never read in the stop tag, just the start tag
-			System.err.println("No Stop tag!");
-			return null;
-		}else if(code.size() == 0) {
-			System.err.println("No documentation!");
-			return null; // there is no code we care about in the documentation
-		}
-		code.remove(0);
-		code.remove(code.size() - 1);
+//		if(code.size() == 1 || !code.get(code.size() - 1).equals(stopTag)) {
+////			throw an error because we never read in the stop tag, just the start tag
+//			System.err.println("No Stop tag!");
+//			return null;
+//		}else if(code.size() == 0) {
+//			System.err.println("No documentation!");
+//			return null; // there is no code we care about in the documentation
+//		}
+//		code.remove(0);
+//		code.remove(code.size() - 1);
 //		System.out.println(code.toString());
 		writer.println(code.toString());
 		return code.toString();
@@ -560,7 +566,7 @@ public class XMLConverter {
 	public static void main(String[] args) {
 		XMLConverter converter = new XMLConverter();
 		BpmnDiagram diagram = null;
-		diagram = converter.importXML("diagrams/online_purchase2.bpmn");
+		diagram = converter.importXML("", "diagrams/online_purchase2.bpmn");
 		System.out.println(diagram.getGlobalVariables(0));
 	}
 	

@@ -31,7 +31,7 @@ public class TestDiagram {
 		System.out.print("Testing " + tests[0] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/2_step.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/2_step.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct;
 		correct = expected.addProcess("Process_1");
@@ -49,7 +49,7 @@ public class TestDiagram {
 		System.out.print("Testing " + tests[1] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/4_step.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/4_step.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("Process_1");
 		correct.addStartEvent("StartEvent_1");
@@ -67,7 +67,7 @@ public class TestDiagram {
 		System.out.print("Test " + tests[3] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/MyName.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/MyName.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("Process_1");
 		correct.addStartEvent("StartEvent_1");
@@ -109,7 +109,7 @@ public class TestDiagram {
 		System.out.print("Test " + tests[4] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/orderFulfillment.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/orderFulfillment.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("orderFulfillment");
 		correct.addStartEvent("StartEvent_1");
@@ -154,7 +154,7 @@ public class TestDiagram {
 		System.out.print("Test " + tests[5] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/jamie.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/jamie.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("process_1");
 		correct.addStartEvent("StartEvent_1");
@@ -189,7 +189,7 @@ public class TestDiagram {
 		System.out.print("Test " + tests[6] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/vendingMachine.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/vendingMachine.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("vendingMachine");
 		
@@ -227,7 +227,7 @@ public class TestDiagram {
 		System.out.print("Test " + tests[7] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/MedicalRecords.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/MedicalRecords.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("MedicalRecords");
 		
@@ -254,7 +254,7 @@ public class TestDiagram {
 		System.out.print("Test " + tests[8] + ": ");
 		
 		XMLConverter convert = new XMLConverter();
-		BpmnDiagram diagram = convert.importXML("diagrams/sub_processes.bpmn");
+		BpmnDiagram diagram = convert.importXML("", "diagrams/sub_processes.bpmn");
 		BpmnDiagram expected = new BpmnDiagram();
 		BpmnProcess correct = expected.addProcess("sub_processes");
 		

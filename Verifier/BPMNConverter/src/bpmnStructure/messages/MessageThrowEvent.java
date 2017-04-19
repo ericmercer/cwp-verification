@@ -6,7 +6,6 @@ import bpmnStructure.Event;
 import bpmnStructure.MessageFlow;
 import bpmnStructure.TokenId;
 import bpmnStructure.PrintMessages.PrintMessageManager;
-import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.TypeDeclaration;
 
 public class MessageThrowEvent extends Event {
