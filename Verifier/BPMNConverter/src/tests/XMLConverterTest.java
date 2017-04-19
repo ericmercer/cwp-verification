@@ -455,7 +455,7 @@ public class XMLConverterTest {
 		correct.addSequenceFlow("SendTask_2", "ExclusiveGateway_2");
 		
 		correct.addTask("Task_2", "Give item");
-		correct.addTask("Task_3", "Return change"); // userMoney = Money - ItemValuesArray[ItemValuesArrayIndex]
+		correct.addScriptTask("Task_3", "userMoney = Money - ItemValuesArray[ItemValuesArrayIndex]", "Return change"); // userMoney = Money - ItemValuesArray[ItemValuesArrayIndex]
 		
 		correct.addSequenceFlow("Task_3", "EndEvent_1");
 		correct.addSequenceFlow("ScriptTask_1", "Task_2");
