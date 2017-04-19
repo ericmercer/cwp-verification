@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/vendingMachineData" elementFormDefault="qualified" targetNamespace="http://www.example.org/vendingMachineData">
+
+    <element name="ItemValuesArray" type="tns:IntArray"/>
+
+
+    <complexType name="IntArray">
+    	<sequence>
+    		<element name="Name">
+    			<simpleType>
+    				<restriction base="string">
+    					<enumeration value="Hello"></enumeration>
+    					<enumeration value="Ima"></enumeration>
+    					<enumeration value="Name"></enumeration>
+    				</restriction>
+    			</simpleType>
+    		</element>
+    		<element maxOccurs="20" name="Array">
+    			<simpleType>
+    				<restriction base="int">
+    					<maxInclusive value="256"/>
+    				</restriction>
+    			</simpleType>
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <element name="BackUpData" type="tns:Integer">
+    </element>
+
+    <simpleType name="Integer">
+    	<restriction base="int"/>
+    </simpleType>
+
+    <element name="Money" type="tns:Integer"/>
+</schema>
