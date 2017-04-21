@@ -19,6 +19,7 @@ public class BpmnToPromela {
 	}
 	
 	public static void importBpmnTest() {
+				System.out.println("Starting");
 				int default_number_of_instances = 1;
 				
 
