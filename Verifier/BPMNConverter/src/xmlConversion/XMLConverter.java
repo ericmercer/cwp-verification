@@ -36,6 +36,7 @@ public class XMLConverter {
 	private HashMap<String, BpmnProcess> messageEvents;
 	private HashMap<String, PromelaType> variables;
 	private HashMap<String, String> dataObjects;
+	private ArrayList<String> defaultFlows;
 	
 	public XMLConverter() {
 	}
@@ -101,6 +102,7 @@ public class XMLConverter {
         BpmnDiagram diagram = new BpmnDiagram();
         definitions = new HashMap<>();
         dataObjects = new HashMap<>();
+        defaultFlows = new ArrayList<>();
         
         list = document.getElementsByTagName(namespace + "import");
 		for(int i = 0; i < list.getLength(); i++) {
@@ -413,6 +415,10 @@ public class XMLConverter {
 	
 	private void initExclusiveGate(Element exclusiveGate, BpmnProcess process) {
 		writer.println( "exclusiveGateway:\t" + exclusiveGate.getAttribute( "id" ) );
+		String defaultPath = exclusiveGate.getAttribute("default");
+		if (defaultPath != null && !defaultPath.isEmpty()) {
+			defaultFlows.add(defaultPath);
+		}
 		process.addExclusiveGateway( exclusiveGate.getAttribute("id") );
 	}
 	
@@ -450,9 +456,9 @@ public class XMLConverter {
 		String definition = definitions.get(data.getAttribute("itemSubjectRef"));
 		if (!variables.containsKey(definition)) {
 			for (String key : variables.keySet()) {
-				System.out.print(key + "\t");
+				writer.print(key + "\t");
 			}
-			System.out.println("\n" + name);
+			writer.println("\n" + name);
 			throw new InvalidDataTypeException();
 		}
 		writer.println("\ttype: " + variables.get(definition).getTypeName());
@@ -464,28 +470,39 @@ public class XMLConverter {
         	return;
         }
         
+        String flowName = null;
         Element current = null;
         NodeList condition = null;
         Iterator<Element> iter = sequenceFlows.iterator();
         while(iter.hasNext()) {
         	current = iter.next();
         	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
-			writer.println( "sourceRef:\t" + source + "\ttargetRef:\t" + target );
+			writer.print( "sourceRef:\t" + source + "\ttargetRef:\t" + target );
 			condition = current.getElementsByTagName(namespace + "conditionExpression");
+			flowName = current.getAttribute("id");
 			if(condition != null && condition.item(0) != null) {
 				current = (Element) condition.item(0);
 //				System.out.println("condition: " + current.getTextContent());
-				process.addSequenceFlow( source, target, current.getTextContent() );
+				if (defaultFlows.contains(flowName)) {
+					writer.print("\tdefault");
+					process.addSequenceFlow( source, target, current.getTextContent(), true );
+				}else {
+					process.addSequenceFlow( source, target, current.getTextContent() );
+				}
 			}else {
 				try {
-					process.addSequenceFlow( source, target );
+					if (defaultFlows.contains(flowName)) {
+						writer.print("\tdefault");
+						process.addDefaultSequenceFlow( source, target );
+					}else {
+						process.addSequenceFlow( source, target );
+					}
 				} catch (NullPointerException e) {
-					System.out.println("Source: " + source + " Target: " + target);
+					System.err.println("Source: " + source + " Target: " + target);
 				}
-				
 			}
+			writer.println();
         }
-        
         return;
 	}
 	

@@ -8,7 +8,7 @@ public class ScriptTask extends Task {
 	public ScriptTask(String elementId, String elementName, String promela) {
 		super(elementId, elementName);
 		this.promela = promela;
-		System.out.println("id, promela: " + elementId + ", " + promela);
+//		System.out.println("id, promela: " + elementId + ", " + promela);
 	}
 
 	@Override
