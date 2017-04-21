@@ -33,7 +33,7 @@ inline print(number){
 }
 
 
-inline xor_fork(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outseq2,exceptionChannel,token_id){
+inline xor_fork(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outseq2,reportChannel,token_id){
   in_tokens(inseq) ->
   atomic {
 	if
@@ -45,7 +45,7 @@ inline xor_fork(inseq,messageNumber1,expr1, outseq1, messageNumber2, expr2,outse
 	   out_tokens(outseq2)
 	:: else ->
 	   printf("xorsplit exception");
-	   exceptionChannel!xor_split_false;
+	   reportChannel!xor_split_false;
 	   break;
 	fi
   }

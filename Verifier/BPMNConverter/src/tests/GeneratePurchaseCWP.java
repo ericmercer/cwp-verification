@@ -125,8 +125,12 @@ public class GeneratePurchaseCWP {
 	
 
 		ss.addSequenceFlow("ReceiveOrder", "CheckInventoryDiverge");
-		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "false /*outOfStock*/");
-		ss.addDefaultSequenceFlow("CheckInventoryDiverge", "ChargeCreditCard");
+		//ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "false /*outOfStock*/");
+		ss.addSequenceFlow("CheckInventoryDiverge", "OutOfStockMessage", "true /*outOfStock*/");
+		
+		
+		//ss.addDefaultSequenceFlow("CheckInventoryDiverge", "ChargeCreditCard");
+		ss.addSequenceFlow("CheckInventoryDiverge", "ChargeCreditCard","true");
 
 		ss.addSequenceFlow("OutOfStockMessage", "join2");
 		ss.addSequenceFlow("join1", "join2");

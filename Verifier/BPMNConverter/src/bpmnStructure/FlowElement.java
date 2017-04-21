@@ -45,7 +45,7 @@ public abstract class FlowElement {
 
 	public String[] getExecutionOptions() {
 		/* default assumes only one flow in */
-		String executionString = "in_tokens(/*def*/" + this.getDefaultTokenInValue() + ") -> ";/* \n */
+		String executionString = "in_tokens(" + this.getDefaultTokenInValue() + ") -> ";/* \n */
 		executionString += "atomic{\n";
 		executionString += "print(" + PrintMessageManager.getInstance().addMessage(this.getElementInfo()) + ");\n";
 		for (SequenceFlow outFlow : this.sequenceFlowOut) {

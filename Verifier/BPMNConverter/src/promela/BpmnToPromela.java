@@ -9,6 +9,7 @@ import bpmnStructure.BpmnDiagram;
 import bpmnStructure.PrintMessages.PrintMessageManager;
 
 import tests.GeneratePurchaseCWP;
+import tests.SimpleFlow;
 
 public class BpmnToPromela {
 
@@ -24,6 +25,7 @@ public class BpmnToPromela {
 		String beginningPath = "C:\\Users\\jvisker\\Documents\\";
 		
 		GeneratePurchaseCWP cwp = new GeneratePurchaseCWP();
+//		SimpleFlow cwp = new SimpleFlow();
 		BpmnDiagram bpmnMemoryStructure = cwp.getManualBpmn();
 		
 		PromelaGenerator pg = new PromelaGenerator(bpmnMemoryStructure);

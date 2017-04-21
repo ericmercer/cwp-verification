@@ -21,6 +21,7 @@ public class Mtypes {
 	}
 
 	public static String toPromela() {
+		if (mtypes.size() > 0){
 		String out = "mtype = {";
 		int i = 0;
 		for (String mtypeString : mtypes) {
@@ -31,7 +32,10 @@ public class Mtypes {
 			}
 		}
 		out += "};\n";
-		return out;
+		return out;}
+		else{
+			return "";
+		}
 	}
 
 }
