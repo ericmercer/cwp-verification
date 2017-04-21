@@ -1,7 +1,6 @@
 package bpmnStructure;
 
 import bpmnStructure.dataTypes.PromelaType;
-import bpmnStructure.dataTypes.PromelaTypeDef;
 
 public class MessageFlow {
 

@@ -24,14 +24,6 @@
 
     <element name="simpleImpl" type="tns:mySimple"></element>
 
-    <element name="illegal">
-    	<complexType>
-    		<sequence>
-    			<element name="illegal1" type="string"></element>
-    		</sequence>
-    	</complexType>
-    </element>
-
     <element name="hasIllegal" type="tns:containsIllegal"></element>
     
     <complexType name="containsIllegal">

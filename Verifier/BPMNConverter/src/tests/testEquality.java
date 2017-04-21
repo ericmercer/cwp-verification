@@ -1,5 +1,6 @@
 package tests;
 
+import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import promela.PromelaGenerator;
 
@@ -8,8 +9,9 @@ public class testEquality {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		BpmnDiagram diagram = new BpmnDiagram();
 		// Simple Gateway Structure
-		BpmnProcess b1 = new BpmnProcess("test2");
+		BpmnProcess b1 = diagram.addProcess("test2");
 
 		b1.addStartEvent("start");
 		b1.addParallelGateway("Gateway1");
@@ -33,7 +35,7 @@ public class testEquality {
 		// b1.unambiguate();
 
 		// Simple Gateway Structure
-		BpmnProcess b2 = new BpmnProcess("test");
+		BpmnProcess b2 = diagram.addProcess("test", "test");
 
 		b2.addStartEvent("start");
 		b2.addParallelGateway("Gateway1");
@@ -52,9 +54,9 @@ public class testEquality {
 
 		System.out.println("b1 == b2 ? " + b2.equals(b1));
 
-		 PromelaGenerator pg = new PromelaGenerator(b1);
+		 PromelaGenerator pg = new PromelaGenerator(diagram);
 
-		 System.out.println(pg.generatePromela());
+		 System.out.println(pg.generatePromela(0));
 
 	}
 

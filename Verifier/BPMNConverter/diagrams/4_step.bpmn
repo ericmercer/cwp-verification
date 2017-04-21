@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- origin at X=0.0 Y=0.0 -->
-<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="sid-38422fae-e03e-43a3-bef4-bd33b32041b2" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170221-1647-B60" targetNamespace="http://bpmn.io/bpmn">
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="sid-38422fae-e03e-43a3-bef4-bd33b32041b2" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170323-1521-B61" targetNamespace="http://bpmn.io/bpmn">
   <process id="Process_1" isExecutable="false">
     <startEvent id="StartEvent_1" name="hajime">
       <outgoing>SequenceFlow_1</outgoing>
     </startEvent>
     <task id="Task_1" name="eventoda">
-      <documentation id="Documentation_2"><![CDATA[<PROMELA>
-do stuff
-</PROMELA>]]></documentation>
       <incoming>SequenceFlow_1</incoming>
       <outgoing>SequenceFlow_2</outgoing>
     </task>

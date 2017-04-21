@@ -2,15 +2,16 @@
 <!-- origin at X=0.0 Y=0.0 -->
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:ns="test" xmlns:ns1.xsd="http://vv.cs.byu.edu/purchaseCWP" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="Definitions_1" exporter="org.eclipse.bpmn2.modeler.core" exporterVersion="1.3.3.Final-v20170221-1647-B60" expressionLanguage="http://www.java.com/java" targetNamespace="http://org.eclipse.bpmn2/default/collaboration">
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="platform:/resource/BPMNConverter/diagrams/purchaseCWP2.xsd" namespace="test"/>
-  <bpmn2:itemDefinition id="ItemDefinition_48" isCollection="false" structureRef="ns1.xsd:order"/>
-  <bpmn2:itemDefinition id="ItemDefinition_49" isCollection="false" structureRef="ns1.xsd:orderStatus"/>
-  <bpmn2:itemDefinition id="ItemDefinition_50" isCollection="false" structureRef="ns1.xsd:shoppingCart"/>
-  <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="ns1.xsd:CWPArray"/>
+  <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="ns1.xsd:cwpArray"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="ns1.xsd:order"/>
   <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="ns1.xsd:orderStatus"/>
   <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="ns1.xsd:shoppingCart"/>
-  <bpmn2:message id="Message_1" itemRef="ItemDefinition_49" name="order"/>
-  <bpmn2:dataStore id="DataStore_2" itemSubjectRef="ItemDefinition_1" capacity="5" isUnlimited="false" name="CWPArray"/>
+  <bpmn2:itemDefinition id="ItemDefinition_5" isCollection="false" structureRef="ns1.xsd:cwpArray"/>
+  <bpmn2:itemDefinition id="ItemDefinition_6" isCollection="false" structureRef="ns1.xsd:order"/>
+  <bpmn2:itemDefinition id="ItemDefinition_7" isCollection="false" structureRef="ns1.xsd:orderStatus"/>
+  <bpmn2:itemDefinition id="ItemDefinition_8" isCollection="false" structureRef="ns1.xsd:shoppingCart"/>
+  <bpmn2:message id="Message_1" itemRef="ItemDefinition_8" name="order"/>
+  <bpmn2:dataStore id="DataStore_2" itemSubjectRef="ItemDefinition_5" capacity="2" isUnlimited="false" name="cwpArray"/>
   <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
     <bpmn2:participant id="Participant_1" name="Customer" processRef="Process_1"/>
     <bpmn2:participant id="Participant_2" name="Shopping Site" processRef="Process_2"/>
@@ -28,15 +29,19 @@
     </bpmn2:startEvent>
     <bpmn2:userTask id="UserTask_1" name="Choose Item">
       <bpmn2:documentation id="Documentation_48"><![CDATA[<PROMELA>
-shoppingCart.msg = order
-select(shoppingCart.item : 0 .. MAX_ITEMS)
-select(shpppingCart.buyer : 0 .. MAX_BUYERS)
-select(shoppingCart.cost : 0 .. MAX_COST)
+		shoppingCart.msg = order;
+		byte temp;
+		select(temp : 0 .. MAX_ITEM);
+		shoppingCart.item = temp;
+		select(temp : 0 .. MAX_BUYER);
+		shoppingCart.item = temp;
+		select(temp : 0 .. MAX_COST);
+		shoppingCart.item = temp;
 </PROMELA>]]></bpmn2:documentation>
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_2">
-        <bpmn2:dataOutput id="DataOutput_18" itemSubjectRef="ItemDefinition_49" name="shoppingCart"/>
+        <bpmn2:dataOutput id="DataOutput_18" itemSubjectRef="ItemDefinition_8" name="shoppingCart"/>
         <bpmn2:outputSet id="OutputSet_17" name="Output Set Choose Item">
           <bpmn2:dataOutputRefs>DataOutput_18</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
@@ -50,7 +55,7 @@ select(shoppingCart.cost : 0 .. MAX_COST)
     <bpmn2:intermediateThrowEvent id="IntermediateThrowEvent_1" name="SendOrder">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_17</bpmn2:outgoing>
-      <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_49" name="order"/>
+      <bpmn2:dataInput id="DataInput_2" itemSubjectRef="ItemDefinition_8" name="order"/>
       <bpmn2:dataInputAssociation id="DataInputAssociation_1">
         <bpmn2:sourceRef>DataObject_2</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
@@ -64,7 +69,7 @@ select(shoppingCart.cost : 0 .. MAX_COST)
     <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_2" name="ReceiveStatus">
       <bpmn2:incoming>SequenceFlow_17</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
-      <bpmn2:dataOutput id="DataOutput_8" itemSubjectRef="ItemDefinition_49" name="Message_6_Output"/>
+      <bpmn2:dataOutput id="DataOutput_8" itemSubjectRef="ItemDefinition_8" name="Message_6_Output"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_5">
         <bpmn2:sourceRef>DataOutput_8</bpmn2:sourceRef>
         <bpmn2:targetRef>DataObject_2</bpmn2:targetRef>
@@ -75,7 +80,7 @@ select(shoppingCart.cost : 0 .. MAX_COST)
       <bpmn2:messageEventDefinition id="MessageEventDefinition_6" messageRef="Message_1"/>
     </bpmn2:intermediateCatchEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_17" sourceRef="IntermediateThrowEvent_1" targetRef="IntermediateCatchEvent_2"/>
-    <bpmn2:dataObject id="DataObject_2" name="shoppingCart" itemSubjectRef="ItemDefinition_49">
+    <bpmn2:dataObject id="DataObject_2" name="shoppingCart" itemSubjectRef="ItemDefinition_8" isCollection="true">
       <bpmn2:dataState id="DataState_2"/>
     </bpmn2:dataObject>
     <bpmn2:subProcess id="SubProcess_1" name="Notifications">
@@ -135,7 +140,7 @@ select(shoppingCart.cost : 0 .. MAX_COST)
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_28</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_7">
-        <bpmn2:dataOutput id="DataOutput_11" itemSubjectRef="ItemDefinition_49" name="orderStatus"/>
+        <bpmn2:dataOutput id="DataOutput_11" itemSubjectRef="ItemDefinition_8" name="orderStatus"/>
         <bpmn2:outputSet id="OutputSet_10" name="Output Set Out Of Stock">
           <bpmn2:dataOutputRefs>DataOutput_11</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
@@ -158,7 +163,7 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller
       <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_27</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_9">
-        <bpmn2:dataOutput id="DataOutput_12" itemSubjectRef="ItemDefinition_49" name="orderStatus"/>
+        <bpmn2:dataOutput id="DataOutput_12" itemSubjectRef="ItemDefinition_8" name="orderStatus"/>
         <bpmn2:outputSet id="OutputSet_12" name="Output Set Card Denied">
           <bpmn2:dataOutputRefs>DataOutput_12</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
@@ -178,7 +183,7 @@ cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer
       <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
       <bpmn2:ioSpecification id="InputOutputSpecification_10">
-        <bpmn2:dataOutput id="DataOutput_13" itemSubjectRef="ItemDefinition_49" name="orderStatus"/>
+        <bpmn2:dataOutput id="DataOutput_13" itemSubjectRef="ItemDefinition_8" name="orderStatus"/>
         <bpmn2:outputSet id="OutputSet_13" name="Output Set Ship Item">
           <bpmn2:dataOutputRefs>DataOutput_13</bpmn2:dataOutputRefs>
         </bpmn2:outputSet>
@@ -188,12 +193,12 @@ cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer
         <bpmn2:targetRef>DataObject_6</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
     </bpmn2:userTask>
-    <bpmn2:dataStoreReference id="DataStoreReference_1" name="CWPArray" dataStoreRef="DataStore_2">
+    <bpmn2:dataStoreReference id="DataStoreReference_1" name="cwpArray" dataStoreRef="DataStore_2">
       <bpmn2:dataState id="DataState_1"/>
     </bpmn2:dataStoreReference>
     <bpmn2:startEvent id="StartEvent_2" name="ReceiveOrder">
       <bpmn2:outgoing>SequenceFlow_19</bpmn2:outgoing>
-      <bpmn2:dataOutput id="DataOutput_10" itemSubjectRef="ItemDefinition_49" name="orderStatus"/>
+      <bpmn2:dataOutput id="DataOutput_10" itemSubjectRef="ItemDefinition_8" name="orderStatus"/>
       <bpmn2:dataOutput id="DataOutput_15" name="orderStatus"/>
       <bpmn2:dataOutputAssociation id="DataOutputAssociation_8">
         <bpmn2:sourceRef>DataOutput_10</bpmn2:sourceRef>
@@ -217,7 +222,7 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
     </bpmn2:startEvent>
     <bpmn2:sequenceFlow id="SequenceFlow_19" sourceRef="StartEvent_2" targetRef="ExclusiveGateway_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_21" sourceRef="ExclusiveGateway_2" targetRef="UserTask_4"/>
-    <bpmn2:dataObject id="DataObject_6" name="orderStatus" itemSubjectRef="ItemDefinition_49">
+    <bpmn2:dataObject id="DataObject_6" name="orderStatus" itemSubjectRef="ItemDefinition_8" isCollection="true">
       <bpmn2:dataState id="DataState_4"/>
     </bpmn2:dataObject>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_5" gatewayDirection="Converging">
@@ -236,7 +241,7 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
     <bpmn2:sequenceFlow id="SequenceFlow_29" sourceRef="ExclusiveGateway_5" targetRef="ExclusiveGateway_6"/>
     <bpmn2:endEvent id="EndEvent_8" name="SendStatus">
       <bpmn2:incoming>SequenceFlow_30</bpmn2:incoming>
-      <bpmn2:dataInput id="DataInput_13" itemSubjectRef="ItemDefinition_49" name="orderStatus"/>
+      <bpmn2:dataInput id="DataInput_13" itemSubjectRef="ItemDefinition_8" name="orderStatus"/>
       <bpmn2:dataInputAssociation id="DataInputAssociation_7">
         <bpmn2:sourceRef>DataObject_6</bpmn2:sourceRef>
         <bpmn2:targetRef>DataInput_13</bpmn2:targetRef>
@@ -266,10 +271,10 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
           <dc:Bounds height="77.0" width="15.0" x="106.0" y="452.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="true">
-        <dc:Bounds height="189.0" width="368.0" x="666.0" y="54.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_SubProcess_1" bpmnElement="SubProcess_1" isExpanded="false">
+        <dc:Bounds height="50.0" width="110.0" x="795.0" y="123.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_9" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="68.0" x="672.0" y="57.0"/>
+          <dc:Bounds height="14.0" width="68.0" x="816.0" y="141.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_DataStoreReference_1" bpmnElement="DataStoreReference_1">
@@ -374,42 +379,6 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
         <dc:Bounds height="36.0" width="36.0" x="1098.0" y="409.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_57" labelStyle="BPMNLabelStyle_1">
           <dc:Bounds height="15.0" width="64.0" x="1084.0" y="445.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_StartEvent_3" bpmnElement="StartEvent_3">
-        <dc:Bounds height="36.0" width="36.0" x="686.0" y="123.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_18" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="68.0" x="670.0" y="159.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_1" bpmnElement="ParallelGateway_1" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="737.0" y="116.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_21" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="28.0" width="57.0" x="734.0" y="166.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_2" bpmnElement="ParallelGateway_2" isMarkerVisible="true">
-        <dc:Bounds height="50.0" width="50.0" x="906.0" y="116.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_22" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="28.0" width="57.0" x="903.0" y="166.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="978.0" y="117.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_23" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="65.0" x="964.0" y="153.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="795.0" y="74.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_24" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="59.0" x="820.0" y="92.0"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
-        <dc:Bounds height="50.0" width="110.0" x="795.0" y="173.0"/>
-        <bpmndi:BPMNLabel id="BPMNLabel_27" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="14.0" width="61.0" x="819.0" y="191.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_UserTask_1">
@@ -583,56 +552,99 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_IntermediateCatchEvent_2" targetElement="BPMNShape_SubProcess_1">
         <di:waypoint xsi:type="dc:Point" x="608.0" y="163.0"/>
-        <di:waypoint xsi:type="dc:Point" x="637.0" y="163.0"/>
-        <di:waypoint xsi:type="dc:Point" x="637.0" y="148.0"/>
-        <di:waypoint xsi:type="dc:Point" x="666.0" y="148.0"/>
+        <di:waypoint xsi:type="dc:Point" x="701.0" y="163.0"/>
+        <di:waypoint xsi:type="dc:Point" x="701.0" y="148.0"/>
+        <di:waypoint xsi:type="dc:Point" x="795.0" y="148.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_11"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_SubProcess_1" targetElement="BPMNShape_EndEvent_7">
-        <di:waypoint xsi:type="dc:Point" x="1034.0" y="148.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1056.0" y="148.0"/>
+        <di:waypoint xsi:type="dc:Point" x="905.0" y="148.0"/>
+        <di:waypoint xsi:type="dc:Point" x="992.0" y="148.0"/>
         <di:waypoint xsi:type="dc:Point" x="1079.0" y="149.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_15"/>
       </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
+      <dc:Font name="arial" size="9.0"/>
+    </bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_2" name="Notifications">
+    <bpmndi:BPMNPlane id="BPMNPlane_2" bpmnElement="SubProcess_1">
+      <bpmndi:BPMNShape id="BPMNShape_StartEvent_3" bpmnElement="StartEvent_3">
+        <dc:Bounds height="36.0" width="36.0" x="66.0" y="99.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_18" labelStyle="BPMNLabelStyle_2">
+          <dc:Bounds height="14.0" width="68.0" x="50.0" y="135.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_1" bpmnElement="ParallelGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="117.0" y="92.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_21" labelStyle="BPMNLabelStyle_2">
+          <dc:Bounds height="28.0" width="57.0" x="114.0" y="142.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ParallelGateway_2" bpmnElement="ParallelGateway_2" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="286.0" y="92.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_22" labelStyle="BPMNLabelStyle_2">
+          <dc:Bounds height="28.0" width="57.0" x="283.0" y="142.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_1" bpmnElement="EndEvent_1">
+        <dc:Bounds height="36.0" width="36.0" x="358.0" y="93.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_23" labelStyle="BPMNLabelStyle_2">
+          <dc:Bounds height="14.0" width="65.0" x="344.0" y="129.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_1" bpmnElement="Task_1" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="175.0" y="50.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_24" labelStyle="BPMNLabelStyle_2">
+          <dc:Bounds height="14.0" width="59.0" x="200.0" y="68.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Task_2" bpmnElement="Task_2" isExpanded="true">
+        <dc:Bounds height="50.0" width="110.0" x="175.0" y="149.0"/>
+        <bpmndi:BPMNLabel id="BPMNLabel_27" labelStyle="BPMNLabelStyle_2">
+          <dc:Bounds height="14.0" width="61.0" x="199.0" y="167.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ParallelGateway_1" targetElement="BPMNShape_Task_1">
-        <di:waypoint xsi:type="dc:Point" x="762.0" y="116.0"/>
-        <di:waypoint xsi:type="dc:Point" x="762.0" y="99.0"/>
-        <di:waypoint xsi:type="dc:Point" x="795.0" y="99.0"/>
+        <di:waypoint xsi:type="dc:Point" x="142.0" y="92.0"/>
+        <di:waypoint xsi:type="dc:Point" x="142.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="175.0" y="75.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_28"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ParallelGateway_1" targetElement="BPMNShape_Task_2">
-        <di:waypoint xsi:type="dc:Point" x="762.0" y="166.0"/>
-        <di:waypoint xsi:type="dc:Point" x="762.0" y="198.0"/>
-        <di:waypoint xsi:type="dc:Point" x="795.0" y="198.0"/>
+        <di:waypoint xsi:type="dc:Point" x="142.0" y="142.0"/>
+        <di:waypoint xsi:type="dc:Point" x="142.0" y="174.0"/>
+        <di:waypoint xsi:type="dc:Point" x="175.0" y="174.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_29"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_Task_1" targetElement="BPMNShape_ParallelGateway_2">
-        <di:waypoint xsi:type="dc:Point" x="905.0" y="99.0"/>
-        <di:waypoint xsi:type="dc:Point" x="931.0" y="99.0"/>
-        <di:waypoint xsi:type="dc:Point" x="931.0" y="116.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="311.0" y="75.0"/>
+        <di:waypoint xsi:type="dc:Point" x="311.0" y="92.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_30"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_Task_2" targetElement="BPMNShape_ParallelGateway_2">
-        <di:waypoint xsi:type="dc:Point" x="905.0" y="198.0"/>
-        <di:waypoint xsi:type="dc:Point" x="931.0" y="198.0"/>
-        <di:waypoint xsi:type="dc:Point" x="931.0" y="166.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="174.0"/>
+        <di:waypoint xsi:type="dc:Point" x="311.0" y="174.0"/>
+        <di:waypoint xsi:type="dc:Point" x="311.0" y="142.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_34"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_StartEvent_3" targetElement="BPMNShape_ParallelGateway_1">
-        <di:waypoint xsi:type="dc:Point" x="722.0" y="141.0"/>
-        <di:waypoint xsi:type="dc:Point" x="729.0" y="141.0"/>
-        <di:waypoint xsi:type="dc:Point" x="737.0" y="141.0"/>
+        <di:waypoint xsi:type="dc:Point" x="102.0" y="117.0"/>
+        <di:waypoint xsi:type="dc:Point" x="109.0" y="117.0"/>
+        <di:waypoint xsi:type="dc:Point" x="117.0" y="117.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_35"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_ParallelGateway_2" targetElement="BPMNShape_EndEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="956.0" y="141.0"/>
-        <di:waypoint xsi:type="dc:Point" x="967.0" y="141.0"/>
-        <di:waypoint xsi:type="dc:Point" x="967.0" y="135.0"/>
-        <di:waypoint xsi:type="dc:Point" x="978.0" y="135.0"/>
+        <di:waypoint xsi:type="dc:Point" x="336.0" y="117.0"/>
+        <di:waypoint xsi:type="dc:Point" x="347.0" y="117.0"/>
+        <di:waypoint xsi:type="dc:Point" x="347.0" y="111.0"/>
+        <di:waypoint xsi:type="dc:Point" x="358.0" y="111.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_36"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
-    <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_1">
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyle_2">
       <dc:Font name="arial" size="9.0"/>
     </bpmndi:BPMNLabelStyle>
   </bpmndi:BPMNDiagram>

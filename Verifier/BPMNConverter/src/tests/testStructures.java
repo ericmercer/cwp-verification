@@ -1,5 +1,6 @@
 package tests;
 
+import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import promela.PromelaGenerator;
 
@@ -9,7 +10,8 @@ public class testStructures {
 		// TODO Auto-generated method stub
 
 		// Simple Gateway Structure
-		BpmnProcess b1 = new BpmnProcess("test2");
+		BpmnDiagram diagram = new BpmnDiagram();
+		BpmnProcess b1 = diagram.addProcess("test2", "test2");
 
 		b1.addStartEvent("start");
 		b1.addParallelGateway("Gateway1");
@@ -27,9 +29,9 @@ public class testStructures {
 
 		b1.unambiguate();
 
-		PromelaGenerator pg = new PromelaGenerator(b1);
+		PromelaGenerator pg = new PromelaGenerator(diagram);
 
-		System.out.println(pg.generatePromela());
+		System.out.println(pg.generatePromela(0));
 
 	}
 

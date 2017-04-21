@@ -24,30 +24,30 @@ import bpmnStructure.BpmnDiagram;
 import bpmnStructure.BpmnProcess;
 import bpmnStructure.dataTypes.PromelaType;
 import bpmnStructure.dataTypes.PromelaTypeDef;
-import bpmnStructure.exceptions.PromelaTypeSizeException;
 
 public class XMLConverter {
 	
 	private BpmnDiagram diagram;
 	private PrintWriter writer;
-	
+	private String basePath;
 	private String namespace;
 	private HashMap<String, String> definitions;
 	private HashMap<String, PromelaTypeDef> messageDefs;
 	private HashMap<String, BpmnProcess> messageEvents;
-	private HashMap<String, PromelaType> types;
+	private HashMap<String, PromelaType> variables;
 	private HashMap<String, String> dataObjects;
+	private ArrayList<String> defaultFlows;
 	
 	public XMLConverter() {
 	}
 	
-	public BpmnDiagram importXML( String fileName ) {
+	public BpmnDiagram importXML(String basePath, String fileName ) {
 		
 		initExport();
 		
 		try {
-			File inputFile = new File( fileName );
-			
+			File inputFile = new File( basePath + fileName );
+			this.basePath = basePath;
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.parse( inputFile );
@@ -63,7 +63,7 @@ public class XMLConverter {
 	        if(processList.item(0) == null) {
 	        	throw new Exception();
 	        }
-	        System.out.println(processList.item(0).getNodeType());
+//	        System.out.println(processList.item(0).getNodeType());
 	        init(document, processList);
 	        
 		} catch (ParserConfigurationException e) {
@@ -76,6 +76,11 @@ public class XMLConverter {
 			e.printStackTrace();
 		} catch (IOException e) {
 			System.err.println("The file doesn't exist!");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.err.println("There was no import of data objects/structures from an outside xsd file! "
+					+ "\nIf you use dataObjects or messages in the BPMN diagram, "
+					+ "\nyou must have a corresponding xsd file to describe the data structures");
 			e.printStackTrace();
 		} catch (Exception e) {
 			System.err.println("Not a valid input file!");
@@ -96,6 +101,8 @@ public class XMLConverter {
         Element e = null;
         BpmnDiagram diagram = new BpmnDiagram();
         definitions = new HashMap<>();
+        dataObjects = new HashMap<>();
+        defaultFlows = new ArrayList<>();
         
         list = document.getElementsByTagName(namespace + "import");
 		for(int i = 0; i < list.getLength(); i++) {
@@ -105,16 +112,23 @@ public class XMLConverter {
 				String[] parts = location.split("/");
 				XSDConverter xsd = new XSDConverter();
 //				System.out.println(parts[parts.length - 2] + "/" + parts[parts.length - 1]);
-				types = xsd.importXSD(parts[parts.length - 2] + "/" + parts[parts.length - 1], diagram);
-				dataObjects = xsd.getVariables();
+				variables = xsd.importXSD(basePath + parts[parts.length - 2] + "/" + parts[parts.length - 1], diagram);
+				if (variables == null) {
+					System.out.println("weird");
+				}
 			}
 		}
         
         list = document.getElementsByTagName(namespace + "itemDefinition");
+        String structRef = null;
 		for(int i = 0; i < list.getLength(); i++) {
 			if(list.item(i) != null) {
 				e = (Element) list.item(i);
-				definitions.put(e.getAttribute("id"), e.getAttribute("structureRef"));
+				structRef = e.getAttribute("structureRef");
+				if (structRef.contains(":")) {
+					structRef = structRef.substring( structRef.indexOf(":") + 1 );
+				}
+				definitions.put(e.getAttribute("id"), structRef);
 			}
 		}
         
@@ -126,10 +140,11 @@ public class XMLConverter {
 				e = (Element) list.item(i);
 				id = e.getAttribute("id");
 				name = e.getAttribute("name");
-				if (!dataObjects.containsKey(name)) {
-					System.err.println("The message found in the bpmn diagram did not match any data elements in the corresponding xsd");
+				if (!variables.containsKey(name)) {
+					System.err.println("The message found in the bpmn diagram did "
+							+ "not match any data elements in the corresponding xsd");
 				}
-				messageDefs.put(id, (PromelaTypeDef) types.get(dataObjects.get(name)));
+				messageDefs.put(id, (PromelaTypeDef) variables.get(name));
 			}
 		}
 		
@@ -139,11 +154,9 @@ public class XMLConverter {
 				e = (Element) list.item(i);
 				try {
 					initDataStore(e, diagram);
-				} catch (PromelaTypeSizeException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				} catch (InvalidDataTypeException e2) {
-					System.err.println("The data store found in the bpmn diagram did not match any data elements in the corresponding xsd");
+					System.err.println("The data store found in the bpmn diagram "
+							+ "did not match any data elements in the corresponding xsd");
 					e2.printStackTrace();
 				}
 			}
@@ -151,12 +164,16 @@ public class XMLConverter {
 		
 		messageEvents = new HashMap<>();
 		Element process = null;
+		NodeList temp = null;
 		writer.println( "ProcessList.size:\t" + processList.getLength() );
 		for(int i = 0; i < processList.getLength(); i++) {
 			process = (Element) processList.item(i);
-			id = process.getAttribute( "id" );
-			writer.println( "Process:\t" + id + "\n" );
-			initProcess(process, diagram.addProcess(id));
+			temp = process.getElementsByTagName(namespace + "startEvent");
+			if (temp != null && temp.getLength() > 0) {
+				id = process.getAttribute( "id" );
+				writer.println( "Process:\t" + id + "\n" );
+				initProcess(process, diagram.addProcess(id));
+			}
 		}
 		
 		list = document.getElementsByTagName(namespace + "messageFlow");
@@ -180,6 +197,23 @@ public class XMLConverter {
 		NodeList children = process.getChildNodes();
 		ArrayList<Element> flowSequences = new ArrayList<>();
 //		ArrayList<Element> associations = new ArrayList<>();
+		for(int i = 0; i < children.getLength(); i++) {
+			if(children.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element child = (Element) children.item(i);
+				String tag = child.getTagName();
+				if(tag.equals(namespace + "dataObject")) {
+					try {
+						initDataObject(child, diagram);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (InvalidDataTypeException e) {
+						System.err.println("The data object found in the bpmn diagram did not "
+								+ "match any data elements in the corresponding xsd");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 		for(int i = 0; i < children.getLength(); i++) {
 			if(children.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element child = (Element) children.item(i);
@@ -210,8 +244,9 @@ public class XMLConverter {
 				else if(tag.equals(namespace + "intermediateCatchEvent")) {
 					initIntermediateCatchEvent(child, diagram);
 				}
-				else if(tag.equals(namespace + "task") || tag.equals(namespace + "userTask") || tag.equals(namespace + "manualTask") || 
-						tag.equals(namespace + "sendTask") || tag.equals(namespace + "receiveTask")) {
+				else if(tag.equals(namespace + "task") || tag.equals(namespace + "userTask") || 
+						tag.equals(namespace + "manualTask") || tag.equals(namespace + "sendTask") || 
+						tag.equals(namespace + "receiveTask")) {
 					initTask(child, diagram);
 				}
 				else if(tag.equals(namespace + "scriptTask")) {
@@ -225,17 +260,6 @@ public class XMLConverter {
 				}
 				else if(tag.equals(namespace + "sequenceFlow")) {
 					flowSequences.add(child);
-				}
-				else if(tag.equals(namespace + "dataObject")) {
-					try {
-						initDataObject(child, diagram);
-					} catch (NumberFormatException | PromelaTypeSizeException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvalidDataTypeException e) {
-						System.err.println("The data object found in the bpmn diagram did not match any data elements in the corresponding xsd");
-						e.printStackTrace();
-					}
 				}
 			}
 		}
@@ -257,109 +281,101 @@ public class XMLConverter {
 	
 	private void initStartEvent(Element startEvent, BpmnProcess process) {
 		String id = startEvent.getAttribute("id");
-		writer.println( "startEvent:\t" + startEvent.getAttribute( "id" ) );
+		writer.print( "startEvent:\t" + startEvent.getAttribute( "id" ) );
 		NodeList message = startEvent.getElementsByTagName(namespace + "messageEventDefinition");
-		NodeList list = startEvent.getElementsByTagName(namespace + "documentation");
-		String code = null;
-		if(list != null && list.getLength() != 0) {
-			Element doc = (Element) list.item(0);
-			code = getCode("<PROMELA>", "</PROMELA>", doc);
-		}
 		if(message != null && message.getLength() == 1) {
 //			if the event has a messageEventDefinition then we add a messageStartEvent instead of 
 //			a regular start event and we add that event id and the process it belongs to to a hashmap
 //			so that we can easily add them to the messageFlows later
 			messageEvents.put(id, process);
-			if(code == null || code.length() == 0) {
-				process.addMessageStartEvent(id);
-			}else {
-				process.addMessageStartEvent(id, code);
-			}
+			writer.print( "\tmessage" );
+			String dataName = getDataName(startEvent);
+//			System.out.println(id + ":" + dataName);
+			process.addMessageStartEvent(id, startEvent.getAttribute("name"), dataName);
 			return;
 		}
-		if(code == null || code.length() == 0) {
-			process.addStartEvent(id);
-		}else {
-			process.addStartEvent(id, code);
+		process.addStartEvent(id, startEvent.getAttribute("name"));
+		writer.println();
+	}
+	
+	private String getDataName(Element element) {
+		NodeList list = element.getElementsByTagName(namespace + "dataInputAssociation");
+		Element child = null;
+		NodeList childList = null;
+		String dataObjectName = null;
+		for (int i = 0; i < list.getLength(); i++) {
+			if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				child = (Element) list.item(i);
+				childList = child.getElementsByTagName(namespace + "sourceRef");
+				for (int j = 0; j < list.getLength(); j++) {
+					if (childList.item(j).getNodeType() == Node.ELEMENT_NODE) {
+						child = (Element) childList.item(j);
+						dataObjectName = child.getTextContent();
+//						System.out.println(dataObjects.get(dataObjectName));
+						return dataObjects.get(dataObjectName);
+					}
+				}
+				return null;
+			}
 		}
+		list = element.getElementsByTagName(namespace + "dataOutputAssociation");
+		for (int i = 0; i < list.getLength(); i++) {
+			if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				child = (Element) list.item(i);
+				childList = child.getElementsByTagName(namespace + "targetRef");
+				for (int j = 0; j < list.getLength(); j++) {
+					if (childList.item(j).getNodeType() == Node.ELEMENT_NODE) {
+						child = (Element) childList.item(j);
+						dataObjectName = child.getTextContent();
+//						System.out.println(dataObjects.get(dataObjectName));
+						return dataObjects.get(dataObjectName);
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	private void initEndEvent(Element endEvent, BpmnProcess process) {
 		String id = endEvent.getAttribute("id");
 		writer.println( "endEvent:\t" + endEvent.getAttribute( "id" ) );
 		NodeList message = endEvent.getElementsByTagName(namespace + "messageEventDefinition");
-		NodeList list = endEvent.getElementsByTagName(namespace + "documentation");
-		String code = null;
-		if(list != null && list.getLength() != 0) {
-			Element doc = (Element) list.item(0);
-			code = getCode("<PROMELA>", "</PROMELA>", doc);
-		}
 		if(message != null && message.getLength() == 1) {
 			messageEvents.put(id, process);
-			if(code == null || code.length() == 0) {
-				process.addMessageEndEvent(id);
-			}else {
-				process.addMessageEndEvent(id, code);
-			}
+			String dataName = getDataName(endEvent);
+//			System.out.println(id + ":" + dataName);
+			process.addMessageEndEvent(id, endEvent.getAttribute("name"), dataName);
 			return;
 		}
-		if(code == null || code.length() == 0) {
-			process.addEndEvent(id);
-		}else {
-			process.addEndEvent(id, code);
-		}
+		process.addEndEvent(id, endEvent.getAttribute("name"));
 	}
 	
 	private void initIntermediateCatchEvent(Element intermediateEvent, BpmnProcess process) {
 		String id = intermediateEvent.getAttribute("id");
 		writer.println( "intermediateEvents:\t" + intermediateEvent.getAttribute( "id" ) );
 		NodeList message = intermediateEvent.getElementsByTagName(namespace + "messageEventDefinition");
-		NodeList list = intermediateEvent.getElementsByTagName(namespace + "documentation");
-		String code = null;
-		if(list != null && list.getLength() != 0) {
-			Element doc = (Element) list.item(0);
-			code = getCode("<PROMELA>", "</PROMELA>", doc);
-		}
 		if(message != null && message.getLength() == 1) {
 			messageEvents.put(id, process);
-			if(code == null || code.length() == 0) {
-				process.addMessageCatchEvent(id);
-			}else {
-				process.addMessageCatchEvent(id, code);
-			}
+			String dataName = getDataName(intermediateEvent);
+//			System.out.println(id + ":" + dataName);
+			process.addMessageCatchEvent(id, intermediateEvent.getAttribute("name"), dataName);
 			return;
 		}
-		if(code == null || code.length() == 0) {
-			process.addIntermediateEvent(id);
-		}else {
-			process.addIntermediateEvent(id, code);
-		}
+		process.addIntermediateEvent(id, intermediateEvent.getAttribute("name"));
 	}
 	
 	private void initIntermediateThrowEvent(Element intermediateEvent, BpmnProcess process) {
 		String id = intermediateEvent.getAttribute("id");
 		writer.println( "intermediateEvents:\t" + intermediateEvent.getAttribute( "id" ) );
 		NodeList message = intermediateEvent.getElementsByTagName(namespace + "messageEventDefinition");
-		NodeList list = intermediateEvent.getElementsByTagName(namespace + "documentation");
-		String code = null;
-		if(list != null && list.getLength() != 0) {
-			Element doc = (Element) list.item(0);
-			code = getCode("<PROMELA>", "</PROMELA>", doc);
-		}
 		if(message != null && message.getLength() == 1) {
 			messageEvents.put(id, process);
-			if(code == null || code.length() == 0) {
-				process.addMessageThrowEvent(id);
-			}else {
-				process.addMessageThrowEvent(id, code);
-			}
+			String dataName = getDataName(intermediateEvent);
+//			System.out.println(id + ":" + dataName);
+			process.addMessageThrowEvent(id, intermediateEvent.getAttribute("name"), dataName);
 			return;
 		}
-		if(code == null || code.length() == 0) {
-			process.addIntermediateEvent(id);
-		}else {
-			process.addIntermediateEvent(id, code);
-		}
+		process.addIntermediateEvent(id, intermediateEvent.getAttribute("name"));
 	}
 	
 	private void initTask(Element task, BpmnProcess process) {
@@ -371,9 +387,9 @@ public class XMLConverter {
 			code = getCode("<PROMELA>", "</PROMELA>", doc);
 		}
 		if(code == null) {
-			process.addTask( task.getAttribute("id") );
+			process.addTask( task.getAttribute("id"), task.getAttribute("name") );
 		}else {
-			process.addTask( task.getAttribute("id"), code );
+			process.addScriptTask( task.getAttribute("id"), code, task.getAttribute("name") );
 		}
 	}
 	
@@ -381,26 +397,28 @@ public class XMLConverter {
 		task.getElementsByTagName("script");
 		writer.println( "scriptTask:\t" + task.getAttribute( "id" ) );
 		NodeList list = task.getElementsByTagName(namespace + "script");
-		ArrayList<String> code = null;
+		StringBuilder code = null;
 		if(list != null && list.getLength() != 0) {
 			Element doc = (Element) list.item(0);
 			Scanner scan = new Scanner(doc.getTextContent());
-			code = new ArrayList<>();
+			code = new StringBuilder();
 			while(scan.hasNext()) {
-				code.add(scan.nextLine());
+				code.append(scan.nextLine());
 			}
 			scan.close();
-			writer.println(code.toString());
+			writer.println("code: " + code.toString());
 		}
-		if(code == null || code.size() == 0) {
-			process.addScriptTask( task.getAttribute("id") );
-		}else {
-			process.addScriptTask( task.getAttribute("id"), code.toString() );
-		}
+		String dataName = getDataName(task);
+//		System.out.println("scriptTask: " + dataName);
+		process.addScriptTask( task.getAttribute("id"), code.toString(), dataName );
 	}
 	
 	private void initExclusiveGate(Element exclusiveGate, BpmnProcess process) {
 		writer.println( "exclusiveGateway:\t" + exclusiveGate.getAttribute( "id" ) );
+		String defaultPath = exclusiveGate.getAttribute("default");
+		if (defaultPath != null && !defaultPath.isEmpty()) {
+			defaultFlows.add(defaultPath);
+		}
 		process.addExclusiveGateway( exclusiveGate.getAttribute("id") );
 	}
 	
@@ -409,8 +427,9 @@ public class XMLConverter {
 		process.addParallelGateway( parellelGate.getAttribute("id") );
 	}
 	
-	private void initDataObject(Element data, BpmnProcess process) throws NumberFormatException, PromelaTypeSizeException, InvalidDataTypeException {
-		writer.println( "dataObject:\t" + data.getAttribute( "name" ) );
+	private void initDataObject(Element data, BpmnProcess process) throws NumberFormatException, InvalidDataTypeException {
+		writer.print( "dataObject:\t" + data.getAttribute("name") );
+		dataObjects.put(data.getAttribute("id"), data.getAttribute("name"));
 		NodeList list = data.getElementsByTagName(namespace + "documentation");
 		String code = null;
 		if(list != null && list.getLength() != 0) {
@@ -418,30 +437,32 @@ public class XMLConverter {
 			code = getCode("<CAPACITY>", "</CAPACITY>", doc);
 		}
 		String name = data.getAttribute("name");
-		if (!dataObjects.containsKey(name)) {
+		String definition = definitions.get(data.getAttribute("itemSubjectRef"));
+		if (!variables.containsKey(definition)) {
 			throw new InvalidDataTypeException();
 		}
+		writer.println("\ttype: " + variables.get(definition).getTypeName());
 		if(code == null) {
-			process.addDataObject( data.getAttribute("id"), types.get(name), 1 );
+			process.addDataObject( name, variables.get(definition), 0 );
 		}else {
-			process.addDataObject( data.getAttribute("id"), types.get(name), Integer.parseInt(code) );
+			process.addDataObject( name, variables.get(definition), Integer.parseInt(code) );
 		}
-		
 	}
 	
-	private void initDataStore(Element data, BpmnDiagram diagram) throws PromelaTypeSizeException, InvalidDataTypeException {
+	private void initDataStore(Element data, BpmnDiagram diagram) throws InvalidDataTypeException {
 		writer.print( "dataStore:\t" + data.getAttribute( "name" ) );
 		String name = data.getAttribute("name"), cap = data.getAttribute("capacity");
 		int capacity = Integer.parseInt(cap);
-		if (!dataObjects.containsKey(name)) {
-			for (String key : dataObjects.keySet()) {
-				System.out.print(key + "\t");
+		String definition = definitions.get(data.getAttribute("itemSubjectRef"));
+		if (!variables.containsKey(definition)) {
+			for (String key : variables.keySet()) {
+				writer.print(key + "\t");
 			}
-			System.out.println("\n" + name);
+			writer.println("\n" + name);
 			throw new InvalidDataTypeException();
 		}
-		writer.println("\ttype: " + types.get(dataObjects.get(name)));
-		diagram.addDataStore( name, types.get(dataObjects.get(name)), capacity );
+		writer.println("\ttype: " + variables.get(definition).getTypeName());
+		diagram.addDataStore( name, variables.get(definition), capacity );
 	}
 	
 	private void initSequenceFlows(ArrayList<Element> sequenceFlows, BpmnProcess process) {
@@ -449,28 +470,39 @@ public class XMLConverter {
         	return;
         }
         
+        String flowName = null;
         Element current = null;
         NodeList condition = null;
         Iterator<Element> iter = sequenceFlows.iterator();
         while(iter.hasNext()) {
         	current = iter.next();
         	String source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef");
-			writer.println( "sourceRef:\t" + source + "\ttargetRef:\t" + target );
+			writer.print( "sourceRef:\t" + source + "\ttargetRef:\t" + target );
 			condition = current.getElementsByTagName(namespace + "conditionExpression");
+			flowName = current.getAttribute("id");
 			if(condition != null && condition.item(0) != null) {
 				current = (Element) condition.item(0);
 //				System.out.println("condition: " + current.getTextContent());
-				process.addSequenceFlow( source, target, current.getTextContent() );
+				if (defaultFlows.contains(flowName)) {
+					writer.print("\tdefault");
+					process.addSequenceFlow( source, target, current.getTextContent(), true );
+				}else {
+					process.addSequenceFlow( source, target, current.getTextContent() );
+				}
 			}else {
 				try {
-					process.addSequenceFlow( source, target );
+					if (defaultFlows.contains(flowName)) {
+						writer.print("\tdefault");
+						process.addDefaultSequenceFlow( source, target );
+					}else {
+						process.addSequenceFlow( source, target );
+					}
 				} catch (NullPointerException e) {
-					System.out.println("Source: " + source + " Target: " + target);
+					System.err.println("Source: " + source + " Target: " + target);
 				}
-				
 			}
+			writer.println();
         }
-        
         return;
 	}
 	
@@ -478,7 +510,8 @@ public class XMLConverter {
 		if(current == null) {
 			return;
 		}
-		String id = current.getAttribute("id"), source = current.getAttribute("sourceRef"), target = current.getAttribute("targetRef"),
+		String id = current.getAttribute("id"), source = current.getAttribute("sourceRef"), 
+				target = current.getAttribute("targetRef"),
 				ref = current.getAttribute("messageRef");
 		if (messageDefs.get(ref) == null) {
 			throw new InvalidDataTypeException();
@@ -503,40 +536,40 @@ public class XMLConverter {
 	 */
 	private String getCode(String startTag, String stopTag, Element doc) {
 		Scanner scan = new Scanner(doc.getTextContent());
-		ArrayList<String> code = new ArrayList<>();
+		StringBuilder code = new StringBuilder();
 		boolean take = false;
 		String current = null;
 		while(scan.hasNextLine()) {
 			current = scan.nextLine();
-			if(current.equals(startTag)) {
-				take = true;
-			}
-			if(take) {
-				code.add(current);
-			}
 			if (current.equals(stopTag)) {
 				take = false;
+			}
+			if(take) {
+				code.append(current + "\n");
+			}
+			if(current.equals(startTag)) {
+				take = true;
 			}
 		}
 		scan.close();
 //		System.out.println(code.toString());
-		if(code.size() == 1 || !code.get(code.size() - 1).equals(stopTag)) {
-//			throw an error because we never read in the stop tag, just the start tag
-			System.err.println("No Stop tag!");
-			return null;
-		}else if(code.size() == 0) {
-			System.err.println("No documentation!");
-			return null; // there is no code we care about in the documentation
-		}
-		code.remove(0);
-		code.remove(code.size() - 1);
+//		if(code.size() == 1 || !code.get(code.size() - 1).equals(stopTag)) {
+////			throw an error because we never read in the stop tag, just the start tag
+//			System.err.println("No Stop tag!");
+//			return null;
+//		}else if(code.size() == 0) {
+//			System.err.println("No documentation!");
+//			return null; // there is no code we care about in the documentation
+//		}
+//		code.remove(0);
+//		code.remove(code.size() - 1);
 //		System.out.println(code.toString());
 		writer.println(code.toString());
 		return code.toString();
 	}
 	
 	public HashMap<String, PromelaType> getTypes() {
-		return types;
+		return variables;
 	}
 	
 	@SuppressWarnings("serial")
@@ -550,8 +583,8 @@ public class XMLConverter {
 	public static void main(String[] args) {
 		XMLConverter converter = new XMLConverter();
 		BpmnDiagram diagram = null;
-		diagram = converter.importXML("diagrams/online_purchase2.bpmn");
-		System.out.println(diagram.getGlobalVariables());
+		diagram = converter.importXML("", "diagrams/online_purchase2.bpmn");
+		System.out.println(diagram.getGlobalVariables(0));
 	}
 	
 } //	end of class

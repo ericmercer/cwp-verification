@@ -1,0 +1,7 @@
+typedef IntArray{
+mtype Name;
+short Array[20];
+};
+typedef Integer{
+short short;
+};

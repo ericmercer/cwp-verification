@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/jamieScheme" elementFormDefault="qualified" targetNamespace="http://www.example.org/jamieScheme">
+
+    <element name="var" type="tns:variableType"/>
+
+    <complexType name="variableType">
+    	<sequence>
+    		<element maxOccurs="10" name="count">
+    			<simpleType>
+    				<restriction base="int">
+    					<maxInclusive value="128"/>
+    				</restriction>
+    			</simpleType>
+    		</element>
+    		<element name="token_id" type="int"/>
+    		<element maxOccurs="10" name="isReady" type="boolean"/>
+    	</sequence>
+    </complexType>
+</schema>
