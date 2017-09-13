@@ -1,0 +1,72 @@
+Diagram:
+
+dataStore:	cwpArray	type: cwpType
+ProcessList.size:	3
+Process:	Process_1
+
+dataObject:	shoppingCart	type: msgType
+startEvent:	StartEvent_1
+task:	UserTask_1
+		shoppingCart.msg = order;
+		byte temp;
+		select(temp : 0 .. MAX_ITEM);
+		shoppingCart.item = temp;
+		select(temp : 0 .. MAX_BUYER);
+		shoppingCart.item = temp;
+		select(temp : 0 .. MAX_COST);
+		shoppingCart.item = temp;
+
+intermediateEvents:	IntermediateThrowEvent_1
+intermediateEvents:	IntermediateCatchEvent_2
+
+subProcess: SubProcess_1
+startEvent:	StartEvent_3
+parellelGateway:	ParallelGateway_1
+parellelGateway:	ParallelGateway_2
+endEvent:	EndEvent_1
+task:	Task_1
+task:	Task_2
+sourceRef:	ParallelGateway_1	targetRef:	Task_1
+sourceRef:	ParallelGateway_1	targetRef:	Task_2
+sourceRef:	Task_1	targetRef:	ParallelGateway_2
+sourceRef:	Task_2	targetRef:	ParallelGateway_2
+sourceRef:	StartEvent_3	targetRef:	ParallelGateway_1
+sourceRef:	ParallelGateway_2	targetRef:	EndEvent_1
+
+endEvent:	EndEvent_7
+sourceRef:	StartEvent_1	targetRef:	UserTask_1
+sourceRef:	UserTask_1	targetRef:	IntermediateThrowEvent_1
+sourceRef:	IntermediateThrowEvent_1	targetRef:	IntermediateCatchEvent_2
+sourceRef:	IntermediateCatchEvent_2	targetRef:	SubProcess_1
+sourceRef:	SubProcess_1	targetRef:	EndEvent_7
+Process:	Process_2
+
+dataObject:	orderStatus	type: msgType
+exclusiveGateway:	ExclusiveGateway_1
+exclusiveGateway:	ExclusiveGateway_2
+scriptTask:	ScriptTask_1
+code: orderStatus.msg = outOfStock
+task:	UserTask_4
+cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].seller
+
+scriptTask:	ScriptTask_3
+code: orderStatus.msg = cardDenied
+task:	UserTask_5
+cwpArray[cwpArrayIndex].itemOwner = cwpArray[cwpArrayIndex].buyer
+
+startEvent:	StartEvent_2	messageexclusiveGateway:	ExclusiveGateway_5
+endEvent:	EndEvent_8
+parellelGateway:	ParallelGateway_4
+sourceRef:	ExclusiveGateway_1	targetRef:	ScriptTask_1
+sourceRef:	ExclusiveGateway_1	targetRef:	ExclusiveGateway_2	default
+sourceRef:	ExclusiveGateway_2	targetRef:	ScriptTask_3
+sourceRef:	UserTask_4	targetRef:	UserTask_5
+sourceRef:	StartEvent_2	targetRef:	ExclusiveGateway_1
+sourceRef:	ExclusiveGateway_2	targetRef:	UserTask_4
+sourceRef:	UserTask_5	targetRef:	ExclusiveGateway_5
+sourceRef:	ScriptTask_3	targetRef:	ExclusiveGateway_5
+sourceRef:	ScriptTask_1	targetRef:	ParallelGateway_4
+sourceRef:	ExclusiveGateway_5	targetRef:	ParallelGateway_4
+sourceRef:	ParallelGateway_4	targetRef:	EndEvent_8
+messageFlow:	sourceRef:	IntermediateThrowEvent_1	targetRef:	StartEvent_2
+messageFlow:	sourceRef:	EndEvent_8	targetRef:	IntermediateCatchEvent_2

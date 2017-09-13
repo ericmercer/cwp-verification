@@ -14,7 +14,11 @@ public abstract class FlowElement {
 
 	public FlowElement(String elementId, String name) {
 		this.setElementId(elementId);
-		this.setElementName(name);
+		if (name != null) {
+			this.setElementName(name);
+		} else {
+			this.setElementName(elementId);
+		}
 	}
 
 	public void setElementId(String elementId) {
@@ -23,7 +27,7 @@ public abstract class FlowElement {
 
 	public String getElementInfo() {
 
-		if (elementName.equals(elementId)) {
+		if (elementId.equals(elementName)) {
 			return elementId;
 		} else {
 			return elementName + "-" + elementId;

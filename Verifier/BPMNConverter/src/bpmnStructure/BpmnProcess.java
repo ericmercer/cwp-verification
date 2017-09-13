@@ -122,6 +122,7 @@ public class BpmnProcess extends FlowElement {
 	}
 
 	public void addScriptTask(String id, String promela, String name) {
+		
 		addFlowElement(id, new ScriptTask(id, name, promela));
 	}
 

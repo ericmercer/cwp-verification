@@ -14,6 +14,8 @@ public class PromelaGenerator {
 
 	public PromelaGenerator(BpmnDiagram diagram) {
 		this.diagram = diagram;
+		//add code to give all inclusive gateways a list of any sequence flow that could lead 
+		//to an inclusive gateway without going through an inclusive gateway
 	}
 
 	public String generatePromela(int number_of_tokens) {

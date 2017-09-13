@@ -4,6 +4,8 @@
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="purchaseCWP.xsd" namespace="http://vv.cs.byu.edu/purchaseCWP"/>
   <bpmn2:itemDefinition id="ItemDefinition_1" isCollection="false" structureRef="purchaseCWP.xsd#//cwpType;XSDElementDeclaration"/>
   <bpmn2:itemDefinition id="ItemDefinition_2" isCollection="false" structureRef="purchaseCWP.xsd#//msgType;XSDElementDeclaration=1"/>
+  <bpmn2:itemDefinition id="ItemDefinition_3" isCollection="false" structureRef="purchaseCWP.xsd#//cwpType;XSDElementDeclaration"/>
+  <bpmn2:itemDefinition id="ItemDefinition_4" isCollection="false" structureRef="purchaseCWP.xsd#//msgType;XSDElementDeclaration=1"/>
   <bpmn2:message id="Message_1" itemRef="ItemDefinition_2" name="order"/>
   <bpmn2:dataStore id="DataStore_2" itemSubjectRef="ItemDefinition_1" capacity="5" isUnlimited="false" name="CWPArray"/>
   <bpmn2:collaboration id="Collaboration_1" name="Default Collaboration">
@@ -274,9 +276,9 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_1">
-        <dc:Bounds height="36.0" width="36.0" x="150.0" y="145.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="152.0" y="145.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_4" labelStyle="BPMNLabelStyle_1">
-          <dc:Bounds height="17.0" width="69.0" x="134.0" y="181.0"/>
+          <dc:Bounds height="17.0" width="69.0" x="136.0" y="181.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_UserTask_1" bpmnElement="UserTask_1" isExpanded="true">
@@ -408,8 +410,8 @@ cwpArray[cwpArrayIndex].paymentOwner = cwpArray[cwpArrayIndex].buyer
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_UserTask_1">
-        <di:waypoint xsi:type="dc:Point" x="186.0" y="163.0"/>
-        <di:waypoint xsi:type="dc:Point" x="238.0" y="163.0"/>
+        <di:waypoint xsi:type="dc:Point" x="188.0" y="163.0"/>
+        <di:waypoint xsi:type="dc:Point" x="239.0" y="163.0"/>
         <di:waypoint xsi:type="dc:Point" x="290.0" y="163.0"/>
         <bpmndi:BPMNLabel id="BPMNLabel_6"/>
       </bpmndi:BPMNEdge>

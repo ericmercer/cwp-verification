@@ -24,9 +24,12 @@ public class BpmnToPromela {
 				int default_number_of_instances = 1;
 				
 
-				String beginningPath = "/Users/iainlee/Documents/workspace/BPMN_project";
-				String pathToDiagram = "/cwp-verification/Verifier/BPMNConverter/";
-				String pathToResults = "";
+//				String beginningPath = "/Users/iainlee/Documents/workspace/BPMN_project";
+//				String pathToDiagram = "/cwp-verification/Verifier/BPMNConverter/";
+				String beginningPath = "C:\\Users\\jvisker\\Documents\\GitHub";
+				String pathToDiagram = "\\cwp-verification\\Verifier\\BPMNConverter\\";
+				
+				String pathToResults = "C:\\Users\\jvisker\\Documents\\presentation\\";
 				
 				XMLConverter xml = new XMLConverter();
 				BpmnDiagram bpmnMemoryStructure = xml.importXML(beginningPath + pathToDiagram, "diagrams/online_purchase2.bpmn");
@@ -39,9 +42,11 @@ public class BpmnToPromela {
 				String promelaString = pg.generatePromela(dataStoreSize>0?dataStoreSize:default_number_of_instances);
 				String awkScript = PrintMessageManager.getInstance().generateAwkScript();
 
-				writeStringToFile(promelaString, beginningPath + pathToResults + "generatedPromela.pml");
-				writeStringToFile(awkScript, beginningPath + pathToResults + "messageTranslation.awk");
+				//writeStringToFile(promelaString, beginningPath + pathToResults + "generatedPromela.pml");
+				//writeStringToFile(awkScript, beginningPath + pathToResults + "messageTranslation.awk");
 				
+				writeStringToFile(promelaString, pathToResults + "generatedPromela.pml");
+				writeStringToFile(awkScript, pathToResults + "messageTranslation.awk");
 				System.out.println("finished");
 	}
 	
@@ -54,7 +59,7 @@ public class BpmnToPromela {
 				int default_number_of_instances = 1;
 				
 
-		String beginningPath = "C:\\Users\\jvisker\\Documents\\";
+		String beginningPath = "C:\\Users\\jvisker\\Documents\\presentation";
 		
 		GeneratePurchaseCWP cwp = new GeneratePurchaseCWP();
 //		SimpleFlow cwp = new SimpleFlow();
